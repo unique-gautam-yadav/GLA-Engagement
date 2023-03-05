@@ -1,0 +1,132 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:gla_engage/root/pages/chats.dart';
+import 'package:gla_engage/root/pages/home.dart';
+import 'package:gla_engage/root/pages/search.dart';
+import 'package:gla_engage/root/pages/self_profile.dart';
+
+class NavBarView extends StatefulWidget {
+  const NavBarView({super.key});
+
+  @override
+  State<NavBarView> createState() => _NavBarViewState();
+}
+
+class _NavBarViewState extends State<NavBarView> {
+  List<Widget> pages = const [
+    HomePage(),
+    ChatsPage(),
+    SearchPage(),
+    SelfProfile(),
+  ];
+
+  int curPageIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [pages[curPageIndex], const SizedBox(height: 85)],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: 12,
+            right: 12,
+            child: Container(
+              height: 65,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.green.shade100),
+                color: Theme.of(context).primaryColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: ButtonBar(
+                    alignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (curPageIndex != 0) {
+                              curPageIndex = 0;
+                            }
+                          });
+                        },
+                        icon: Icon(
+                          Icons.home_filled,
+                          color: curPageIndex == 0
+                              ? Colors.green.shade900
+                              : Theme.of(context).textTheme.bodyLarge!.color,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (curPageIndex != 1) {
+                              curPageIndex = 1;
+                            }
+                          });
+                        },
+                        icon: Icon(
+                          Icons.chat_rounded,
+                          color: curPageIndex == 1
+                              ? Colors.green.shade900
+                              : Theme.of(context).textTheme.bodyLarge!.color,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (curPageIndex != 2) {
+                              curPageIndex = 2;
+                            }
+                          });
+                        },
+                        icon: Icon(
+                          Icons.search_rounded,
+                          color: curPageIndex == 2
+                              ? Colors.green.shade900
+                              : Theme.of(context).textTheme.bodyLarge!.color,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (curPageIndex != 3) {
+                              curPageIndex = 3;
+                            }
+                          });
+                        },
+                        icon: Icon(
+                          CupertinoIcons.person_alt_circle,
+                          color: curPageIndex == 3
+                              ? Colors.green.shade900
+                              : Theme.of(context).textTheme.bodyLarge!.color,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
