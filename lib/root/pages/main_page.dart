@@ -17,7 +17,7 @@ class NavBarView extends StatefulWidget {
 class _NavBarViewState extends State<NavBarView> {
   List<Widget> pages = const [
     HomePage(),
-    ChatsPage(),
+    Chat(),
     SearchPage(),
     SelfProfile(),
   ];
