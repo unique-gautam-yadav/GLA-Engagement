@@ -1,6 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gla_engage/root/pages/auth/signup.dart';
 
-void main() {
+import 'firebase_options.dart';
+import 'root/pages/auth/login.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -10,11 +20,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.indigo,
+        primaryColor: Colors.indigoAccent,
+        useMaterial3: true,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+          padding: MaterialStateProperty.all(const EdgeInsets.only(
+            top: 10,
+            bottom: 10,
+            left: 150,
+            right: 150,
+          )),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          backgroundColor: MaterialStateProperty.all(Colors.indigo),
+        )),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const AuthPage(),
+      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -63,5 +92,35 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+}
+
+class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
+
+  @override
+  State<AuthPage> createState() => AuthPageState();
+}
+
+class AuthPageState extends State<AuthPage> {
+  bool showSignIn = true;
+
+  togglePages() {
+    setState(() {
+      showSignIn = !showSignIn;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (showSignIn) {
+      return SignInPage(
+        togglePages: togglePages,
+      );
+    } else {
+      return SignUpPage(
+        togglePages: togglePages,
+      );
+    }
   }
 }

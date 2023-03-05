@@ -1,0 +1,3 @@
+class AppDecorations {
+  // static 
+}
