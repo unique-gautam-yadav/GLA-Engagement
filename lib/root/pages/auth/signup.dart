@@ -1,6 +1,6 @@
 import 'package:gla_engage/backend/models.dart';
 import 'package:gla_engage/root/pages/auth/student_next.dart';
-import 'package:validators/validators.dart' as dd;
+import 'package:validators/validators.dart' as validator;
 import 'package:flutter/material.dart';
 import 'package:gla_engage/backend/keywords.dart';
 
@@ -69,14 +69,21 @@ class _SignUpPageState extends State<SignUpPage> {
                 height: 250,
                 width: 250,
                 decoration: BoxDecoration(
-                  color: Colors.indigo,
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.green.shade600,
+                        Colors.green.shade300,
+                      ]),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: const Center(
-                    child: Text(
-                  "Logo Here!!",
-                  style: TextStyle(color: Colors.white),
-                )),
+                  child: Text(
+                    "Logo Here!!",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
               const SizedBox(height: 35),
               Text("Sign Up to App",
@@ -87,7 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "This filed is required";
-                  } else if (!dd.isEmail(value)) {
+                  } else if (!validator.isEmail(value)) {
                     return "Please enter valid mail";
                   } else {
                     return null;

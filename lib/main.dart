@@ -24,8 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
-        primaryColor: Colors.indigoAccent,
+        colorSchemeSeed: Colors.green,
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(Colors.indigo),
+          backgroundColor: MaterialStateProperty.all(Colors.green),
         )),
       ),
       home:  Student_Profile(),

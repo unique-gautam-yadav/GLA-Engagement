@@ -12,6 +12,7 @@ class Student {
   String? unvRoll;
   String? desc;
   int? addmissionYear;
+  String? imgUrl;
   Student({
     this.uid,
     this.name,
@@ -23,6 +24,7 @@ class Student {
     this.unvRoll,
     this.desc,
     this.addmissionYear,
+    this.imgUrl,
   });
 
   Map<String, dynamic> toMap() {
@@ -37,6 +39,7 @@ class Student {
       'unvRoll': unvRoll,
       'desc': desc,
       'addmissionYear': addmissionYear,
+      'imgUrl': imgUrl,
     };
   }
 
@@ -44,6 +47,7 @@ class Student {
     return Student(
       uid: map['uid'] != null ? map['uid'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
+      imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
       course: map['course'] != null ? map['course'] as String : null,
       branch: map['branch'] != null ? map['branch'] as String : null,
       sem: map['sem'] != null ? map['sem'] as String : null,
@@ -69,6 +73,7 @@ class Student {
     String? unvRoll,
     String? desc,
     int? addmissionYear,
+    String? imgUrl,
   }) {
     return Student(
       uid: uid ?? this.uid,
@@ -81,6 +86,7 @@ class Student {
       unvRoll: unvRoll ?? this.unvRoll,
       desc: desc ?? this.desc,
       addmissionYear: addmissionYear ?? this.addmissionYear,
+      imgUrl: imgUrl ?? this.imgUrl,
     );
   }
 }
@@ -96,7 +102,9 @@ class Alumni {
   String? desc;
   int? addmissionYear;
   int? passoutYear;
+  String? imgUrl;
   Map<String, dynamic>? exprience;
+
   Alumni({
     this.uid,
     this.name,
@@ -108,6 +116,7 @@ class Alumni {
     this.desc,
     this.addmissionYear,
     this.passoutYear,
+    this.imgUrl,
     this.exprience,
   });
 
@@ -122,6 +131,7 @@ class Alumni {
     String? desc,
     int? addmissionYear,
     int? passoutYear,
+    String? imgUrl,
     Map<String, dynamic>? exprience,
   }) {
     return Alumni(
@@ -135,6 +145,7 @@ class Alumni {
       desc: desc ?? this.desc,
       addmissionYear: addmissionYear ?? this.addmissionYear,
       passoutYear: passoutYear ?? this.passoutYear,
+      imgUrl: imgUrl ?? this.imgUrl,
       exprience: exprience ?? this.exprience,
     );
   }
@@ -151,6 +162,7 @@ class Alumni {
       'desc': desc,
       'addmissionYear': addmissionYear,
       'passoutYear': passoutYear,
+      'imgUrl': imgUrl,
       'exprience': exprience,
     };
   }
@@ -169,6 +181,7 @@ class Alumni {
           map['addmissionYear'] != null ? map['addmissionYear'] as int : null,
       passoutYear:
           map['passoutYear'] != null ? map['passoutYear'] as int : null,
+      imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
       exprience: map['exprience'] != null
           ? Map<String, dynamic>.from(
               (map['exprience'] as Map<String, dynamic>))
@@ -177,6 +190,9 @@ class Alumni {
   }
 
   String toJson() => json.encode(toMap());
+
+  factory Alumni.fromJson(String source) =>
+      Alumni.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class Teacher {
@@ -189,6 +205,7 @@ class Teacher {
   String? phone;
   String? empID;
   String? desc;
+  String? imgUrl;
   Map<String, dynamic>? exprience;
   Teacher({
     this.uid,
@@ -200,6 +217,7 @@ class Teacher {
     this.phone,
     this.empID,
     this.desc,
+    this.imgUrl,
     this.exprience,
   });
 
@@ -214,6 +232,7 @@ class Teacher {
       'phone': phone,
       'empID': empID,
       'desc': desc,
+      'imgUrl': imgUrl,
       'exprience': exprience,
     };
   }
@@ -229,12 +248,40 @@ class Teacher {
       phone: map['phone'] != null ? map['phone'] as String : null,
       empID: map['empID'] != null ? map['empID'] as String : null,
       desc: map['desc'] != null ? map['desc'] as String : null,
-      exprience: map['exprience'] != null
-          ? Map<String, dynamic>.from(
-              (map['exprience'] as Map<String, dynamic>))
-          : null,
+      imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
+      exprience: map['exprience'] != null ? Map<String, dynamic>.from((map['exprience'] as Map<String, dynamic>)) : null,
     );
   }
 
   String toJson() => json.encode(toMap());
+
+  Teacher copyWith({
+    String? uid,
+    String? name,
+    String? course,
+    String? branch,
+    String? mail,
+    String? subjects,
+    String? phone,
+    String? empID,
+    String? desc,
+    String? imgUrl,
+    Map<String, dynamic>? exprience,
+  }) {
+    return Teacher(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      course: course ?? this.course,
+      branch: branch ?? this.branch,
+      mail: mail ?? this.mail,
+      subjects: subjects ?? this.subjects,
+      phone: phone ?? this.phone,
+      empID: empID ?? this.empID,
+      desc: desc ?? this.desc,
+      imgUrl: imgUrl ?? this.imgUrl,
+      exprience: exprience ?? this.exprience,
+    );
+  }
+
+  factory Teacher.fromJson(String source) => Teacher.fromMap(json.decode(source) as Map<String, dynamic>);
 }
