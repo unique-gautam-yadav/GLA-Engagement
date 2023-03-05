@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gla_engage/root/pages/auth/Student_Profile.dart';
 import 'package:gla_engage/root/pages/auth/signup.dart';
 
 import 'firebase_options.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: MaterialStateProperty.all(Colors.indigo),
         )),
       ),
-      home: const AuthPage(),
+      home:  Student_Profile(),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -95,32 +96,32 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+// class AuthPage extends StatefulWidget {
+//   const AuthPage({super.key});
 
-  @override
-  State<AuthPage> createState() => AuthPageState();
-}
+//   @override
+//   State<AuthPage> createState() => AuthPageState();
+// }
 
-class AuthPageState extends State<AuthPage> {
-  bool showSignIn = true;
+// class AuthPageState extends State<AuthPage> {
+//   bool showSignIn = true;
 
-  togglePages() {
-    setState(() {
-      showSignIn = !showSignIn;
-    });
-  }
+//   togglePages() {
+//     setState(() {
+//       showSignIn = !showSignIn;
+//     });
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (showSignIn) {
-      return SignInPage(
-        togglePages: togglePages,
-      );
-    } else {
-      return SignUpPage(
-        togglePages: togglePages,
-      );
-    }
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     if (showSignIn) {
+//       return SignInPage(
+//         togglePages: togglePages,
+//       );
+//     } else {
+//       return SignUpPage(
+//         togglePages: togglePages,
+//       );
+//     }
+//   }
+// }
