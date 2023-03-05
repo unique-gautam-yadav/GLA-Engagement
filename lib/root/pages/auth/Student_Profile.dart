@@ -16,8 +16,10 @@ class _Student_ProfileState extends State<Student_Profile> {
       appBar: AppBar(),
       body: SingleChildScrollView(
          child: Stack( 
+          alignment : Alignment.center,
             children: [
                CoverImage(),
+               ProfileImage(),
             ],
         )
       ),
@@ -28,7 +30,15 @@ class _Student_ProfileState extends State<Student_Profile> {
     child: SvgPicture.asset('assets/images/Profile-Cover.svg', width: double.infinity,
     height: CoverImageHeight,
     fit: BoxFit.cover,),
-   
-
   );
+
+    Widget ProfileImage() => Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  height: 95,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: AssetImage("assets/Images/profile.png")),
+           ),
+      );
 }
