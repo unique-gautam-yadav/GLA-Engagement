@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:validators/validators.dart' as validator;
 
+import 'package:gla_engage/root/pages/main_page.dart';
+
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key, required this.togglePages});
 
@@ -84,7 +86,13 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 const SizedBox(height: 50),
                 ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NavBarView(),
+                          ));
+                    },
                     child: const Text(
                       "Sign In",
                       style: TextStyle(color: Colors.white),

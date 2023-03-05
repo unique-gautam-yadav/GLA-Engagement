@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gla_engage/root/pages/auth/Student_Profile.dart';
+import 'package:flutter/services.dart';
 import 'package:gla_engage/root/pages/auth/signup.dart';
 
 import 'firebase_options.dart';
@@ -12,6 +12,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
@@ -27,100 +28,53 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: Colors.green,
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-          padding: MaterialStateProperty.all(const EdgeInsets.only(
-            top: 10,
-            bottom: 10,
-            left: 150,
-            right: 150,
-          )),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+              left: 150,
+              right: 150,
+            )),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
+            backgroundColor: MaterialStateProperty.all(Colors.green),
           ),
-          backgroundColor: MaterialStateProperty.all(Colors.green),
-        )),
+        ),
       ),
-      home:  Student_Profile(),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const AuthPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AuthPage> createState() => AuthPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class AuthPageState extends State<AuthPage> {
+  bool showSignIn = true;
 
-  void _incrementCounter() {
+  togglePages() {
     setState(() {
-      _counter++;
+      showSignIn = !showSignIn;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+    if (showSignIn) {
+      return SignInPage(
+        togglePages: togglePages,
+      );
+    } else {
+      return SignUpPage(
+        togglePages: togglePages,
+      );
+    }
   }
 }
-
-// class AuthPage extends StatefulWidget {
-//   const AuthPage({super.key});
-
-//   @override
-//   State<AuthPage> createState() => AuthPageState();
-// }
-
-// class AuthPageState extends State<AuthPage> {
-//   bool showSignIn = true;
-
-//   togglePages() {
-//     setState(() {
-//       showSignIn = !showSignIn;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (showSignIn) {
-//       return SignInPage(
-//         togglePages: togglePages,
-//       );
-//     } else {
-//       return SignUpPage(
-//         togglePages: togglePages,
-//       );
-//     }
-//   }
-// }
