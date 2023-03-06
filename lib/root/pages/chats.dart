@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:microphone/microphone.dart';
 class Chat extends StatefulWidget {
   const Chat({super.key});
 
@@ -21,9 +21,7 @@ class _ChatState extends State<Chat> {
         title: Text("NAME"),
         backgroundColor: Color.fromARGB(255, 40, 202, 124),
         leading: Icon(Icons.person_2),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
+      
               actions:
               [
                 PopupMenuButton<int>(
@@ -49,11 +47,7 @@ class _ChatState extends State<Chat> {
                   color: Colors.grey,
                   elevation: 2,
                 ),
-              ];
-            },
-            icon: const Icon(Icons.more_vert_outlined),
-          )
-        ],
+              ],
       ),
       body: SafeArea(
           child: Column(
