@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'main_page.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({
     super.key,
@@ -31,6 +33,7 @@ class HomePage extends StatelessWidget {
       body: Container(
         child: Text("hello every one"),
       ),
+      bottomNavigationBar: NavBarView(),
     );
   }
 }
