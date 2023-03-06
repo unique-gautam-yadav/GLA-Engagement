@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'main_page.dart';
@@ -32,9 +33,11 @@ class HomePage extends StatelessWidget {
         //   ],
         // ),
         // body:
-        Container(
-      child: Text("hello every one"),
-    );
+        TextButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            child: const Text("Logout"));
     // bottomNavigationBar: NavBarView(),
     // );
   }
