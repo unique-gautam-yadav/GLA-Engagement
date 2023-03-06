@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gla_engage/backend/auth.dart';
 import 'package:validators/validators.dart' as validator;
 
 import 'package:gla_engage/root/pages/main_page.dart';
@@ -16,6 +20,53 @@ class _SignInPageState extends State<SignInPage> {
   final formKey = GlobalKey<FormState>();
   TextEditingController mail = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  bool processing = false;
+
+  login() async {
+    setState(() {
+      processing = true;
+    });
+    if (formKey.currentState!.validate()) {
+      String msg = await Auth.login(mail.text, password.text);
+      log(msg);
+      if (context.mounted) {
+        if (msg == "wrong-password") {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Incorrect Password"),
+            showCloseIcon: true,
+          ));
+        } else if (msg == "user-not-found") {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("No user found"),
+            showCloseIcon: true,
+          ));
+        } else if (msg == "user-disabled") {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("This user is disabled"),
+            showCloseIcon: true,
+          ));
+        } else if (msg == "invalid-email") {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Invalid mail"),
+            showCloseIcon: true,
+          ));
+        } else if (msg == "ok") {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Loggin in"),
+          ));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Some thing went wrong"),
+            showCloseIcon: true,
+          ));
+        }
+      }
+    }
+    setState(() {
+      processing = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,41 +136,44 @@ class _SignInPageState extends State<SignInPage> {
                           borderRadius: BorderRadius.circular(12))),
                 ),
                 const SizedBox(height: 50),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NavBarView(),
-                          ));
-                    },
-                    child: const Text(
-                      "Sign In",
-                      style: TextStyle(color: Colors.white),
-                    )),
+                SizedBox(
+                  width: 411,
+                  height: 42,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (!processing) {
+                          login();
+                        }
+                      },
+                      child: processing
+                          ? const SpinKitFadingCircle(
+                              color: Colors.white, size: 20)
+                          : const Text(
+                              "Sign In",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                ),
+                const SizedBox(height: 4),
                 const Text("or"),
-                InkWell(
-                  onTap: widget.togglePages,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RichText(
-                      text: TextSpan(
-                        text: "Don't hava an account?",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w400,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Don't hava an account?"),
+                    InkWell(
+                      onTap: widget.togglePages,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Register",
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold),
                         ),
-                        children: [
-                          TextSpan(
-                              text: " Register",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor))
-                        ],
                       ),
-                    ),
-                  ),
-                )
+                    )
+                  ],
+                ),
               ],
             ),
           )),

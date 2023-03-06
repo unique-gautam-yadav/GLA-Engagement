@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gla_engage/root/pages/auth/signup.dart';
+import 'package:gla_engage/root/pages/main_page.dart';
 
 import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
@@ -44,7 +46,30 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const AuthPage(),
+      home: const MainPage(),
+    );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return const NavBarView();
+        } else {
+          return const AuthPage();
+        }
+      },
     );
   }
 }
@@ -72,7 +97,7 @@ class AuthPageState extends State<AuthPage> {
         togglePages: togglePages,
       );
     } else {
-      return SignUpPage(
+      return SignUpWelcome(
         togglePages: togglePages,
       );
     }

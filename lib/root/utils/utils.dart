@@ -1,3 +1,7 @@
 class AppDecorations {
-  // static 
+  showLoadingModal(){
+    ///
+  }
 }
+
+
