@@ -8,6 +8,8 @@ import 'package:gla_engage/root/pages/main_page.dart';
 import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
 
+import 'package:permission_handler/permission_handler.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding();
 
@@ -17,6 +19,8 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
