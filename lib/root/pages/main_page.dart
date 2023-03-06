@@ -26,8 +26,8 @@ class _NavBarViewState extends State<NavBarView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
+    return Material(
+      child: SafeArea(
         child: Stack(
           children: [
             Positioned(
