@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:microphone/microphone.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -13,51 +14,44 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
+        // shape: const RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(
+        //     bottom: Radius.circular(30),
+        //   ),
+        // ),
         title: Text("NAME"),
         backgroundColor: Color.fromARGB(255, 40, 202, 124),
-        leading: Icon(Icons.person_2),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              actions:
-              [
-                PopupMenuButton<int>(
-                  onSelected: (value) {
-                    // if value 1 show dialog
-                    if (value == 1) {
-                      print("hello, i is clicked ");
-                      // if value 2 show dialog
-                    } else if (value == 2) {
-                      print("second is clicked");
-                    }
-                  },
-                  itemBuilder: (context) => [
-                    // popupmenu item 1
-                    const PopupMenuItem(value: 1, child: Text("Get The App")),
-                    // popupmenu item 2
-                    const PopupMenuItem(
-                        value: 2,
-                        // row has two child icon and text
-                        child: Text("About")),
-                  ],
-                  offset: Offset(0, 100),
-                  color: Colors.grey,
-                  elevation: 2,
-                ),
-              ];
+        leading: CircleAvatar(child: Icon(Icons.person_2)),
+        actions: [
+          PopupMenuButton<int>(
+            onSelected: (value) {
+              // if value 1 show dialog
+              if (value == 1) {
+                print("hello, i is clicked ");
+                // if value 2 show dialog
+              } else if (value == 2) {
+                print("second is clicked");
+              }
             },
-            icon: const Icon(Icons.more_vert_outlined),
-          )
+            itemBuilder: (context) => [
+              // popupmenu item 1
+              const PopupMenuItem(value: 1, child: Text("Get The App")),
+              // popupmenu item 2
+              const PopupMenuItem(
+                  value: 2,
+                  // row has two child icon and text
+                  child: Text("About")),
+            ],
+            offset: Offset(0, 100),
+            color: Colors.grey,
+            elevation: 2,
+          ),
         ],
       ),
       body: SafeArea(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
         children: [
           SingleChildScrollView(),
           Row(
