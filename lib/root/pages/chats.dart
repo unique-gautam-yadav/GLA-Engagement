@@ -74,36 +74,39 @@ class _ChatState extends State<Chat> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(child: SingleChildScrollView()),
-            Expanded(
+            Align(
+              alignment: Alignment.bottomCenter,
               child: Row(
                 children: [
-                  
                   Container(
                     width: MediaQuery.of(context).size.width * .7,
-                    
+                    height: MediaQuery.of(context).size.height * .1,
                     child: TextFormField(
                       cursorColor: Colors.green,
                       autocorrect: true,
                       controller: Textcontroller,
                       textAlign: TextAlign.end,
                       decoration: InputDecoration(
-                          suffixIcon: _isTextFilled
-                              ? IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.send, color: Colors.green,),
-                                )
-                              : null,
-                          border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18))),
-                          hintText: "enter something to Chats someone",
-                            focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 38, 194, 72),
-                            ),
+                        suffixIcon: _isTextFilled
+                            ? IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.send,
+                                  color: Colors.green,
+                                ),
+                              )
+                            : null,
+                        border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18))),
+                        hintText: "enter something to Chats someone",
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 38, 194, 72),
                           ),
                         ),
+                      ),
                     ),
                   ),
                   IconButton(

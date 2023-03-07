@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:gla_engage/root/pages/self_profile/Student_Profile.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+=======
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+>>>>>>> c21fd179b916f51faf2a178ea011b2d0c1225691
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -121,3 +125,17 @@ class Speech {
     return isAvailable;
   }
 }
+
+// USe this code for speech to text convert
+// final stt.SpeechToText _speech = stt.SpeechToText();
+//
+// void startListening() {
+//   _speech.listen(
+//     onResult: (result) => print('Text: ${result.recognizedWords}'),
+//     listenFor: Duration(minutes: 1),
+//   );
+// }
+//
+// void stopListening() {
+//   _speech.stop();
+// }
