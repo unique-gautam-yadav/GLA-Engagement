@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -16,8 +19,9 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  SpeechToText speechToText = SpeechToText();
   TextEditingController name = TextEditingController();
-  String text = " search";
+  var isListening = false;
   @override
 
   //  ------------------------------------------------------
@@ -47,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
             children: [
               Avatar(),
               Container(
-                width: MediaQuery.of(context).size.width - 140,
+                width: MediaQuery.of(context).size.width - 120,
                 height: 45,
                 child: TextFormField(
                   controller: name,
@@ -82,31 +86,92 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               IconButton(
-                  onPressed: () {
-                    //     _buildVoiceInput(
-                    // onPressed: _speechRecognitionAvailable && !_isListening
-                    //     ? () => start()
-                    //     : () => stop(),
-                    // label: _isListening ? 'Listening...' : '',
-                    // ),
-                  },
-                  icon: IconButton(
-                    icon: Icon(
-                      Icons.mic,
-                      size: 30,
-                      color: Colors.grey.shade600,
-                    ),
-                    onPressed: () {
-                      requestMicrophonePermission();
-                      toggelRecording();
+                icon: Icon(
+                  isListening ? Icons.mic : Icons.mic_none_outlined,
+                  size: 30,
+                  color: Colors.grey.shade600,
+                ),
+                onPressed: () {
+                  gettingvoice();
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) {
+                      Future.delayed(Duration(seconds: 5), () {
+                        Navigator.of(context).pop(true);
+                      });
+                      return AlertDialog(
+                        alignment: Alignment.center,
+                        content: Container(
+                          height: 250,
+                          width: 100,
+                          alignment: Alignment.center,
+                          child: Column(
+                            children: [
+                              AvatarGlow(
+                                endRadius: 75.0,
+                                animate: isListening,
+                                duration: Duration(milliseconds: 2000),
+                                glowColor: Colors.green.shade300,
+                                repeat: true,
+                                showTwoGlows: true,
+                                repeatPauseDuration:
+                                    Duration(milliseconds: 100),
+                                child: IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.mic_none_outlined,
+                                      size: 50,
+                                    )),
+                              ),
+                              Text(
+                                "Listening...",
+                                style: TextStyle(),
+                              )
+                            ],
+                          ),
+                        ),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                      );
                     },
-                  ))
+                  );
+                },
+              ),
             ],
           ),
-          Text("$text"),
+          //  Column .................
         ],
       ),
     );
+  }
+
+  void gettingvoice() async {
+    try {
+      if (!isListening) {
+        var available = await speechToText.initialize();
+        if (available) {
+          isListening = true;
+          speechToText.listen(
+            onResult: (result) {
+              setState(() {
+                name.text = result.recognizedWords;
+              });
+            },
+          );
+        }
+      }
+      ;
+    } catch (e) {
+      print(e);
+    }
+    Future.delayed(Duration(seconds: 5), () {
+      setState(() {
+        isListening = false;
+        clear();
+      });
+    });
   }
 
   Widget Avatar() {
@@ -128,34 +193,4 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
-
-  Future toggelRecording() => Speech.toggelRecording(
-      onResult: (text) => setState(() => this.text = text));
-}
-
-class Speech {
-  static final speech = SpeechToText();
-
-  static Future<bool> toggelRecording({
-    required Function(String text) onResult,
-  }) async {
-    final isAvailable = await speech.initialize();
-    if (isAvailable) {
-      speech.listen(onResult: (value) => onResult(value.recognizedWords));
-    }
-    return isAvailable;
-  }
-}
-
-final stt.SpeechToText _speech = stt.SpeechToText();
-
-void startListening() {
-  _speech.listen(
-    onResult: (result) => print('Text: ${result.recognizedWords}'),
-    listenFor: Duration(minutes: 1),
-  );
-}
-
-void stopListening() {
-  _speech.stop();
 }
