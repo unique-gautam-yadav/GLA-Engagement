@@ -12,10 +12,28 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   TextEditingController Textcontroller = TextEditingController();
   bool islistening = false;
+  bool _isTextFilled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Textcontroller.addListener(() {
+      setState(() {
+        _isTextFilled = Textcontroller.text.isNotEmpty;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    Textcontroller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Color.fromARGB(255, 219, 241, 195)),
+      color: Color.fromARGB(255, 169, 236, 160),
       child: Scaffold(
         appBar: AppBar(
           // shape: const RoundedRectangleBorder(
@@ -25,9 +43,7 @@ class _ChatState extends State<Chat> {
           // ),
           title: Text("NAME"),
           backgroundColor: Color.fromARGB(255, 40, 202, 124),
-          leading: CircleAvatar(
-              child: Icon(Icons.person_2),
-              backgroundColor: Color.fromARGB(255, 59, 174, 63)),
+          leading: Icon(Icons.person_2),
           actions: [
             PopupMenuButton<int>(
               onSelected: (value) {
@@ -49,71 +65,82 @@ class _ChatState extends State<Chat> {
                     child: Text("About")),
               ],
               offset: Offset(0, 100),
-              color: Colors.grey,
+              // color: Colors.grey,
               elevation: 2,
             ),
           ],
         ),
-        body: SafeArea(
-            child: Column(
+        body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
           children: [
-            SingleChildScrollView(),
-            Container(
+            Expanded(child: SingleChildScrollView()),
+            Expanded(
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 40, 202, 124),
-                    foregroundColor: Colors.white,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.attach_file),
+                  
+                  Container(
+                    width: MediaQuery.of(context).size.width * .7,
+                    
+                    child: TextFormField(
+                      cursorColor: Colors.green,
+                      autocorrect: true,
+                      controller: Textcontroller,
+                      textAlign: TextAlign.end,
+                      decoration: InputDecoration(
+                          suffixIcon: _isTextFilled
+                              ? IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.send, color: Colors.green,),
+                                )
+                              : null,
+                          border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18))),
+                          hintText: "enter something to Chats someone",
+                            focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 38, 194, 72),
+                            ),
+                          ),
+                        ),
                     ),
+                  ),
+                  IconButton(
+                    color: Color.fromARGB(255, 48, 220, 53),
+                    onPressed: () {},
+                    icon: Icon(Icons.attach_file),
                   ),
                   SizedBox(
                     width: 5,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * .8,
-                    child: TextFormField(
-                      autocorrect: true,
-                      controller: Textcontroller,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18))),
-                          hintText: "enter something to chat someone",
-                          hoverColor: Colors.green),
-                      validator: (value) {
-                        if (true) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                  ),
                   SizedBox(width: 5),
+                  // if(tcontroller.text!=null)
+
                   AvatarGlow(
                     animate: islistening,
                     duration: Duration(seconds: 5),
-                    glowColor: Color.fromARGB(255, 210, 131, 13),
+                    glowColor: Colors.orange,
                     repeat: true,
                     repeatPauseDuration: Duration(seconds: 1),
-                    endRadius: 20.0,
+                    endRadius: 25.0,
                     child: IconButton(
                         onPressed: () {
                           setState(() {
                             islistening = true;
                           });
                         },
-                        icon: Icon(islistening ? Icons.mic : Icons.mic_none)),
+                        // onPressed: () {},
+                        icon: Icon(
+                          islistening ? Icons.mic : Icons.mic_none,
+                          color: Colors.green,
+                        )),
                   ),
                 ],
               ),
             )
           ],
-        )),
+        ),
       ),
     );
   }
