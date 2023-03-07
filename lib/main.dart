@@ -9,6 +9,7 @@ import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding();
