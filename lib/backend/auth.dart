@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
 final FirebaseFirestore store = FirebaseFirestore.instance;
 final CollectionReference studentsRef = store.collection("Users");

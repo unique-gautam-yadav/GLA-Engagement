@@ -1,6 +1,5 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'package:microphone/microphone.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});

@@ -5,8 +5,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gla_engage/backend/auth.dart';
 import 'package:validators/validators.dart' as validator;
 
-import 'package:gla_engage/root/pages/main_page.dart';
-
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key, required this.togglePages});
 
