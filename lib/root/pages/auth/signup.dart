@@ -1,13 +1,13 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gla_engage/backend/auth.dart';
-import 'package:gla_engage/backend/models.dart';
-import 'package:gla_engage/root/pages/auth/student_next.dart';
 import 'package:validators/validators.dart' as validator;
-import 'package:flutter/material.dart';
-import 'package:gla_engage/backend/keywords.dart';
+
+import '../../../backend/auth.dart';
+import '../../../backend/keywords.dart';
+import '../../../backend/models.dart';
 
 class SignUpWelcome extends StatefulWidget {
   const SignUpWelcome({super.key, required this.togglePages});
@@ -232,41 +232,6 @@ class _SignUpPageState extends State<SignUpPage> {
     });
   }
 
-  // navigateToNextStep() {
-  //   FocusManager.instance.primaryFocus!.unfocus();
-  //   if (userType == null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         showCloseIcon: true,
-  //         content: Text("Please select user type"),
-  //       ),
-  //     );
-  //   } else {
-  //     if (accountFormKey.currentState!.validate()) {
-  //       if (userType == KeyWords.alumniUser) {
-  //         Alumni model = Alumni(mail: mail.text);
-  //       } else if (userType == KeyWords.studentUser) {
-  //         Student model = Student(mail: mail.text);
-  //         Navigator.push(
-  //             context,
-  //             MaterialPageRoute(
-  //               builder: (context) => StudentRegisterNextStep(
-  //                   model: model, password: password.text),
-  //             ));
-  //       } else if (userType == KeyWords.teacherUser) {
-  //         Teacher model = Teacher(mail: mail.text);
-  //       }
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           showCloseIcon: true,
-  //           content: Text("Check all required fields"),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -299,30 +264,13 @@ class _SignUpPageState extends State<SignUpPage> {
             Text("Registration", style: Theme.of(context).textTheme.titleLarge),
             // const SizedBox(height: 35),
             Expanded(
-              // height: 600,
               child: Stepper(
                 controlsBuilder: (context, details) {
                   return const SizedBox.shrink();
                 },
+                physics: const ClampingScrollPhysics(),
                 type: StepperType.horizontal,
                 currentStep: stepIndex,
-                // onStepContinue: switchToNextStep,
-                // onStepCancel: () {
-                //   setState(() {
-                //     errorAt0 = false;
-                //     errorAt1 = false;
-                //     errorAt2 = false;
-                //     mail.clear();
-                //     password.clear();
-                //     stepIndex = 0;
-                //   });
-                // },
-                onStepTapped: (value) {
-                  // if (value < stepIndex) {
-                  setState(() {
-                    stepIndex = value;
-                  });
-                },
                 steps: [
                   Step(
                     title: Text(stepIndex == 0 ? "Account" : ""),
