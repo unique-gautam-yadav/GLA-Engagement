@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gla_engage/root/pages/auth/signup.dart';
+import 'package:gla_engage/root/pages/main_page.dart';
 
 import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
