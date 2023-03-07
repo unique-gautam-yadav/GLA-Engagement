@@ -77,17 +77,12 @@ class _ChatState extends State<Chat> {
             Expanded(
               child: Row(
                 children: [
-                  IconButton(
-                    color: Color.fromARGB(255, 48, 220, 53),
-                    onPressed: () {},
-                    icon: Icon(Icons.attach_file),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
+                  
                   Container(
                     width: MediaQuery.of(context).size.width * .7,
+                    
                     child: TextFormField(
+                      cursorColor: Colors.green,
                       autocorrect: true,
                       controller: Textcontroller,
                       textAlign: TextAlign.end,
@@ -95,15 +90,29 @@ class _ChatState extends State<Chat> {
                           suffixIcon: _isTextFilled
                               ? IconButton(
                                   onPressed: () {},
-                                  icon: Icon(Icons.send),
+                                  icon: Icon(Icons.send, color: Colors.green,),
                                 )
                               : null,
                           border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(18))),
                           hintText: "enter something to Chats someone",
-                          hoverColor: Colors.green),
+                            focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 38, 194, 72),
+                            ),
+                          ),
+                        ),
                     ),
+                  ),
+                  IconButton(
+                    color: Color.fromARGB(255, 48, 220, 53),
+                    onPressed: () {},
+                    icon: Icon(Icons.attach_file),
+                  ),
+                  SizedBox(
+                    width: 5,
                   ),
                   SizedBox(width: 5),
                   // if(tcontroller.text!=null)
