@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gla_engage/backend/providers.dart';
 import 'package:gla_engage/root/pages/auth/signup.dart';
 import 'package:gla_engage/root/pages/main_page.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
-
-import 'package:permission_handler/permission_handler.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding();
@@ -17,10 +17,10 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => UserProvider()),
+  ], child: const MyApp()));
 }
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
