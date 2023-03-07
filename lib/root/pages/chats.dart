@@ -74,7 +74,8 @@ class _ChatState extends State<Chat> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(child: SingleChildScrollView()),
-            Expanded(
+            Align(
+              alignment: Alignment.bottomCenter,
               child: Row(
                 children: [
                   Container(
@@ -147,6 +148,3 @@ class _ChatState extends State<Chat> {
     );
   }
 }
-// This is for test by hima for vs code checking
-// ab sun jab bhi commit kare to message karna is must uss ke bina nahi hoga commipta h mujhe, 
-//lekin account ka dhyan nhi diay tha koi nhai baccha hai abhi sik jaye hga chl e
