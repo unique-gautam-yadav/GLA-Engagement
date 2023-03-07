@@ -1,8 +1,11 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gla_engage/backend/auth.dart';
+import 'package:gla_engage/backend/keywords.dart';
+import 'package:gla_engage/backend/models.dart';
+import 'package:gla_engage/backend/providers.dart';
+import 'package:provider/provider.dart';
 import 'package:validators/validators.dart' as validator;
 
 class SignInPage extends StatefulWidget {
@@ -22,13 +25,15 @@ class _SignInPageState extends State<SignInPage> {
   bool processing = false;
 
   login() async {
+    bool toBeChanged = true;
     setState(() {
       processing = true;
     });
     if (formKey.currentState!.validate()) {
       String msg = await Auth.login(mail.text, password.text);
-      log(msg);
-      if (context.mounted) {
+      if (msg == 'ok') {
+        toBeChanged = false;
+      } else if (context.mounted) {
         if (msg == "wrong-password") {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Incorrect Password"),
@@ -61,78 +66,88 @@ class _SignInPageState extends State<SignInPage> {
         }
       }
     }
-    setState(() {
-      processing = false;
-    });
+    if (toBeChanged) {
+      setState(() {
+        processing = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 85),
           child: Form(
             key: formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  height: 250,
-                  width: 250,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(25),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 250,
+                          width: 250,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: const Center(
+                              child: Text(
+                            "Logo Here!!",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
+                        const SizedBox(height: 35),
+                        Text("Sign In to App",
+                            style: Theme.of(context).textTheme.titleLarge),
+                        const SizedBox(height: 65),
+                        TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "This field is reuired";
+                            } else if (!validator.isEmail(value)) {
+                              return "Invalid mail";
+                            } else {
+                              return null;
+                            }
+                          },
+                          controller: mail,
+                          decoration: InputDecoration(
+                              hintText: "Enter mail address",
+                              labelText: "Mail",
+                              prefixIcon: const Icon(Icons.mail),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12))),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: password,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "This field is required";
+                            } else if (value.length < 6) {
+                              return "Invalid password";
+                            } else {
+                              return null;
+                            }
+                          },
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              hintText: "Enter password",
+                              labelText: "Password",
+                              prefixIcon: const Icon(Icons.lock),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12))),
+                        ),
+                        const SizedBox(height: 50),
+                      ],
+                    ),
                   ),
-                  child: const Center(
-                      child: Text(
-                    "Logo Here!!",
-                    style: TextStyle(color: Colors.white),
-                  )),
                 ),
-                const SizedBox(height: 35),
-                Text("Sign In to App",
-                    style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 65),
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "This field is reuired";
-                    } else if (!validator.isEmail(value)) {
-                      return "Invalid mail";
-                    } else {
-                      return null;
-                    }
-                  },
-                  controller: mail,
-                  decoration: InputDecoration(
-                      hintText: "Enter mail address",
-                      labelText: "Mail",
-                      prefixIcon: const Icon(Icons.mail),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12))),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: password,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "This field is required";
-                    } else if (value.length < 6) {
-                      return "Invalid password";
-                    } else {
-                      return null;
-                    }
-                  },
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      hintText: "Enter password",
-                      labelText: "Password",
-                      prefixIcon: const Icon(Icons.lock),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12))),
-                ),
-                const SizedBox(height: 50),
                 SizedBox(
                   width: 411,
                   height: 42,

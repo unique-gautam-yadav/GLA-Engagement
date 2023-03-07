@@ -2,6 +2,10 @@ import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:gla_engage/backend/keywords.dart';
+import 'package:gla_engage/backend/models.dart';
+import 'package:gla_engage/backend/providers.dart';
+import 'package:provider/provider.dart';
 
 class SelfProfile extends StatefulWidget {
   const SelfProfile({super.key});
@@ -80,10 +84,49 @@ class _SelfProfileState extends State<SelfProfile> {
   int? addmissionYear = 2021;
   final String coverImageUrl =
       'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=MnwxfDB8MXxyYW5kb218MHx8bmF0dXJlP3JpdmVyP21vaW50YWluc3x8fHx8fDE2NzgwNDUxOTU&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=0';
-  final String imgUrl =
+  String? imgUrl =
       'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZXx8fHx8fDE2NzgwNTEwNjM&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1600';
   final double coverImageHeight = 120;
   final double profileImageHeight = 130;
+
+  getProfileData() {
+    String userType =
+        Provider.of<UserProvider>(context, listen: false).getUserType;
+
+    if (userType == KeyWords.studentUser) {
+      ///
+      Student? sModel =
+          Provider.of<UserProvider>(context, listen: false).getStudent;
+      if (sModel != null) {
+        setState(() {
+          name = sModel.name ?? "";
+          course = sModel.course;
+          branch = sModel.branch;
+          sem = sModel.sem;
+          mail = sModel.mail;
+          phone = sModel.phone ?? "__";
+          unvRoll = sModel.unvRoll;
+          desc = sModel.desc ?? "__";
+          addmissionYear = sModel.addmissionYear ?? 0;
+          imgUrl = sModel.imgUrl;
+        });
+      }
+
+      ///
+    } else if (userType == KeyWords.alumniUser) {
+      ///
+    } else if (userType == KeyWords.teacherUser) {
+      ///
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getProfileData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,16 +235,28 @@ class _SelfProfileState extends State<SelfProfile> {
       );
 
   Widget profileImage() => Container(
-        padding: const EdgeInsets.all(2),
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-        ),
-        child: CircleAvatar(
-          radius: 45,
-          backgroundColor: Colors.grey.shade300,
-          backgroundImage: NetworkImage(imgUrl),
-        ),
+      padding: const EdgeInsets.all(2),
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+      ),
+      child: SizedBox(
+        height: 95,
+        width: 95,
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(500),
+            child: imgUrl != null
+                ? Image.network(
+                    imgUrl!,
+                    fit: BoxFit.cover,
+                  )
+                : const Icon(Icons.person_2, size: 55)),
+      )
+      //     CircleAvatar(
+      //   radius: 45,
+      //   backgroundColor: Colors.grey.shade300,
+      //   backgroundImage: NetworkImage(imgUrl!),
+      // ),
       );
 
   Widget nameAndBio() => Container(
@@ -295,11 +350,12 @@ class _SelfProfileState extends State<SelfProfile> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text('$value',
-                style:const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-           const  SizedBox(height: 2),
+                style:
+                    const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 2),
             Text(
               font,
-              style:const  TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
             )
           ],
         ),
@@ -413,7 +469,7 @@ class _SelfProfileState extends State<SelfProfile> {
                     ),
                     child: Image.network(
                       "${gridMap.elementAt(index)['images']}",
-                      height: 170,
+                      height: 166,
                       width: double.infinity,
                       fit: BoxFit.cover,
                     ),

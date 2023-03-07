@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,13 +14,11 @@ class Auth {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: data['mail'] ?? "", password: password);
       } on FirebaseAuthException catch (e) {
-        // log(e.code);
         return e.code;
       }
       await studentsRef.doc(data['mail']).set(data);
       return "ok";
     } catch (e) {
-      // log(e.toString());
       return e.toString();
     }
   }
@@ -31,5 +31,20 @@ class Auth {
     } on FirebaseAuthException catch (e) {
       return e.code;
     }
+  }
+
+  static Future<Map<String, dynamic>?> fetchUserData(String mail) async {
+    try {
+      DocumentSnapshot<Object?> d =
+          await studentsRef.doc(mail.toLowerCase()).get();
+      return d.data() as Map<String, dynamic>;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  static logOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 }
