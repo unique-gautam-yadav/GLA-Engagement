@@ -17,7 +17,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController name = TextEditingController();
-  String text = " search"; 
+  String text = " search";
   @override
 
   //  ------------------------------------------------------
@@ -27,11 +27,7 @@ class _SearchPageState extends State<SearchPage> {
       PermissionStatus t = await Permission.microphone.request();
       MicPermission = t.isGranted;
     } else {
-      Navigator.pop(context);
-      // print("$phonePermission && $contactPermission");
-      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        print("We can take Your Without ");
-      //     content: Text("We can't take you without permissions.")));
+      print("Your Already Have Permission");
     }
   }
   // ---------------------------------------------------------
