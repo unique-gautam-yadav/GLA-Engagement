@@ -72,8 +72,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-          padding:
-              const EdgeInsets.only(left: 10, right: 10, top: 85, bottom: 85),
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 85),
           child: Form(
             key: formKey,
             child: Column(
