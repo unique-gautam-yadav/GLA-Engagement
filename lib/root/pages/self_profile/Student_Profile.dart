@@ -349,33 +349,105 @@ class _Student_ProfileState extends State<Student_Profile> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // ignore: prefer_const_literals_to_create_immutables
               children: [
-                AnimatedTextKit(
-                  animatedTexts: [
-                    TypewriterAnimatedText(
-                      "POST",
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey.shade500,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      speed: const Duration(milliseconds: 400),
-                    )
-                  ],
-                ),
-                AnimatedTextKit(
-                  animatedTexts: [
-                    TypewriterAnimatedText(
-                      "SAVED",
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey.shade500,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      speed: const Duration(milliseconds: 400),
-                    )
-                  ],
-                ),
+                // AnimatedTextKit(
+                //   animatedTexts: [
+                //     RotateAnimatedText(
+                //       "See",
+                //       textStyle: TextStyle(
+                //         fontSize: 20,
+                //         color: Colors.grey.shade500,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //       // speed: const Duration(milliseconds: 400),
+                //     ),
+                //     RotateAnimatedText(
+                //       "Your",
+                //       textStyle: TextStyle(
+                //         fontSize: 20,
+                //         color: Colors.grey.shade500,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //       // speed: const Duration(milliseconds: 400),
+                //     ),
+                //     RotateAnimatedText(
+                //       "POST",
+                //       textStyle: TextStyle(
+                //         fontSize: 20,
+                //         color: Colors.grey.shade500,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //       // speed: const Duration(milliseconds: 400),
+                //     ),
+                //     RotateAnimatedText(
+                //       "Here",
+                //       textStyle: TextStyle(
+                //         fontSize: 20,
+                //         color: Colors.grey.shade500,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //       // speed: const Duration(milliseconds: 400),
+                //     )
+                //   ],
+                // ),
+                // AnimatedTextKit(
+                //   animatedTexts: [
+                //     FadeAnimatedText(
+                //       "SAVED",
+                //       textStyle: TextStyle(
+                //         fontSize: 20,
+                //         color: Colors.grey.shade500,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                // speed: const Duration(milliseconds: 400),
+                //     )
+                //   ],
+                // ),
+                ElevatedButton(
+                    onPressed: () {},
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        TypewriterAnimatedText("Post",
+                            textStyle:
+                                TextStyle(fontSize: 25, color: Colors.white),
+                            speed: Duration(milliseconds: 500))
+                      ],
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.green),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)))),
+                      padding: MaterialStateProperty.all(const EdgeInsets.only(
+                        left: 40,
+                        right: 40,
+                      )),
+                      elevation: MaterialStateProperty.all(1),
+                    )),
+                ElevatedButton(
+                    onPressed: () {},
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        TypewriterAnimatedText("Saved",
+                            textStyle:
+                                TextStyle(fontSize: 25, color: Colors.white),
+                            speed: Duration(milliseconds: 500))
+                      ],
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.green),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)))),
+                      padding: MaterialStateProperty.all(const EdgeInsets.only(
+                          left: 40, right: 40, top: 5, bottom: 5)),
+                      elevation: MaterialStateProperty.all(1),
+                    ))
               ],
             ),
           ],
