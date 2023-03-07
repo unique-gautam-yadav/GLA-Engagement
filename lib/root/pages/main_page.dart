@@ -17,7 +17,7 @@ class NavBarView extends StatefulWidget {
 class _NavBarViewState extends State<NavBarView> {
   List<Widget> pages = const [
     HomePage(),
-    ChatsPage(),
+    Chat(),
     SearchPage(),
     SelfProfile(),
   ];
@@ -26,8 +26,8 @@ class _NavBarViewState extends State<NavBarView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
+    return Material(
+      child: SafeArea(
         child: Stack(
           children: [
             Positioned(

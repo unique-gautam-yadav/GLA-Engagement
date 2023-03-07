@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 class Student {
-  String? uid;
+  String? type;
   String? name;
   String? course;
   String? branch;
@@ -14,7 +14,7 @@ class Student {
   int? addmissionYear;
   String? imgUrl;
   Student({
-    this.uid,
+    this.type,
     this.name,
     this.course,
     this.branch,
@@ -29,7 +29,7 @@ class Student {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'uid': uid,
+      'type': type,
       'name': name,
       'course': course,
       'branch': branch,
@@ -45,7 +45,7 @@ class Student {
 
   factory Student.fromMap(Map<String, dynamic> map) {
     return Student(
-      uid: map['uid'] != null ? map['uid'] as String : null,
+      type: map['type'] != null ? map['type'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
       course: map['course'] != null ? map['course'] as String : null,
@@ -63,7 +63,7 @@ class Student {
   String toJson() => json.encode(toMap());
 
   Student copyWith({
-    String? uid,
+    String? type,
     String? name,
     String? course,
     String? branch,
@@ -76,7 +76,7 @@ class Student {
     String? imgUrl,
   }) {
     return Student(
-      uid: uid ?? this.uid,
+      type: type ?? this.type,
       name: name ?? this.name,
       course: course ?? this.course,
       branch: branch ?? this.branch,
@@ -92,7 +92,7 @@ class Student {
 }
 
 class Alumni {
-  String? uid;
+  String? type;
   String? name;
   String? course;
   String? branch;
@@ -106,7 +106,7 @@ class Alumni {
   Map<String, dynamic>? exprience;
 
   Alumni({
-    this.uid,
+    this.type,
     this.name,
     this.course,
     this.branch,
@@ -121,7 +121,7 @@ class Alumni {
   });
 
   Alumni copyWith({
-    String? uid,
+    String? type,
     String? name,
     String? course,
     String? branch,
@@ -135,7 +135,7 @@ class Alumni {
     Map<String, dynamic>? exprience,
   }) {
     return Alumni(
-      uid: uid ?? this.uid,
+      type: type ?? this.type,
       name: name ?? this.name,
       course: course ?? this.course,
       branch: branch ?? this.branch,
@@ -152,7 +152,7 @@ class Alumni {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'uid': uid,
+      'type': type,
       'name': name,
       'course': course,
       'branch': branch,
@@ -169,7 +169,7 @@ class Alumni {
 
   factory Alumni.fromMap(Map<String, dynamic> map) {
     return Alumni(
-      uid: map['uid'] != null ? map['uid'] as String : null,
+      type: map['type'] != null ? map['type'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       course: map['course'] != null ? map['course'] as String : null,
       branch: map['branch'] != null ? map['branch'] as String : null,
@@ -196,7 +196,7 @@ class Alumni {
 }
 
 class Teacher {
-  String? uid;
+  String? type;
   String? name;
   String? course;
   String? branch;
@@ -208,7 +208,7 @@ class Teacher {
   String? imgUrl;
   Map<String, dynamic>? exprience;
   Teacher({
-    this.uid,
+    this.type,
     this.name,
     this.course,
     this.branch,
@@ -223,7 +223,7 @@ class Teacher {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'uid': uid,
+      'type': type,
       'name': name,
       'course': course,
       'branch': branch,
@@ -239,7 +239,7 @@ class Teacher {
 
   factory Teacher.fromMap(Map<String, dynamic> map) {
     return Teacher(
-      uid: map['uid'] != null ? map['uid'] as String : null,
+      type: map['type'] != null ? map['type'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       course: map['course'] != null ? map['course'] as String : null,
       branch: map['branch'] != null ? map['branch'] as String : null,
@@ -249,14 +249,17 @@ class Teacher {
       empID: map['empID'] != null ? map['empID'] as String : null,
       desc: map['desc'] != null ? map['desc'] as String : null,
       imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
-      exprience: map['exprience'] != null ? Map<String, dynamic>.from((map['exprience'] as Map<String, dynamic>)) : null,
+      exprience: map['exprience'] != null
+          ? Map<String, dynamic>.from(
+              (map['exprience'] as Map<String, dynamic>))
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   Teacher copyWith({
-    String? uid,
+    String? type,
     String? name,
     String? course,
     String? branch,
@@ -269,7 +272,7 @@ class Teacher {
     Map<String, dynamic>? exprience,
   }) {
     return Teacher(
-      uid: uid ?? this.uid,
+      type: type ?? this.type,
       name: name ?? this.name,
       course: course ?? this.course,
       branch: branch ?? this.branch,
@@ -283,5 +286,6 @@ class Teacher {
     );
   }
 
-  factory Teacher.fromJson(String source) => Teacher.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Teacher.fromJson(String source) =>
+      Teacher.fromMap(json.decode(source) as Map<String, dynamic>);
 }

@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'main_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -7,8 +10,35 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [Text("Home Page")],
-    );
+    return
+        // Scaffold(
+        // appBar: AppBar(
+        //   title: Text("App Ka NAme"),
+        //   elevation: 2.0,
+        //   centerTitle: true,
+        //   actions: [
+        //     IconButton(onPressed: () {}, icon: Icon(Icons.search_sharp)),
+        //     PopupMenuButton<int>(
+        //         // icon: Icon(Icons.),
+        //         itemBuilder: (context) => [
+        //               const PopupMenuItem(
+        //                 value: 1,
+        //                 child: Text("Get The App"),
+        //               ),
+        //               PopupMenuItem(
+        //                 child: Text("chbdscv"),
+        //                 value: 2,
+        //               ),
+        //             ]),
+        //   ],
+        // ),
+        // body:
+        TextButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            child: const Text("Logout"));
+    // bottomNavigationBar: NavBarView(),
+    // );
   }
 }
