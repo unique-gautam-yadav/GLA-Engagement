@@ -44,6 +44,9 @@ dependencies:
   flutter_spinkit: ^5.1.0
   microphone: ^0.1.0
 
+  permission_handler: ^8.3.0
+  avatar_glow: ^2.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
