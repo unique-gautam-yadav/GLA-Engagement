@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:gla_engage/root/pages/self_profile/Student_Profile.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SearchPage extends StatefulWidget {
@@ -16,8 +17,25 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController name = TextEditingController();
-  String text = " search";
+  String text = " search"; 
   @override
+
+  //  ------------------------------------------------------
+  requestMicrophonePermission() async {
+    bool MicPermission = await Permission.microphone.isGranted;
+    if (!MicPermission) {
+      PermissionStatus t = await Permission.microphone.request();
+      MicPermission = t.isGranted;
+    } else {
+      Navigator.pop(context);
+      // print("$phonePermission && $contactPermission");
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        print("We can take Your Without ");
+      //     content: Text("We can't take you without permissions.")));
+    }
+  }
+  // ---------------------------------------------------------
+
   void clear() {
     name.clear();
     // super.dispose();
@@ -27,63 +45,69 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(),
-      child: Row(
+      child: Column(
         children: [
-          Avatar(),
-          Container(
-            width: MediaQuery.of(context).size.width - 140,
-            height: 45,
-            child: TextFormField(
-              controller: name,
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Search Name or Post ",
-                labelText: "$text",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(width: 0.5)),
-                prefixIcon: Icon(
-                  Icons.search,
-                  size: 25,
-                  color: Colors.grey.shade400,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    Icons.clear,
-                    size: 25,
-                    color: Colors.grey.shade600,
+          Row(
+            children: [
+              Avatar(),
+              Container(
+                width: MediaQuery.of(context).size.width - 140,
+                height: 45,
+                child: TextFormField(
+                  controller: name,
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: "Search Name or Post ",
+                    labelText: "Search...",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide(width: 0.5)),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      size: 25,
+                      color: Colors.grey.shade400,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        size: 25,
+                        color: Colors.grey.shade600,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          clear();
+                        });
+                      },
+                    ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      clear();
-                    });
-                  },
                 ),
               ),
-            ),
+              IconButton(
+                  onPressed: () {
+                    //     _buildVoiceInput(
+                    // onPressed: _speechRecognitionAvailable && !_isListening
+                    //     ? () => start()
+                    //     : () => stop(),
+                    // label: _isListening ? 'Listening...' : '',
+                    // ),
+                  },
+                  icon: IconButton(
+                    icon: Icon(
+                      Icons.mic,
+                      size: 30,
+                      color: Colors.grey.shade600,
+                    ),
+                    onPressed: () {
+                      requestMicrophonePermission();
+                      toggelRecording();
+                    },
+                  ))
+            ],
           ),
-          IconButton(
-              onPressed: () {
-                //     _buildVoiceInput(
-                // onPressed: _speechRecognitionAvailable && !_isListening
-                //     ? () => start()
-                //     : () => stop(),
-                // label: _isListening ? 'Listening...' : '',
-                // ),
-              },
-              icon: IconButton(
-                icon: Icon(
-                  Icons.mic,
-                  size: 30,
-                  color: Colors.grey.shade600,
-                ),
-                onPressed: () {
-                  toggelRecording();
-                },
-              ))
+          Text("$text"),
         ],
       ),
     );
@@ -103,7 +127,6 @@ class _SearchPageState extends State<SearchPage> {
         ),
         child: CircleAvatar(
           radius: 24,
-          backgroundColor: Colors.grey.shade300,
           backgroundImage: NetworkImage('$img'),
         ),
       ),
