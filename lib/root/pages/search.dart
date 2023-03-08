@@ -169,7 +169,7 @@ class _SearchPageState extends State<SearchPage> {
     Future.delayed(Duration(seconds: 5), () {
       setState(() {
         isListening = false;
-        clear();
+        // clear();
       });
     });
   }
