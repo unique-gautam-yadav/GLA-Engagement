@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:microphone/microphone.dart';
 
 class Chat extends StatefulWidget {
@@ -25,21 +26,33 @@ class _ChatState extends State<Chat> {
     });
   }
 
-  @override
-  void dispose() {
-    Textcontroller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   Textcontroller.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     final List<Post> _posts = [
-      Post(str: 'Hello!', dt: DateTime.now()),
-      Post(str: 'Hi there!', dt: DateTime.now()),
-      Post(str: 'How are you?', dt: DateTime.now()),
-      Post(str: 'I\'m doing well, thanks!', dt: DateTime.now()),
-      Post(str: 'What have you been up to?', dt: DateTime.now()),
-      Post(str: 'Just working on some projects.', dt: DateTime.now()),
+      Post(str: 'Hello!', dt: DateTime.now(), Sentbyme: true),
+      Post(str: 'Hi there!', dt: DateTime.now(), Sentbyme: false),
+      Post(
+        str: 'How are you?',
+        dt: DateTime.now(),
+        Sentbyme: false,
+      ),
+      Post(str: 'I\'m doing well, thanks!', dt: DateTime.now(), Sentbyme: true),
+      Post(
+        str: 'What have you been up to?',
+        dt: DateTime.now(),
+        Sentbyme: true,
+      ),
+      Post(
+        str: 'Just working on some projects.',
+        dt: DateTime.now(),
+        Sentbyme: false,
+      ),
     ];
     return Material(
       child: Container(
@@ -50,18 +63,19 @@ class _ChatState extends State<Chat> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Appbarr(),
-            Container(
-              height: 60.0,
-              child: Expanded(
-                  child: SingleChildScrollView(
-                // child: ListView.builder(
-                //   itemCount: _posts.length,
-                //   itemBuilder: (context, index) {
-                //     final Post posts = _posts[index];
-                //     return Post(str: posts.str, dt: posts.dt);
-                //   },
-                // ),
-              )),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _posts.length,
+                itemBuilder: (context, index) {
+                  final Post posts = _posts[index];
+                  return Card(
+                    child: Post(
+                        str: posts.str, dt: posts.dt, Sentbyme: posts.Sentbyme),
+                    elevation: 1,
+                    color: Colors.transparent,
+                  );
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(6.0),
@@ -153,7 +167,7 @@ class Appbarr extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-        color: Color.fromARGB(255, 102, 211, 107),
+        color: Theme.of(context).primaryColor,
       ),
       height: MediaQuery.of(context).size.height * 0.2,
       child: Row(
@@ -203,13 +217,17 @@ class Post extends StatelessWidget {
     Key? key,
     required this.str,
     required this.dt,
+    required this.Sentbyme,
   }) : super(key: key);
   final String str;
   final DateTime dt;
+  final bool Sentbyme;
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 20.0,
+      alignment: Sentbyme ? Alignment.centerRight : Alignment.centerLeft,
+      height: 30,
+      width: 40,
       child: Column(
         children: [
           Text(str),
