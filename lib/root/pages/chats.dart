@@ -54,13 +54,13 @@ class _ChatState extends State<Chat> {
               height: 60.0,
               child: Expanded(
                   child: SingleChildScrollView(
-                child: ListView.builder(
-                  itemCount: _posts.length,
-                  itemBuilder: (context, index) {
-                    final Post posts = _posts[index];
-                    return Post(str: posts.str, dt: posts.dt);
-                  },
-                ),
+                // child: ListView.builder(
+                //   itemCount: _posts.length,
+                //   itemBuilder: (context, index) {
+                //     final Post posts = _posts[index];
+                //     return Post(str: posts.str, dt: posts.dt);
+                //   },
+                // ),
               )),
             ),
             Padding(
