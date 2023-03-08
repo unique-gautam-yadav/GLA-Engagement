@@ -4,8 +4,8 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:gla_engage/root/pages/self_profile/Student_Profile.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'self_profile.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
@@ -44,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(),
+      decoration: const BoxDecoration(),
       child: Column(
         children: [
           Row(
@@ -56,15 +56,15 @@ class _SearchPageState extends State<SearchPage> {
                 child: TextFormField(
                   controller: name,
                   decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 15.0),
                     filled: true,
                     fillColor: Colors.white,
                     hintText: "Search Name or Post ",
                     labelText: "Search...",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide(width: 0.5)),
+                        borderSide: const BorderSide(width: 0.5)),
                     prefixIcon: Icon(
                       Icons.search,
                       size: 25,
@@ -78,6 +78,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       onPressed: () {
                         setState(() {
+                          FocusScope.of(context).unfocus();
                           clear();
                         });
                       },
@@ -97,7 +98,7 @@ class _SearchPageState extends State<SearchPage> {
                     barrierDismissible: false,
                     context: context,
                     builder: (context) {
-                      Future.delayed(Duration(seconds: 5), () {
+                      Future.delayed(const Duration(seconds: 5), () {
                         Navigator.of(context).pop(true);
                       });
                       return AlertDialog(
@@ -111,20 +112,20 @@ class _SearchPageState extends State<SearchPage> {
                               AvatarGlow(
                                 endRadius: 75.0,
                                 animate: isListening,
-                                duration: Duration(milliseconds: 2000),
+                                duration: const Duration(milliseconds: 2000),
                                 glowColor: Colors.green.shade300,
                                 repeat: true,
                                 showTwoGlows: true,
                                 repeatPauseDuration:
-                                    Duration(milliseconds: 100),
+                                    const Duration(milliseconds: 100),
                                 child: IconButton(
                                     onPressed: () {},
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.mic_none_outlined,
                                       size: 50,
                                     )),
                               ),
-                              Text(
+                              const Text(
                                 "Listening...",
                                 style: TextStyle(),
                               )
@@ -166,7 +167,7 @@ class _SearchPageState extends State<SearchPage> {
     } catch (e) {
       print(e);
     }
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       setState(() {
         isListening = false;
         // clear();
@@ -176,13 +177,15 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget Avatar() {
     String img =
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZXx8fHx8fDE2NzgwNTEwNjM&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1600';
-
-    return InkWell(
-      onTap: () {},
+        "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZT9ib3l8fHx8fHwxNjc4MjY4OTA3&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1600";
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SelfProfile()));
+      },
       child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.all(10),
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
         ),

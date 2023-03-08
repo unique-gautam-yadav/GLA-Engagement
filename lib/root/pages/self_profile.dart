@@ -139,6 +139,7 @@ class _SelfProfileState extends State<SelfProfile> {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.green.shade300,
+                    
                     offset: const Offset(
                       5.0,
                       5.0,
