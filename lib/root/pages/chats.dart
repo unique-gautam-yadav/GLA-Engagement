@@ -55,103 +55,105 @@ class _ChatState extends State<Chat> {
       ),
     ];
     return Material(
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        color: Color.fromARGB(255, 169, 236, 160),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Appbarr(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _posts.length,
-                itemBuilder: (context, index) {
-                  final Post posts = _posts[index];
-                  return Card(
-                    child: Post(
-                        str: posts.str, dt: posts.dt, Sentbyme: posts.Sentbyme),
-                    elevation: 1,
-                    color: Colors.transparent,
-                  );
-                },
+      child: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          color: Color.fromARGB(255, 169, 236, 160),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              const Appbarr(),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _posts.length,
+                  itemBuilder: (context, index) {
+                    final Post posts = _posts[index];
+                    return Card(
+                      child: Post(
+                          str: posts.str,
+                          dt: posts.dt,
+                          Sentbyme: posts.Sentbyme),
+                      elevation: 1,
+                      color: Colors.transparent,
+                    );
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * .7,
-                      height: MediaQuery.of(context).size.height * .1,
-                      child: TextFormField(
-                        cursorColor: Colors.green,
-                        autocorrect: true,
-                        controller: Textcontroller,
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 81, 187, 104)),
-                          labelText: "enter message",
-                          suffixIcon: _isTextFilled
-                              ? IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.send,
-                                    color: Colors.green,
-                                  ),
-                                )
-                              : null,
-                          border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18))),
-                          hintText: "enter something to Chats someone",
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 38, 194, 72),
+              Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * .7,
+                        height: MediaQuery.of(context).size.height * .1,
+                        child: TextFormField(
+                          cursorColor: Colors.green,
+                          autocorrect: true,
+                          controller: Textcontroller,
+                          textAlign: TextAlign.start,
+                          decoration: InputDecoration(
+                            labelStyle: TextStyle(
+                                color: Color.fromARGB(255, 81, 187, 104)),
+                            labelText: "enter message",
+                            suffixIcon: _isTextFilled
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.send,
+                                      color: Colors.green,
+                                    ),
+                                  )
+                                : null,
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(18))),
+                            hintText: "enter something to Chats someone",
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(255, 38, 194, 72),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    IconButton(
-                      color: Color.fromARGB(255, 48, 220, 53),
-                      onPressed: () {},
-                      icon: Icon(Icons.attach_file),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    SizedBox(width: 5),
-                    // if(tcontroller.text!=null)
+                      IconButton(
+                        color: Color.fromARGB(255, 48, 220, 53),
+                        onPressed: () {},
+                        icon: Icon(Icons.attach_file),
+                      ),
 
-                    AvatarGlow(
-                      animate: islistening,
-                      duration: Duration(seconds: 5),
-                      glowColor: Colors.orange,
-                      repeat: true,
-                      repeatPauseDuration: Duration(seconds: 1),
-                      endRadius: 25.0,
-                      child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              islistening = true;
-                            });
-                          },
-                          // onPressed: () {},
-                          icon: Icon(
-                            islistening ? Icons.mic : Icons.mic_none,
-                            color: Colors.green,
-                          )),
-                    ),
-                  ],
+                      SizedBox(width: 4),
+                      // if(tcontroller.text!=null)
+
+                      AvatarGlow(
+                        animate: islistening,
+                        duration: Duration(seconds: 3),
+                        glowColor: Colors.orange,
+                        repeat: true,
+                        repeatPauseDuration: Duration(seconds: 1),
+                        endRadius: 25.0,
+                        child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                islistening = true;
+                              });
+                            },
+                            // onPressed: () {},
+                            icon: Icon(
+                              islistening ? Icons.mic : Icons.mic_none,
+                              color: Colors.green,
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -164,12 +166,13 @@ class Appbarr extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
         color: Theme.of(context).primaryColor,
       ),
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.15,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -226,7 +229,7 @@ class Post extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Sentbyme ? Alignment.centerRight : Alignment.centerLeft,
-      height: 30,
+      height: 40,
       width: 40,
       child: Column(
         children: [
