@@ -76,11 +76,15 @@ class _NavBarViewState extends State<NavBarView> {
                         ),
                         IconButton(
                           onPressed: () {
-                            setState(() {
-                              if (curPageIndex != 1) {
-                                curPageIndex = 1;
-                              }
-                            });
+                            // setState(() {
+                            //   if (curPageIndex != 1) {
+                            //     curPageIndex = 1;
+                            //   }
+                            // });
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Chat()));
                           },
                           icon: Icon(
                             Icons.chat_rounded,
@@ -88,6 +92,20 @@ class _NavBarViewState extends State<NavBarView> {
                                 ? Colors.green.shade900
                                 : Theme.of(context).textTheme.bodyLarge!.color,
                           ),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: IconButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12))),
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.green)),
+                              onPressed: () {},
+                              icon: const Icon(Icons.add)),
                         ),
                         IconButton(
                           onPressed: () {
@@ -124,7 +142,7 @@ class _NavBarViewState extends State<NavBarView> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

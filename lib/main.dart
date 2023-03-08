@@ -2,13 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gla_engage/splash_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+
+import 'package:gla_engage/backend/providers.dart';
 import 'package:gla_engage/root/pages/auth/signup.dart';
 import 'package:gla_engage/root/pages/main_page.dart';
 
+import 'backend/auth.dart';
+import 'backend/keywords.dart';
+import 'backend/models.dart';
 import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
-
-import 'package:permission_handler/permission_handler.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding();
@@ -17,10 +24,10 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => UserProvider()),
+  ], child: const MyApp()));
 }
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -69,12 +76,64 @@ class _MainPageState extends State<MainPage> {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return const NavBarView();
+          return const HomeNavigator();
         } else {
           return const AuthPage();
         }
       },
     );
+  }
+}
+
+class HomeNavigator extends StatefulWidget {
+  const HomeNavigator({super.key});
+
+  @override
+  State<HomeNavigator> createState() => _HomeNavigatorState();
+}
+
+class _HomeNavigatorState extends State<HomeNavigator> {
+  String? userType;
+
+  getData() async {
+    Map<String, dynamic>? data = await Auth.fetchUserData(
+        FirebaseAuth.instance.currentUser!.email ?? "");
+    if (context.mounted) {
+      if (data == null) {
+        FirebaseAuth.instance.signOut();
+      } else {
+        if (data['type'] == KeyWords.studentUser) {
+          context.read<UserProvider>().setUserType(KeyWords.studentUser);
+          context.read<UserProvider>().setStudent(Student.fromMap(data));
+        } else if (data['type' == KeyWords.alumniUser]) {
+          context.read<UserProvider>().setUserType(KeyWords.alumniUser);
+          context.read<UserProvider>().setAlumni(Alumni.fromMap(data));
+        } else if (data['type'] == KeyWords.teacherUser) {
+          context.read<UserProvider>().setUserType(KeyWords.teacherUser);
+          context.read<UserProvider>().setTeacher(Teacher.fromMap(data));
+        }
+        setState(() {
+          userType = data['type'];
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getData();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (userType == null) {
+      return const SplashScreen();
+    } else {
+      return const NavBarView();
+    }
   }
 }
 
