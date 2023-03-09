@@ -2,6 +2,11 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:gla_engage/backend/keywords.dart';
+import 'package:gla_engage/backend/models.dart';
+import 'package:gla_engage/backend/providers.dart';
+import 'package:provider/provider.dart';
 
 final FirebaseFirestore store = FirebaseFirestore.instance;
 final CollectionReference studentsRef = store.collection("Users");
@@ -46,5 +51,31 @@ class Auth {
 
   static logOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  static Future<void> updateUserData(
+      Map<String, dynamic> data, BuildContext? context) async {
+    if (context != null) {
+      await studentsRef.doc(data['mail']).set(Student.fromMap(data).toMap());
+      if (data['type'] == KeyWords.studentUser) {
+        Student model = Student.fromMap(data);
+        await studentsRef.doc(data['mail']).set(model.toMap());
+        if (context.mounted) {
+          context.read<UserProvider>().setStudent(model);
+        }
+      } else if (data['type'] == KeyWords.alumniUser) {
+        Alumni model = Alumni.fromMap(data);
+        await studentsRef.doc(data['mail']).set(model.toMap());
+        if (context.mounted) {
+          context.read<UserProvider>().setAlumni(Alumni.fromMap(data));
+        }
+      } else if (data['type' == KeyWords.teacherUser]) {
+        Teacher model = Teacher.fromMap(data);
+        await studentsRef.doc(data['mail']).set(model.toMap());
+        if (context.mounted) {
+          context.read<UserProvider>().setTeacher(model);
+        }
+      }
+    }
   }
 }

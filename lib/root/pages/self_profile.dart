@@ -1,10 +1,19 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:gla_engage/backend/keywords.dart';
+import 'package:gla_engage/backend/auth.dart';
 import 'package:gla_engage/backend/models.dart';
 import 'package:gla_engage/backend/providers.dart';
+import 'package:gla_engage/root/pages/edit_self_profile.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class SelfProfile extends StatefulWidget {
@@ -15,6 +24,16 @@ class SelfProfile extends StatefulWidget {
 }
 
 class _SelfProfileState extends State<SelfProfile> {
+  // final double profileImageHeight = 120;
+  ProfileModel? model;
+
+  bool loadingProfilePic = false;
+  bool loadingCover = false;
+
+  final ImagePicker picker = ImagePicker();
+
+  String? userType;
+
   final List<Map<String, dynamic>> gridMap = [
     {
       "title": "white sneaker with adidas logo",
@@ -60,64 +79,173 @@ class _SelfProfileState extends State<SelfProfile> {
     }
   ];
 
-  // // Text Editing Forms For Validation
-  // TextEditingController uid = TextEditingController();
-  // TextEditingController name = TextEditingController();
-  // TextEditingController course = TextEditingController();
-  // TextEditingController branch = TextEditingController();
-  // TextEditingController sem = TextEditingController();
-  // TextEditingController mail = TextEditingController();
-  // TextEditingController phone = TextEditingController();
-  // TextEditingController unvRoll = TextEditingController();
-  // TextEditingController desc = TextEditingController();
-  // TextEditingController addmissionYear = TextEditingController();
-  String? uid;
-  String name = "Aditya Chauhan";
-  String? course = "Diploma";
-  String? branch = "CS";
-  String? sem = "IV";
-  String? mail = "adityachauhan123@gmail.com";
-  String? phone = "8859835449";
-  String? unvRoll = "2135000028";
-  String? desc =
-      "Make Coding as Your Passian You're Able To Solve Problems Easily . ";
-  int? addmissionYear = 2021;
-  final String coverImageUrl =
-      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=MnwxfDB8MXxyYW5kb218MHx8bmF0dXJlP3JpdmVyP21vaW50YWluc3x8fHx8fDE2NzgwNDUxOTU&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=0';
-  String? imgUrl =
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZXx8fHx8fDE2NzgwNTEwNjM&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1600';
-  final double coverImageHeight = 120;
-  final double profileImageHeight = 130;
-
-  getProfileData() {
-    String userType =
-        Provider.of<UserProvider>(context, listen: false).getUserType;
-
-    if (userType == KeyWords.studentUser) {
-      ///
-      Student? sModel =
-          Provider.of<UserProvider>(context, listen: false).getStudent;
-      if (sModel != null) {
-        setState(() {
-          name = sModel.name ?? "";
-          course = sModel.course;
-          branch = sModel.branch;
-          sem = sModel.sem;
-          mail = sModel.mail;
-          phone = sModel.phone ?? "__";
-          unvRoll = sModel.unvRoll;
-          desc = sModel.desc ?? "__";
-          addmissionYear = sModel.addmissionYear ?? 0;
-          imgUrl = sModel.imgUrl;
-        });
+  uploadProfileImage(ImageSource? src) async {
+    setState(() {
+      loadingProfilePic = true;
+    });
+    if (src != null) {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      XFile? i = await picker.pickImage(source: src);
+      if (i != null) {
+        CroppedFile? f = await ImageCropper().cropImage(
+            sourcePath: i.path,
+            aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+        if (f != null) {
+          Reference ref = storage
+              .ref()
+              .child("profilePictures")
+              .child("${FirebaseAuth.instance.currentUser!.email!.hashCode}");
+          await ref.putFile(File(i.path)).whenComplete(() async {
+            String url = await ref.getDownloadURL();
+            log(url);
+            Map<String, dynamic> data = {};
+            data = model!.copyWith(imgUrl: url).toMap();
+            if (context.mounted) {
+              await Auth.updateUserData(data, context);
+              getProfileData();
+            }
+          });
+        }
       }
-
-      ///
-    } else if (userType == KeyWords.alumniUser) {
-      ///
-    } else if (userType == KeyWords.teacherUser) {
-      ///
+      setState(() {
+        loadingProfilePic = false;
+      });
     }
+  }
+
+  uploadCoverImage(ImageSource? src) async {
+    setState(() {
+      loadingCover = true;
+    });
+    if (src != null) {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      XFile? i = await picker.pickImage(source: src);
+      if (i != null) {
+        CroppedFile? f = await ImageCropper().cropImage(
+            sourcePath: i.path,
+            aspectRatio: const CropAspectRatio(ratioX: 137, ratioY: 40));
+        if (f != null) {
+          Reference ref = storage
+              .ref()
+              .child("coverPictures")
+              .child("${FirebaseAuth.instance.currentUser!.email!.hashCode}");
+          await ref.putFile(File(f.path)).whenComplete(() async {
+            String url = await ref.getDownloadURL();
+            log(url);
+            Map<String, dynamic> data = {};
+            data = model!.copyWith(coverImage: url).toMap();
+            if (context.mounted) {
+              await Auth.updateUserData(data, context);
+              getProfileData();
+            }
+          });
+        }
+      }
+      setState(() {
+        loadingCover = false;
+      });
+    }
+  }
+
+  selectPicker(Function next) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).bottomSheetTheme.backgroundColor,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+          width: double.infinity,
+          height: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Choose image source"),
+              const Padding(
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 8),
+                child: Divider(),
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    next(ImageSource.camera);
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: SizedBox(
+                    height: 110,
+                    width: 90,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Card(
+                            color: Colors.grey.shade300,
+                            child: const SizedBox(
+                                height: 70,
+                                width: 70,
+                                child: Center(
+                                    child: Icon(
+                                  Icons.camera_alt_rounded,
+                                  size: 30,
+                                )))),
+                        const Text("Camera"),
+                      ],
+                    ),
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    next(ImageSource.gallery);
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: SizedBox(
+                    height: 110,
+                    width: 90,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Card(
+                            color: Colors.grey.shade300,
+                            child: const SizedBox(
+                                height: 70,
+                                width: 70,
+                                child: Center(
+                                    child: Icon(
+                                  Icons.photo,
+                                  size: 30,
+                                )))),
+                        const Text("Gallery"),
+                      ],
+                    ),
+                  ),
+                ),
+              ]),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void getProfileData() {
+    String uT = Provider.of<UserProvider>(context, listen: false).getUserType;
+
+    setState(() {
+      userType = uT;
+    });
+    Map<String, dynamic>? data =
+        Provider.of<UserProvider>(context, listen: false).userToMap;
+
+    setState(() {
+      model = ProfileModel.fromMap(data!);
+    });
   }
 
   @override
@@ -131,216 +259,259 @@ class _SelfProfileState extends State<SelfProfile> {
   @override
   Widget build(BuildContext context) {
     // final top = coverImageHeight - profileImageHeight / 2;
+    // final bottom = profileImageHeight / 2 - 35;
     return Column(
-      children: [
-        Container(
-            decoration: BoxDecoration(
-                border: Border.all(width: 2.0, color: Colors.grey.shade300),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.green.shade300,
-                    offset: const Offset(
-                      5.0,
-                      5.0,
-                    ),
-                    blurRadius: 10.0,
-                    spreadRadius: 2.0,
-                  ), //BoxShadow
-                  const BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(0.0, 0.0),
-                    blurRadius: 0.0,
-                    spreadRadius: 0.0,
-                  ), //BoxShadow
-                ],
-                color: Colors.green.shade100,
-                shape: BoxShape.rectangle,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15))),
-            child: Column(
-              children: [
-                topCompelete(),
-                nameAndBio(),
-                social(),
-                logos(),
-              ],
-            )),
-        post(),
-        Container(
-            decoration: BoxDecoration(
-                border: Border.all(width: 2.0, color: Colors.green.shade300),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.green.shade300,
-                    offset: const Offset(
-                      5.0,
-                      5.0,
-                    ),
-                    blurRadius: 10.0,
-                    spreadRadius: 2.0,
+      children: model != null
+          ? [
+              Container(
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade50,
                   ),
-                  const BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(0.0, 0.0),
-                    blurRadius: 0.0,
-                    spreadRadius: 0.0,
-                  ),
-                ],
-                shape: BoxShape.rectangle,
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Colors.green.shade300,
-                    Colors.red,
-                    Colors.indigo.shade300
-                  ],
-                ),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15))),
-            child: postContainer()),
-      ],
-    );
-  }
-
-  Widget topCompelete() {
-    final top = coverImageHeight - profileImageHeight / 2;
-    final bottom = profileImageHeight / 2 - 35;
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-            padding: EdgeInsets.only(bottom: bottom), child: coverImage()),
-        Positioned(
-          top: top,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: profileImage(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget coverImage() => Container(
-        color: Colors.grey,
-        child: Image.network(
-          coverImageUrl,
-          width: double.infinity,
-          height: coverImageHeight,
-          fit: BoxFit.cover,
-        ),
-      );
-
-  Widget profileImage() => Container(
-      padding: const EdgeInsets.all(2),
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white,
-      ),
-      child: SizedBox(
-        height: 95,
-        width: 95,
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(500),
-            child: imgUrl != null
-                ? Image.network(
-                    imgUrl!,
-                    fit: BoxFit.cover,
-                  )
-                : const Icon(Icons.person_2, size: 55)),
-      )
-      //     CircleAvatar(
-      //   radius: 45,
-      //   backgroundColor: Colors.grey.shade300,
-      //   backgroundImage: NetworkImage(imgUrl!),
-      // ),
-      );
-
-  Widget nameAndBio() => Container(
-        // height: 80,
-        // width: double.infinity,
-        padding: const EdgeInsets.only(bottom: 15, left: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  "$name  ",
-                  style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                const Icon(
-                  Icons.lock,
-                  size: 18,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 90),
-                  child: ElevatedButton(
-                    onPressed: () => {},
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.green),
-                      shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(3)))),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.only(left: 25, right: 25)),
-                      elevation: MaterialStateProperty.all(1),
-                    ),
-                    child: const Text(
-                      "Edit",
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 180,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                                padding: const EdgeInsets.only(bottom: 25),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 120,
+                                  color: Colors.grey,
+                                  child: !loadingCover
+                                      ? model!.coverImage != null
+                                          ? InkWell(
+                                              onLongPress: () {
+                                                selectPicker(uploadCoverImage);
+                                              },
+                                              child: Image.network(
+                                                model!.coverImage!,
+                                                // width: double.infinity,
+                                                // height: 120,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                          : MaterialButton(
+                                              onPressed: () {
+                                                selectPicker(uploadCoverImage);
+                                              },
+                                              child: SizedBox(
+                                                // width: double.infinity,
+                                                // height: 120,
+                                                child: Center(
+                                                    child: IconButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .white)),
+                                                  onPressed: () {
+                                                    selectPicker(
+                                                        uploadCoverImage);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.file_upload,
+                                                      size: 25),
+                                                )),
+                                              ),
+                                            )
+                                      : const SpinKitCircle(
+                                          color: Colors.green,
+                                          size: 35,
+                                        ),
+                                )),
+                            Positioned(
+                              top: 60,
+                              left: 20,
+                              child: Container(
+                                height: 120,
+                                width: 120,
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(500),
+                                  child: !loadingProfilePic
+                                      ? model!.imgUrl != null
+                                          ? MaterialButton(
+                                              onPressed: null,
+                                              onLongPress: () {
+                                                selectPicker(
+                                                    uploadProfileImage);
+                                              },
+                                              child: SizedBox(
+                                                height: 120,
+                                                width: 120,
+                                                child: Image.network(
+                                                  model!.imgUrl!,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            )
+                                          : MaterialButton(
+                                              onPressed: () {
+                                                selectPicker(
+                                                    uploadProfileImage);
+                                              },
+                                              child: const Icon(Icons.person_2,
+                                                  size: 55))
+                                      : const SpinKitCircle(
+                                          color: Colors.green,
+                                          size: 45,
+                                        ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 15, left: 15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${model!.name}  ",
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: OutlinedButton(
+                                      onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditSelfProfile(
+                                              profile: model!,
+                                              getProfileData: getProfileData,
+                                            ),
+                                          )),
+                                      child: const Icon(Icons.edit_note_rounded,
+                                          color: Colors.green)),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "${model!.desc ?? ""} ",
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            buildButton(keyword: "POST", value: 3),
+                            const Divider(height: 2),
+                            buildButton(keyword: "FOLLOWER", value: 1200),
+                            const Divider(
+                              height: 2,
+                            ),
+                            buildButton(keyword: "FOLLOWING", value: 200),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 40, right: 40, top: 10, bottom: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/github.svg",
+                              height: 40,
+                              width: 40,
+                            ),
+                            SvgPicture.asset(
+                              "assets/images/linkedin.svg",
+                              height: 40,
+                              width: 40,
+                            ),
+                            SvgPicture.asset(
+                              "assets/images/twitter.svg",
+                              height: 40,
+                              width: 40,
+                            ),
+                            SvgPicture.asset(
+                              "assets/images/instagram.svg",
+                              height: 40,
+                              width: 40,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )),
+              const Divider(),
+              GridView.builder(
+                  padding: const EdgeInsets.all(10),
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisExtent: MediaQuery.of(context).size.width / 3,
                   ),
+                  itemCount: gridMap.length,
+                  itemBuilder: (_, index) {
+                    return Container(
+                      width: double.infinity,
+                      margin:
+                          const EdgeInsets.only(left: 2, right: 2, bottom: 4),
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Colors.black.withOpacity(.5)),
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  "${gridMap.elementAt(index)['images']}"))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(2),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Icon(
+                              CupertinoIcons.heart_fill,
+                              size: 17,
+                            ),
+                            Text(
+                              "${gridMap.elementAt(index)['price']}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ]
+          : const [
+              Center(
+                child: SpinKitCircle(
+                  color: Colors.green,
+                  size: 55,
                 ),
-              ],
-            ),
-            Text(
-              "Student At GLA University ",
-              style: TextStyle(
-                fontSize: 17,
-                color: Colors.grey.shade500,
-              ),
-
-              // style:
-              //     GoogleFonts.oswald(fontSize: 17, color: Colors.grey.shade300),
-            ),
-          ],
-        ),
-      );
-
-  Widget social() {
-    return SizedBox(
-      width: double.infinity,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          buildButton(font: "POST", value: 3),
-          const Divider(height: 2),
-          buildButton(font: "FOLLOWER", value: 1200),
-          const Divider(
-            height: 2,
-          ),
-          buildButton(font: "FOLLOWING", value: 200),
-        ],
-      ),
+              )
+            ],
     );
   }
 
-  Widget buildButton({required String font, required int value}) =>
+  Widget buildButton({required String keyword, required int value}) =>
       MaterialButton(
         padding: const EdgeInsets.symmetric(vertical: 4),
         onPressed: () => {},
@@ -354,185 +525,10 @@ class _SelfProfileState extends State<SelfProfile> {
                     const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
             const SizedBox(height: 2),
             Text(
-              font,
+              keyword,
               style: const TextStyle(fontSize: 12),
             )
           ],
         ),
       );
-
-  Widget logos() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 40, right: 40, top: 10, bottom: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SvgPicture.asset(
-            "assets/images/github.svg",
-            height: 40,
-            width: 40,
-          ),
-          SvgPicture.asset(
-            "assets/images/linkedin.svg",
-            height: 40,
-            width: 40,
-          ),
-          SvgPicture.asset(
-            "assets/images/twitter.svg",
-            height: 40,
-            width: 40,
-          ),
-          SvgPicture.asset(
-            "assets/images/instagram.svg",
-            height: 40,
-            width: 40,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget post() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                AnimatedTextKit(
-                  animatedTexts: [
-                    TypewriterAnimatedText(
-                      "POST",
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey.shade500,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      speed: const Duration(milliseconds: 400),
-                    )
-                  ],
-                ),
-                AnimatedTextKit(
-                  animatedTexts: [
-                    TypewriterAnimatedText(
-                      "SAVED",
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey.shade500,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      speed: const Duration(milliseconds: 400),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget postContainer() {
-    return GridView.builder(
-        padding: const EdgeInsets.all(10),
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          mainAxisExtent: 310,
-        ),
-        itemCount: gridMap.length,
-        itemBuilder: (_, index) {
-          return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                  16.0,
-                ),
-                color: Colors.green.shade100,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16.0),
-                      topRight: Radius.circular(16.0),
-                    ),
-                    child: Image.network(
-                      "${gridMap.elementAt(index)['images']}",
-                      height: 166,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${gridMap.elementAt(index)['title']}",
-                          style: Theme.of(context).textTheme.subtitle1!.merge(
-                                const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                        ),
-                        const SizedBox(
-                          height: 3.0,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.heart,
-                              size: 17,
-                              color: Colors.grey.shade500,
-                            ),
-                            Text(
-                              "${gridMap.elementAt(index)['price']}",
-                              style:
-                                  Theme.of(context).textTheme.subtitle2!.merge(
-                                        TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.grey.shade500,
-                                        ),
-                                      ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 3.0,
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                CupertinoIcons.heart,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.comment_bank_outlined,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ));
-        });
-  }
 }

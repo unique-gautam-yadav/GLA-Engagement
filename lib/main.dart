@@ -2,20 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gla_engage/splash_screen.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:speech_to_text/speech_to_text.dart';
-
-import 'package:gla_engage/backend/providers.dart';
-import 'package:gla_engage/root/pages/auth/signup.dart';
-import 'package:gla_engage/root/pages/main_page.dart';
 
 import 'backend/auth.dart';
 import 'backend/keywords.dart';
 import 'backend/models.dart';
+import 'backend/providers.dart';
 import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
+import 'root/pages/auth/signup.dart';
+import 'root/pages/main_page.dart';
+import 'splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding();

@@ -59,7 +59,10 @@ class _NavBarViewState extends State<NavBarView> {
                     child: ButtonBar(
                       alignment: MainAxisAlignment.spaceAround,
                       children: [
-                        IconButton(
+                        MaterialButton(
+                          colorBrightness: Brightness.dark,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                           onPressed: () {
                             setState(() {
                               if (curPageIndex != 0) {
@@ -67,7 +70,7 @@ class _NavBarViewState extends State<NavBarView> {
                               }
                             });
                           },
-                          icon: Icon(
+                          child: Icon(
                             Icons.home_filled,
                             color: curPageIndex == 0
                                 ? Colors.green.shade900

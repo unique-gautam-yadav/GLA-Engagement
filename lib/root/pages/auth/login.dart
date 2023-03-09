@@ -1,11 +1,6 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gla_engage/backend/auth.dart';
-import 'package:gla_engage/backend/keywords.dart';
-import 'package:gla_engage/backend/models.dart';
-import 'package:gla_engage/backend/providers.dart';
-import 'package:provider/provider.dart';
 import 'package:validators/validators.dart' as validator;
 
 class SignInPage extends StatefulWidget {
