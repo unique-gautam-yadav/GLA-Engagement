@@ -92,6 +92,7 @@ class Auth {
     });
     if (user.type == KeyWords.studentUser && context.mounted) {
       StudentModel model = StudentModel.fromMap(user.toMap());
+      model.socialLinks ??= [];
       model.socialLinks!.add(data);
 
       if (context.mounted) {
@@ -99,6 +100,7 @@ class Auth {
       }
     } else if (user.type == KeyWords.alumniUser && context.mounted) {
       AlumniModel model = AlumniModel.fromMap(user.toMap());
+      model.socialLinks ??= [];
       model.socialLinks!.add(data);
 
       if (context.mounted) {
@@ -106,6 +108,7 @@ class Auth {
       }
     } else if (user.type == KeyWords.teacherUser && context.mounted) {
       TeacherModel model = TeacherModel.fromMap(user.toMap());
+      model.socialLinks ??= [];
       model.socialLinks!.add(data);
 
       if (context.mounted) {
@@ -124,6 +127,7 @@ class Auth {
     });
     if (user.type == KeyWords.studentUser && context.mounted) {
       StudentModel model = StudentModel.fromMap(user.toMap());
+      model.socialLinks ??= [];
       model.socialLinks!.remove(data);
 
       if (context.mounted) {
@@ -131,6 +135,7 @@ class Auth {
       }
     } else if (user.type == KeyWords.alumniUser && context.mounted) {
       AlumniModel model = AlumniModel.fromMap(user.toMap());
+      model.socialLinks ??= [];
       model.socialLinks!.remove(data);
 
       if (context.mounted) {
@@ -138,7 +143,76 @@ class Auth {
       }
     } else if (user.type == KeyWords.teacherUser && context.mounted) {
       TeacherModel model = TeacherModel.fromMap(user.toMap());
+      model.socialLinks ??= [];
       model.socialLinks!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setTeacher(model);
+      }
+    }
+  }
+
+  static addAchievement(
+      {required Map<String, dynamic> data,
+      required BuildContext context,
+      required ProfileModel user}) async {
+    await studentsRef.doc(user.mail).update({
+      "achievements": FieldValue.arrayUnion([data])
+    });
+    if (user.type == KeyWords.studentUser && context.mounted) {
+      StudentModel model = StudentModel.fromMap(user.toMap());
+      model.achievements ??= [];
+      model.achievements!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setStudent(model);
+      }
+    } else if (user.type == KeyWords.alumniUser && context.mounted) {
+      AlumniModel model = AlumniModel.fromMap(user.toMap());
+      model.achievements ??= [];
+      model.achievements!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setAlumni(model);
+      }
+    } else if (user.type == KeyWords.teacherUser && context.mounted) {
+      TeacherModel model = TeacherModel.fromMap(user.toMap());
+      model.achievements ??= [];
+      model.achievements!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setTeacher(model);
+      }
+    }
+  }
+
+  static removeAchievement(
+      {required Map<String, dynamic> data,
+      required BuildContext context,
+      required ProfileModel user}) async {
+    await studentsRef.doc(user.mail).update({
+      "achievements": FieldValue.arrayRemove([data])
+    });
+    if (user.type == KeyWords.studentUser && context.mounted) {
+      StudentModel model = StudentModel.fromMap(user.toMap());
+      model.achievements ??= [];
+      model.achievements!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setStudent(model);
+      }
+    } else if (user.type == KeyWords.alumniUser && context.mounted) {
+      AlumniModel model = AlumniModel.fromMap(user.toMap());
+      model.achievements ??= [];
+      model.achievements!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setAlumni(model);
+      }
+    } else if (user.type == KeyWords.teacherUser && context.mounted) {
+      TeacherModel model = TeacherModel.fromMap(user.toMap());
+      model.achievements ??= [];
+      model.achievements!.remove(data);
 
       if (context.mounted) {
         context.read<UserProvider>().setTeacher(model);
