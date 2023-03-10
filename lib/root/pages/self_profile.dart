@@ -606,27 +606,44 @@ class _SelfProfileState extends State<SelfProfile> {
               const SizedBox(height: 10),
               const Divider(),
               const Text("Archiements or Jobs"),
-              Container(
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(border: Border.all()),
-                child: const ExpansionTile(
-                  collapsedTextColor: Colors.black,
-                  title: Text("Title of the job or archievemtn title"),
-                  subtitle: Text("Company name or archievement role"),
-                  children: [Text("Detialed description")],
-                ),
-              ),
+              model!.achievements != null && model!.achievements!.isNotEmpty
+                  ? AchievementCard(
+                      getProfileData: getProfileData,
+                      model: model!,
+                      index: 0,
+                    )
+                  : Text("No achievement added !!",
+                      style: TextStyle(
+                        color: Colors.red.shade900,
+                      )),
               ButtonBar(
                 alignment: MainAxisAlignment.spaceAround,
                 children: [
                   OutlinedButton.icon(
                     icon: const Icon(Icons.show_chart),
-                    onPressed: () {},
+                    onPressed: model!.achievements != null &&
+                            model!.achievements!.length > 1
+                        ? () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AllAchievements(
+                                        getProfileData: getProfileData,
+                                        model: model!)));
+                          }
+                        : null,
                     label: const Text("view more"),
                   ),
                   OutlinedButton.icon(
                     icon: const Icon(Icons.add),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NewAchievement(
+                                  model: model!,
+                                  getProfileData: getProfileData)));
+                    },
                     label: const Text("add new"),
                   ),
                 ],
@@ -682,6 +699,125 @@ class _SelfProfileState extends State<SelfProfile> {
                 ),
               )
             ],
+    );
+  }
+}
+
+class AchievementCard extends StatefulWidget {
+  const AchievementCard({
+    super.key,
+    required this.model,
+    required this.getProfileData,
+    required this.index,
+  });
+
+  final int index;
+  final ProfileModel model;
+  final VoidCallback getProfileData;
+
+  @override
+  State<AchievementCard> createState() => _AchievementCardState();
+}
+
+class _AchievementCardState extends State<AchievementCard> {
+  bool isExpanded = false;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: MaterialButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        splashColor: Colors.green.shade300,
+        onLongPress: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => SizedBox(
+              height: 85,
+              child: Column(
+                children: [
+                  Container(
+                    height: 5,
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
+                    width: MediaQuery.of(context).size.width / 4,
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(.6),
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  OutlinedButton(
+                      onPressed: () async {
+                        await Auth.removeAchievement(
+                            data: widget.model.achievements!
+                                .elementAt(widget.index),
+                            context: context,
+                            user: widget.model);
+                        widget.getProfileData();
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Text("Remove"))
+                ],
+              ),
+            ),
+          );
+        },
+        onPressed: () {
+          setState(() {
+            isExpanded = !isExpanded;
+          });
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 700,
+          height: isExpanded ? 160 : 100,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.black.withOpacity(.6))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Flexible(
+                flex: 1,
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  "${widget.model.achievements!.elementAt(widget.index)['title']}",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              Flexible(
+                flex: 2,
+                child: Text(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  "${widget.model.achievements!.elementAt(widget.index)['briefDesc']}",
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
+              isExpanded
+                  ? Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: Colors.black.withOpacity(.6),
+                    )
+                  : const SizedBox.shrink(),
+              isExpanded
+                  ? Flexible(
+                      flex: 4,
+                      child: Text(
+                        overflow: TextOverflow.ellipsis,
+                        "${widget.model.achievements!.elementAt(widget.index)['detaiedDesc']}",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                    )
+                  : const SizedBox.shrink()
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -923,6 +1059,164 @@ class AddSocialButton extends StatelessWidget {
         ),
         const Text("Add"),
       ],
+    );
+  }
+}
+
+class AllAchievements extends StatelessWidget {
+  const AllAchievements(
+      {super.key, required this.model, required this.getProfileData});
+
+  final ProfileModel model;
+  final VoidCallback getProfileData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Achievements"),
+      ),
+      body: ListView.builder(
+        itemCount: model.achievements!.length,
+        itemBuilder: (context, index) {
+          return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AchievementCard(
+                  index: index, model: model, getProfileData: getProfileData));
+        },
+      ),
+    );
+  }
+}
+
+class NewAchievement extends StatefulWidget {
+  const NewAchievement(
+      {super.key, required this.model, required this.getProfileData});
+
+  final ProfileModel model;
+  final VoidCallback getProfileData;
+
+  @override
+  State<NewAchievement> createState() => _NewAchievementState();
+}
+
+class _NewAchievementState extends State<NewAchievement> {
+  TextEditingController title = TextEditingController();
+  TextEditingController briefD = TextEditingController();
+  TextEditingController detailD = TextEditingController();
+
+  bool processing = false;
+
+  final fKey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("New Achievement"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(
+            left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: fKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "This field is required";
+                          } else if (value.length < 3) {
+                            return "Title must have at least 3 char";
+                          } else {
+                            return null;
+                          }
+                        },
+                        controller: title,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            labelText: "Title of Achievement/job"),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "This field is required";
+                          } else if (value.length < 3) {
+                            return "Description must have at least 3 char";
+                          } else {
+                            return null;
+                          }
+                        },
+                        maxLines: 2,
+                        controller: briefD,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            labelText: "Brief description of Achievement/job"),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        maxLines: 3,
+                        controller: detailD,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            labelText:
+                                "Detailed description of Achievement/job"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // const Expanded(child: SizedBox.shrink()),
+            ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    processing = !processing;
+                  });
+                  if (fKey.currentState!.validate()) {
+                    AchievementModel data = AchievementModel(
+                        title: title.text,
+                        briefDesc: briefD.text,
+                        detaiedDesc: detailD.text);
+                    await Auth.addAchievement(
+                        data: data.toMap(),
+                        context: context,
+                        user: widget.model);
+                    widget.getProfileData();
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  }
+                  setState(() {
+                    processing = !processing;
+                  });
+                },
+                child: !processing
+                    ? const Expanded(
+                        child: Text(
+                          "Add",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    : const Expanded(
+                        child: SpinKitCircle(
+                        color: Colors.white,
+                        size: 25,
+                      ))),
+            MediaQuery.of(context).viewInsets.bottom < 10
+                ? const SizedBox(height: 50)
+                : const SizedBox.shrink(),
+          ],
+        ),
+      ),
     );
   }
 }

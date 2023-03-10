@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class StudentModel {
@@ -566,4 +567,45 @@ class SocialLinkModel {
   }
 }
 
-class AchievementModel {}
+class AchievementModel {
+  String? title;
+  String? briefDesc;
+  String? detaiedDesc;
+  AchievementModel({
+    this.title,
+    this.briefDesc,
+    this.detaiedDesc,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'title': title,
+      'briefDesc': briefDesc,
+      'detaiedDesc': detaiedDesc,
+    };
+  }
+
+  factory AchievementModel.fromMap(Map<String, dynamic> map) {
+    return AchievementModel(
+      title: map['title'] != null ? map['title'] as String : null,
+      briefDesc: map['briefDesc'] != null ? map['briefDesc'] as String : null,
+      detaiedDesc: map['detaiedDesc'] != null ? map['detaiedDesc'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory AchievementModel.fromJson(String source) => AchievementModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  AchievementModel copyWith({
+    String? title,
+    String? briefDesc,
+    String? detaiedDesc,
+  }) {
+    return AchievementModel(
+      title: title ?? this.title,
+      briefDesc: briefDesc ?? this.briefDesc,
+      detaiedDesc: detaiedDesc ?? this.detaiedDesc,
+    );
+  }
+}
