@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gla_engage/root/pages/add_post.dart';
 import 'package:gla_engage/root/pages/chats.dart';
 import 'package:gla_engage/root/pages/home.dart';
 import 'package:gla_engage/root/pages/search.dart';
@@ -106,7 +107,13 @@ class _NavBarViewState extends State<NavBarView> {
                                             BorderRadius.circular(12))),
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.green)),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const NewPostPage(),
+                                  ));
+                            },
                             icon: const Icon(Icons.add)),
                       ),
                       IconButton(

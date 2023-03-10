@@ -589,13 +589,15 @@ class AchievementModel {
     return AchievementModel(
       title: map['title'] != null ? map['title'] as String : null,
       briefDesc: map['briefDesc'] != null ? map['briefDesc'] as String : null,
-      detaiedDesc: map['detaiedDesc'] != null ? map['detaiedDesc'] as String : null,
+      detaiedDesc:
+          map['detaiedDesc'] != null ? map['detaiedDesc'] as String : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory AchievementModel.fromJson(String source) => AchievementModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory AchievementModel.fromJson(String source) =>
+      AchievementModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   AchievementModel copyWith({
     String? title,
@@ -606,6 +608,67 @@ class AchievementModel {
       title: title ?? this.title,
       briefDesc: briefDesc ?? this.briefDesc,
       detaiedDesc: detaiedDesc ?? this.detaiedDesc,
+    );
+  }
+}
+
+class PostModel {
+  String? postID;
+  String? imgUrl;
+  List<String>? likes;
+  String? timeStamp;
+  String? postedBy;
+  String? caption;
+  PostModel({
+    this.postID,
+    this.imgUrl,
+    this.likes,
+    this.timeStamp,
+    this.postedBy,
+    this.caption,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'postID': postID,
+      'imgUrl': imgUrl,
+      'likes': likes,
+      'timeStamp': timeStamp,
+      'postedBy': postedBy,
+      'caption': caption,
+    };
+  }
+
+  factory PostModel.fromMap(Map<String, dynamic> map) {
+    return PostModel(
+      postID: map['postID'] != null ? map['postID'] as String : null,
+      imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
+      likes: map['likes'] != null ? List<String>.from((map['likes'] as List<String>)) : null,
+      timeStamp: map['timeStamp'] != null ? map['timeStamp'] as String : null,
+      postedBy: map['postedBy'] != null ? map['postedBy'] as String : null,
+      caption: map['caption'] != null ? map['caption'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory PostModel.fromJson(String source) => PostModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  PostModel copyWith({
+    String? postID,
+    String? imgUrl,
+    List<String>? likes,
+    String? timeStamp,
+    String? postedBy,
+    String? caption,
+  }) {
+    return PostModel(
+      postID: postID ?? this.postID,
+      imgUrl: imgUrl ?? this.imgUrl,
+      likes: likes ?? this.likes,
+      timeStamp: timeStamp ?? this.timeStamp,
+      postedBy: postedBy ?? this.postedBy,
+      caption: caption ?? this.caption,
     );
   }
 }

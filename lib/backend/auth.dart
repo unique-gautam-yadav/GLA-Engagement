@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 final FirebaseFirestore store = FirebaseFirestore.instance;
 final CollectionReference studentsRef = store.collection("Users");
+final CollectionReference postsRef = store.collection("Posts");
 
 class Auth {
   static Future<String> createUser(
@@ -217,6 +218,37 @@ class Auth {
       if (context.mounted) {
         context.read<UserProvider>().setTeacher(model);
       }
+    }
+  }
+
+  static Future<String> uploadPost(String caption) async {
+    String pId = postsRef.doc().id;
+    await postsRef.doc(pId).set(PostModel(
+          caption: caption,
+          postID: pId,
+          postedBy: FirebaseAuth.instance.currentUser!.email,
+          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+        ).toMap());
+    return pId;
+  }
+
+  static putFileToPost(String pId, String url) async {
+    await postsRef.doc(pId).update({'imgUrl': url});
+  }
+
+  static Future<List<Map<String, dynamic>>> getAllPostsByMail(
+      String mail) async {
+    try {
+      QuerySnapshot<Object?> data = await postsRef
+          .orderBy('timeStamp', descending: true)
+          .where('postedBy', isEqualTo: mail)
+          .get();
+
+      return List.generate(data.docs.length,
+          (index) => data.docs.elementAt(index).data() as Map<String, dynamic>);
+    } catch (e) {
+      log("$e");
+      return [{}];
     }
   }
 }
