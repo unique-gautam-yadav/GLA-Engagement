@@ -149,7 +149,7 @@ class _SignUpPageState extends State<SignUpPage> {
       if (personalFormKey.currentState!.validate()) {
         Map<String, dynamic> profile = {};
         if (userType! == KeyWords.studentUser) {
-          Student data = Student(
+          StudentModel data = StudentModel(
             addmissionYear: int.tryParse(admisionYear.text.toString()),
             branch: branch.text,
             course: course.text,
@@ -163,7 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
           );
           profile = data.toMap();
         } else if (userType! == KeyWords.alumniUser) {
-          Alumni data = Alumni(
+          AlumniModel data = AlumniModel(
             addmissionYear: int.tryParse(admisionYear.text.toString()),
             branch: branch.text,
             course: course.text,
@@ -177,7 +177,7 @@ class _SignUpPageState extends State<SignUpPage> {
           );
           profile = data.toMap();
         } else if (userType == KeyWords.teacherUser) {
-          Teacher data = Teacher(
+          TeacherModel data = TeacherModel(
             branch: branch.text,
             course: course.text,
             desc: bio.text,

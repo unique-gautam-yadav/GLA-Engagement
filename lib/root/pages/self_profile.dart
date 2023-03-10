@@ -1,17 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:validators/validators.dart' as valdi;
 import 'package:gla_engage/backend/auth.dart';
 import 'package:gla_engage/backend/models.dart';
 import 'package:gla_engage/backend/providers.dart';
-import 'package:gla_engage/root/pages/edit_self_profile.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +32,8 @@ class _SelfProfileState extends State<SelfProfile> {
   final ImagePicker picker = ImagePicker();
 
   String? userType;
+
+  TextEditingController bioController = TextEditingController();
 
   final List<Map<String, dynamic>> gridMap = [
     {
@@ -258,205 +259,378 @@ class _SelfProfileState extends State<SelfProfile> {
 
   @override
   Widget build(BuildContext context) {
-    // final top = coverImageHeight - profileImageHeight / 2;
-    // final bottom = profileImageHeight / 2 - 35;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: model != null
           ? [
               Container(
-                  decoration: BoxDecoration(
+                decoration: BoxDecoration(
                     color: Colors.green.shade50,
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 180,
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Container(
-                                padding: const EdgeInsets.only(bottom: 25),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 120,
-                                  color: Colors.grey,
-                                  child: !loadingCover
-                                      ? model!.coverImage != null
-                                          ? InkWell(
-                                              onLongPress: () {
-                                                selectPicker(uploadCoverImage);
-                                              },
+                    boxShadow: const [
+                      BoxShadow(blurRadius: 1),
+                    ],
+                    borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(30))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 180,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                              padding: const EdgeInsets.only(bottom: 25),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 120,
+                                // color: Colors.blueGrey,
+                                child: !loadingCover
+                                    ? model!.coverImage != null
+                                        ? InkWell(
+                                            onLongPress: () {
+                                              selectPicker(uploadCoverImage);
+                                            },
+                                            child: Image.network(
+                                              model!.coverImage!,
+                                              // width: double.infinity,
+                                              // height: 120,
+                                              fit: BoxFit.fitWidth,
+                                            ),
+                                          )
+                                        : MaterialButton(
+                                            onPressed: () {
+                                              selectPicker(uploadCoverImage);
+                                            },
+                                            child: SizedBox(
+                                              // width: double.infinity,
+                                              // height: 120,
+                                              child: Center(
+                                                  child: IconButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(Colors.white)),
+                                                onPressed: () {
+                                                  selectPicker(
+                                                      uploadCoverImage);
+                                                },
+                                                icon: const Icon(
+                                                    Icons.file_upload,
+                                                    size: 25),
+                                              )),
+                                            ),
+                                          )
+                                    : const SpinKitCircle(
+                                        color: Colors.green,
+                                        size: 35,
+                                      ),
+                              )),
+                          Positioned(
+                            top: 60,
+                            left: 20,
+                            child: Container(
+                              height: 120,
+                              width: 120,
+                              padding: const EdgeInsets.all(2),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(500),
+                                child: !loadingProfilePic
+                                    ? model!.imgUrl != null
+                                        ? MaterialButton(
+                                            onPressed: null,
+                                            onLongPress: () {
+                                              selectPicker(uploadProfileImage);
+                                            },
+                                            child: SizedBox(
+                                              height: 120,
+                                              width: 120,
                                               child: Image.network(
-                                                model!.coverImage!,
-                                                // width: double.infinity,
-                                                // height: 120,
+                                                model!.imgUrl!,
                                                 fit: BoxFit.cover,
                                               ),
-                                            )
-                                          : MaterialButton(
-                                              onPressed: () {
-                                                selectPicker(uploadCoverImage);
-                                              },
-                                              child: SizedBox(
-                                                // width: double.infinity,
-                                                // height: 120,
-                                                child: Center(
-                                                    child: IconButton(
-                                                  style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(Colors
-                                                                  .white)),
-                                                  onPressed: () {
-                                                    selectPicker(
-                                                        uploadCoverImage);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.file_upload,
-                                                      size: 25),
-                                                )),
-                                              ),
-                                            )
-                                      : const SpinKitCircle(
-                                          color: Colors.green,
-                                          size: 35,
-                                        ),
-                                )),
-                            Positioned(
-                              top: 60,
-                              left: 20,
-                              child: Container(
-                                height: 120,
-                                width: 120,
-                                padding: const EdgeInsets.all(2),
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(500),
-                                  child: !loadingProfilePic
-                                      ? model!.imgUrl != null
-                                          ? MaterialButton(
-                                              onPressed: null,
-                                              onLongPress: () {
-                                                selectPicker(
-                                                    uploadProfileImage);
-                                              },
-                                              child: SizedBox(
-                                                height: 120,
-                                                width: 120,
-                                                child: Image.network(
-                                                  model!.imgUrl!,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            )
-                                          : MaterialButton(
-                                              onPressed: () {
-                                                selectPicker(
-                                                    uploadProfileImage);
-                                              },
-                                              child: const Icon(Icons.person_2,
-                                                  size: 55))
-                                      : const SpinKitCircle(
-                                          color: Colors.green,
-                                          size: 45,
-                                        ),
-                                ),
+                                            ),
+                                          )
+                                        : MaterialButton(
+                                            onPressed: () {
+                                              selectPicker(uploadProfileImage);
+                                            },
+                                            child: const Icon(Icons.person_2,
+                                                size: 55))
+                                    : const SpinKitCircle(
+                                        color: Colors.green,
+                                        size: 45,
+                                      ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(bottom: 15, left: 15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 15, left: 15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "${model!.name}  ",
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              !FirebaseAuth.instance.currentUser!.emailVerified
+                                  ? MaterialButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      height: 2,
+                                      padding: EdgeInsets.zero,
+                                      splashColor: Colors.red.shade300,
+                                      onPressed: () async {
+                                        try {
+                                          await FirebaseAuth
+                                              .instance.currentUser!
+                                              .sendEmailVerification();
+                                        } on FirebaseAuthException catch (e) {
+                                          log(e.code);
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                            top: 2,
+                                            bottom: 2,
+                                            left: 8,
+                                            right: 8),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.red.shade900),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: Text(
+                                          "mail not varified",
+                                          style: TextStyle(
+                                            color: Colors.red.shade900,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink()
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 5,
+                                  softWrap: true,
+                                  "${model!.desc ?? ""} ",
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  bioController.text = model!.desc ?? "";
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(12))),
+                                    builder: (context) => Padding(
+                                      padding:
+                                          MediaQuery.of(context).viewInsets,
+                                      child: Container(
+                                        height: 250,
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(12),
+                                                topRight: Radius.circular(12))),
+                                        child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                  height: 5,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      4,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey
+                                                        .withOpacity(.9),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  )),
+                                              const SizedBox(height: 20),
+                                              TextFormField(
+                                                maxLength: 250,
+                                                controller: bioController,
+                                                maxLines: 3,
+                                                decoration: InputDecoration(
+                                                  labelText: "Bio",
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                ),
+                                              ),
+                                              const Expanded(
+                                                  child: SizedBox.expand()),
+                                              ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      shape: MaterialStateProperty.all(
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          200)))),
+                                                  onPressed: () async {
+                                                    await Auth.updateUserData(
+                                                        model!
+                                                            .copyWith(
+                                                                desc:
+                                                                    bioController
+                                                                        .text)
+                                                            .toMap(),
+                                                        context);
+                                                    getProfileData();
+                                                    if (context.mounted) {
+                                                      Navigator.pop(context);
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                    "Update",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ))
+                                            ]),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                splashColor: Colors.green.shade300,
+                                padding: EdgeInsets.zero,
+                                minWidth: 1,
+                                height: 10,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8, top: 2, bottom: 2),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Colors.black.withOpacity(.6)),
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    )),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          CusButton(keyword: "POST", value: 3),
+                          CusButton(keyword: "FOLLOWER", value: 1200),
+                          CusButton(keyword: "FOLLOWING", value: 200),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    const SizedBox(height: 10),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Text(
+                        "Social Links",
+                        style: TextStyle(decoration: TextDecoration.underline),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 20),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "${model!.name}  ",
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 12),
-                                  child: OutlinedButton(
-                                      onPressed: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                EditSelfProfile(
-                                              profile: model!,
-                                              getProfileData: getProfileData,
-                                            ),
-                                          )),
-                                      child: const Icon(Icons.edit_note_rounded,
-                                          color: Colors.green)),
-                                ),
-                              ],
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: model!.socialLinks != null &&
+                                      model!.socialLinks!.isNotEmpty
+                                  ? model!.socialLinks!
+                                      .map((e) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: ProfileLink(
+                                              e: e,
+                                              model: model!,
+                                              getProfileData: getProfileData)))
+                                      .toList()
+                                  : [],
                             ),
-                            Text(
-                              "${model!.desc ?? ""} ",
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: Colors.grey.shade500,
-                              ),
-                            ),
+                            AddSocialButton(
+                                model: model!, getProfileData: getProfileData)
                           ],
                         ),
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            buildButton(keyword: "POST", value: 3),
-                            const Divider(height: 2),
-                            buildButton(keyword: "FOLLOWER", value: 1200),
-                            const Divider(
-                              height: 2,
-                            ),
-                            buildButton(keyword: "FOLLOWING", value: 200),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 40, right: 40, top: 10, bottom: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/github.svg",
-                              height: 40,
-                              width: 40,
-                            ),
-                            SvgPicture.asset(
-                              "assets/images/linkedin.svg",
-                              height: 40,
-                              width: 40,
-                            ),
-                            SvgPicture.asset(
-                              "assets/images/twitter.svg",
-                              height: 40,
-                              width: 40,
-                            ),
-                            SvgPicture.asset(
-                              "assets/images/instagram.svg",
-                              height: 40,
-                              width: 40,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Divider(),
+              const Text("Archiements or Jobs"),
+              Container(
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(border: Border.all()),
+                child: const ExpansionTile(
+                  collapsedTextColor: Colors.black,
+                  title: Text("Title of the job or archievemtn title"),
+                  subtitle: Text("Company name or archievement role"),
+                  children: [Text("Detialed description")],
+                ),
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.spaceAround,
+                children: [
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.show_chart),
+                    onPressed: () {},
+                    label: const Text("view more"),
+                  ),
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {},
+                    label: const Text("add new"),
+                  ),
+                ],
+              ),
               const Divider(),
               GridView.builder(
                   padding: const EdgeInsets.all(10),
@@ -474,7 +648,7 @@ class _SelfProfileState extends State<SelfProfile> {
                           const EdgeInsets.only(left: 2, right: 2, bottom: 4),
                       decoration: BoxDecoration(
                           border:
-                              Border.all(color: Colors.black.withOpacity(.5)),
+                              Border.all(color: Colors.black.withOpacity(.6)),
                           image: DecorationImage(
                               fit: BoxFit.cover,
                               image: NetworkImage(
@@ -510,25 +684,245 @@ class _SelfProfileState extends State<SelfProfile> {
             ],
     );
   }
+}
 
-  Widget buildButton({required String keyword, required int value}) =>
-      MaterialButton(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        onPressed: () => {},
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text('$value',
-                style:
-                    const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 2),
-            Text(
-              keyword,
-              style: const TextStyle(fontSize: 12),
-            )
-          ],
+///
+///
+///
+///
+
+class CusButton extends StatelessWidget {
+  const CusButton({
+    super.key,
+    required this.value,
+    required this.keyword,
+  });
+
+  final int value;
+  final String keyword;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      onPressed: () => {},
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text('$value',
+              style:
+                  const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 2),
+          Text(
+            keyword,
+            style: const TextStyle(fontSize: 12),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileLink extends StatelessWidget {
+  const ProfileLink(
+      {super.key,
+      required this.e,
+      required this.model,
+      required this.getProfileData});
+
+  final Map<String, dynamic> e;
+  final ProfileModel model;
+  final VoidCallback getProfileData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        MaterialButton(
+          padding: EdgeInsets.zero,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          onLongPress: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => SizedBox(
+                height: 85,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 5,
+                      margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      width: MediaQuery.of(context).size.width / 4,
+                      decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(.6),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    OutlinedButton(
+                        onPressed: () async {
+                          await Auth.removeSocialLinkToProfile(
+                              data: e, context: context, user: model);
+                          getProfileData();
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: const Text("Remove"))
+                  ],
+                ),
+              ),
+            );
+          },
+          onPressed: () async {
+            try {
+              Uri r = Uri.parse(e['url']);
+              await launchUrl(r, mode: LaunchMode.inAppWebView);
+            } catch (e) {
+              log("$e");
+            }
+          },
+          minWidth: 2,
+          splashColor: Colors.green.shade300,
+          child: Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.green.withOpacity(.6)),
+                  borderRadius: BorderRadius.circular(50)),
+              child: const Icon(
+                Icons.link,
+                color: Colors.green,
+              )),
         ),
-      );
+        Text(e['title'])
+      ],
+    );
+  }
+}
+
+class AddSocialButton extends StatelessWidget {
+  const AddSocialButton(
+      {super.key, required this.model, required this.getProfileData});
+
+  final ProfileModel model;
+  final VoidCallback getProfileData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        MaterialButton(
+          padding: EdgeInsets.zero,
+          minWidth: 2,
+          splashColor: Colors.green.shade300,
+          onPressed: () {
+            final fKey = GlobalKey<FormState>();
+            TextEditingController title = TextEditingController();
+            TextEditingController url = TextEditingController();
+            showModalBottomSheet(
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(12))),
+              context: context,
+              builder: (context) => Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                  height: 300,
+                  padding: const EdgeInsets.all(10),
+                  child: Form(
+                    key: fKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          width: MediaQuery.of(context).size.width / 4,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(.5),
+                          ),
+                        ),
+                        TextFormField(
+                          controller: title,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "This field is required";
+                            } else if (value.length < 3) {
+                              return "Title must have at least 3 char";
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: InputDecoration(
+                              labelText: "Title",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12))),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: url,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "This field is required";
+                            } else if (!valdi.isURL(value)) {
+                              return "Invalid url";
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: InputDecoration(
+                              labelText: "Url",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12))),
+                        ),
+                        const Expanded(child: SizedBox.expand()),
+                        ElevatedButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50)))),
+                            onPressed: () async {
+                              if (fKey.currentState!.validate()) {
+                                SocialLinkModel link = SocialLinkModel(
+                                    title: title.text, url: url.text);
+                                await Auth.addSocialLinkToProfile(
+                                    data: link.toMap(),
+                                    context: context,
+                                    user: model);
+                                if (context.mounted) {
+                                  getProfileData();
+                                  Navigator.pop(context);
+                                }
+                              }
+                            },
+                            child: const Text(
+                              "Save",
+                              style: TextStyle(color: Colors.white),
+                            ))
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+          child: Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                border: Border.all(color: Colors.black.withOpacity(.6)),
+              ),
+              child: const Center(child: Icon(Icons.add))),
+        ),
+        const Text("Add"),
+      ],
+    );
+  }
 }

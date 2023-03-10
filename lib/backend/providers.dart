@@ -7,17 +7,17 @@ class UserProvider extends ChangeNotifier {
 
   String get getUserType => _userType;
 
-  Alumni? _alumni;
+  AlumniModel? _alumni;
 
-  Student? _student;
+  StudentModel? _student;
 
-  Teacher? _teacher;
+  TeacherModel? _teacher;
 
-  Alumni? get getAlumni => _alumni;
+  AlumniModel? get getAlumni => _alumni;
 
-  Student? get getStudent => _student;
+  StudentModel? get getStudent => _student;
 
-  Teacher? get getTeacher => _teacher;
+  TeacherModel? get getTeacher => _teacher;
 
   Map<String, dynamic>? get userToMap {
     if (_userType == KeyWords.alumniUser) {
@@ -35,17 +35,17 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setAlumni(Alumni alumni) {
+  void setAlumni(AlumniModel alumni) {
     _alumni = alumni;
     notifyListeners();
   }
 
-  void setStudent(Student student) {
+  void setStudent(StudentModel student) {
     _student = student;
     notifyListeners();
   }
 
-  void setTeacher(Teacher teacher) {
+  void setTeacher(TeacherModel teacher) {
     _teacher = teacher;
     notifyListeners();
   }

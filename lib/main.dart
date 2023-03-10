@@ -101,13 +101,13 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       } else {
         if (data['type'] == KeyWords.studentUser) {
           context.read<UserProvider>().setUserType(KeyWords.studentUser);
-          context.read<UserProvider>().setStudent(Student.fromMap(data));
+          context.read<UserProvider>().setStudent(StudentModel.fromMap(data));
         } else if (data['type' == KeyWords.alumniUser]) {
           context.read<UserProvider>().setUserType(KeyWords.alumniUser);
-          context.read<UserProvider>().setAlumni(Alumni.fromMap(data));
+          context.read<UserProvider>().setAlumni(AlumniModel.fromMap(data));
         } else if (data['type'] == KeyWords.teacherUser) {
           context.read<UserProvider>().setUserType(KeyWords.teacherUser);
-          context.read<UserProvider>().setTeacher(Teacher.fromMap(data));
+          context.read<UserProvider>().setTeacher(TeacherModel.fromMap(data));
         }
         setState(() {
           userType = data['type'];

@@ -56,25 +56,92 @@ class Auth {
   static Future<void> updateUserData(
       Map<String, dynamic> data, BuildContext? context) async {
     if (context != null) {
-      await studentsRef.doc(data['mail']).set(Student.fromMap(data).toMap());
+      await studentsRef
+          .doc(data['mail'])
+          .set(StudentModel.fromMap(data).toMap());
       if (data['type'] == KeyWords.studentUser) {
-        Student model = Student.fromMap(data);
+        StudentModel model = StudentModel.fromMap(data);
         await studentsRef.doc(data['mail']).set(model.toMap());
         if (context.mounted) {
           context.read<UserProvider>().setStudent(model);
         }
       } else if (data['type'] == KeyWords.alumniUser) {
-        Alumni model = Alumni.fromMap(data);
+        AlumniModel model = AlumniModel.fromMap(data);
         await studentsRef.doc(data['mail']).set(model.toMap());
         if (context.mounted) {
-          context.read<UserProvider>().setAlumni(Alumni.fromMap(data));
+          context.read<UserProvider>().setAlumni(AlumniModel.fromMap(data));
         }
-      } else if (data['type' == KeyWords.teacherUser]) {
-        Teacher model = Teacher.fromMap(data);
+      } else if (data['type'] == KeyWords.teacherUser) {
+        TeacherModel model = TeacherModel.fromMap(data);
         await studentsRef.doc(data['mail']).set(model.toMap());
         if (context.mounted) {
           context.read<UserProvider>().setTeacher(model);
         }
+      }
+    }
+  }
+
+  static Future<void> addSocialLinkToProfile({
+    // required String mail,
+    required Map<String, dynamic> data,
+    required BuildContext context,
+    required ProfileModel user,
+  }) async {
+    await studentsRef.doc(user.mail).update({
+      "socialLinks": FieldValue.arrayUnion([data])
+    });
+    if (user.type == KeyWords.studentUser && context.mounted) {
+      StudentModel model = StudentModel.fromMap(user.toMap());
+      model.socialLinks!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setStudent(model);
+      }
+    } else if (user.type == KeyWords.alumniUser && context.mounted) {
+      AlumniModel model = AlumniModel.fromMap(user.toMap());
+      model.socialLinks!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setAlumni(model);
+      }
+    } else if (user.type == KeyWords.teacherUser && context.mounted) {
+      TeacherModel model = TeacherModel.fromMap(user.toMap());
+      model.socialLinks!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setTeacher(model);
+      }
+    }
+  }
+
+  static Future<void> removeSocialLinkToProfile({
+    required Map<String, dynamic> data,
+    required BuildContext context,
+    required ProfileModel user,
+  }) async {
+    await studentsRef.doc(user.mail).update({
+      "socialLinks": FieldValue.arrayRemove([data])
+    });
+    if (user.type == KeyWords.studentUser && context.mounted) {
+      StudentModel model = StudentModel.fromMap(user.toMap());
+      model.socialLinks!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setStudent(model);
+      }
+    } else if (user.type == KeyWords.alumniUser && context.mounted) {
+      AlumniModel model = AlumniModel.fromMap(user.toMap());
+      model.socialLinks!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setAlumni(model);
+      }
+    } else if (user.type == KeyWords.teacherUser && context.mounted) {
+      TeacherModel model = TeacherModel.fromMap(user.toMap());
+      model.socialLinks!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setTeacher(model);
       }
     }
   }
