@@ -31,11 +31,16 @@ class HomePage extends StatelessWidget {
         //   ],
         // ),
         // body:
-        TextButton(
+        Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Center(
+        child: TextButton(
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },
-            child: const Text("Logout"));
+            child: const Text("Logout")),
+      ),
+    );
     // bottomNavigationBar: NavBarView(),
     // );
   }
