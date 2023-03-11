@@ -643,7 +643,9 @@ class PostModel {
     return PostModel(
       postID: map['postID'] != null ? map['postID'] as String : null,
       imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
-      likes: map['likes'] != null ? List<String>.from((map['likes'] as List<String>)) : null,
+      likes: map['likes'] != null
+          ? List<String>.from((map['likes'] as List<dynamic>))
+          : null,
       timeStamp: map['timeStamp'] != null ? map['timeStamp'] as String : null,
       postedBy: map['postedBy'] != null ? map['postedBy'] as String : null,
       caption: map['caption'] != null ? map['caption'] as String : null,
@@ -652,7 +654,8 @@ class PostModel {
 
   String toJson() => json.encode(toMap());
 
-  factory PostModel.fromJson(String source) => PostModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory PostModel.fromJson(String source) =>
+      PostModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   PostModel copyWith({
     String? postID,

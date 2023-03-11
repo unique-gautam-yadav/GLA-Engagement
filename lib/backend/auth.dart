@@ -251,4 +251,27 @@ class Auth {
       return [{}];
     }
   }
+
+  static Future<ProfileModel?> getProfileByMail(String email) async {
+    DocumentSnapshot<Object?> data = await studentsRef.doc(email).get();
+    if (data.data() != null) {
+      return ProfileModel.fromMap(data.data() as Map<String, dynamic>);
+    } else {
+      return null;
+    }
+  }
+
+  static likePost(String postID) async {
+    await postsRef.doc(postID).update({
+      'likes':
+          FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.email!])
+    });
+  }
+
+  static unLikePost(String postID) async {
+    await postsRef.doc(postID).update({
+      'likes':
+          FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.email!])
+    });
+  }
 }
