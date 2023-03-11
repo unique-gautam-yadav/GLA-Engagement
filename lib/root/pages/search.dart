@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:gla_engage/backend/models.dart';
@@ -199,7 +200,9 @@ class _SearchPageState extends State<SearchPage> {
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection("Users")
-                  .where("mail", isGreaterThanOrEqualTo: search.text)
+                  .where("name", isGreaterThanOrEqualTo: search.text)
+                  .where('mail',
+                      isNotEqualTo: FirebaseAuth.instance.currentUser?.email!)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
