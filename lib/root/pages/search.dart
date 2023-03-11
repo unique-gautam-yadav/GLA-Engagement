@@ -200,7 +200,7 @@ class _SearchPageState extends State<SearchPage> {
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection("Users")
-                  .where("name", isGreaterThanOrEqualTo: search.text)
+                  .where("name", isGreaterThanOrEqualTo: search.text).where("email", isGreaterThanOrEqualTo: search.text)
                   .where('mail',
                       isNotEqualTo: FirebaseAuth.instance.currentUser?.email!)
                   .snapshots(),
