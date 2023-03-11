@@ -15,6 +15,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import 'posts_page.dart';
+
 class SelfProfile extends StatefulWidget {
   const SelfProfile({super.key});
 
@@ -632,32 +634,46 @@ class _SelfProfileState extends State<SelfProfile> {
                         PostModel data =
                             PostModel.fromMap(posts!.elementAt(index));
                         data.likes ??= [];
-                        return Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.only(
-                              left: 2, right: 2, bottom: 4),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.black.withOpacity(.6)),
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage("${data.imgUrl}"))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.heart_fill,
-                                  size: 17,
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PostsFromProfile(
+                                  posts: posts!,
+                                  currentIndex: index,
+                                  profileData: model!,
                                 ),
-                                Text(
-                                  "${data.likes!.length}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(
+                                left: 2, right: 2, bottom: 4),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.black.withOpacity(.6)),
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage("${data.imgUrl}"))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    CupertinoIcons.heart_fill,
+                                    size: 17,
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    "${data.likes!.length}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -670,7 +686,7 @@ class _SelfProfileState extends State<SelfProfile> {
                   color: Colors.green,
                   size: 55,
                 ),
-              )
+              ),
             ],
     );
   }
