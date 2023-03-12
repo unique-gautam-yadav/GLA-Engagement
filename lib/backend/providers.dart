@@ -19,6 +19,18 @@ class UserProvider extends ChangeNotifier {
 
   TeacherModel? get getTeacher => _teacher;
 
+  ProfileModel? get getProfile {
+    if (_userType == KeyWords.alumniUser) {
+      return ProfileModel.fromMap(_alumni!.toMap());
+    } else if (_userType == KeyWords.studentUser) {
+      return ProfileModel.fromMap(_student!.toMap());
+    } else if (_userType == KeyWords.teacherUser) {
+      return ProfileModel.fromMap(_teacher!.toMap());
+    } else {
+      return null;
+    }
+  }
+
   Map<String, dynamic>? get userToMap {
     if (_userType == KeyWords.alumniUser) {
       return _alumni!.toMap();

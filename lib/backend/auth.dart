@@ -39,16 +39,6 @@ class Auth {
     }
   }
 
-  static Future<Map<String, dynamic>?> fetchUserData(String mail) async {
-    try {
-      DocumentSnapshot<Object?> d =
-          await studentsRef.doc(mail.toLowerCase()).get();
-      return d.data() as Map<String, dynamic>;
-    } catch (e) {
-      log(e.toString());
-      return null;
-    }
-  }
 
   static logOut() async {
     await FirebaseAuth.instance.signOut();

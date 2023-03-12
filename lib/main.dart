@@ -94,24 +94,24 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   String? userType;
 
   getData() async {
-    Map<String, dynamic>? data = await Auth.fetchUserData(
+    ProfileModel? data = await Auth.getProfileByMail(
         FirebaseAuth.instance.currentUser!.email ?? "");
     if (context.mounted) {
       if (data == null) {
         FirebaseAuth.instance.signOut();
       } else {
-        if (data['type'] == KeyWords.studentUser) {
+        if (data.type == KeyWords.studentUser) {
           context.read<UserProvider>().setUserType(KeyWords.studentUser);
-          context.read<UserProvider>().setStudent(StudentModel.fromMap(data));
-        } else if (data['type' == KeyWords.alumniUser]) {
+          context.read<UserProvider>().setStudent(StudentModel.fromMap(data.toMap()));
+        } else if (data.type == KeyWords.alumniUser) {
           context.read<UserProvider>().setUserType(KeyWords.alumniUser);
-          context.read<UserProvider>().setAlumni(AlumniModel.fromMap(data));
-        } else if (data['type'] == KeyWords.teacherUser) {
+          context.read<UserProvider>().setAlumni(AlumniModel.fromMap(data.toMap()));
+        } else if (data.type == KeyWords.teacherUser) {
           context.read<UserProvider>().setUserType(KeyWords.teacherUser);
-          context.read<UserProvider>().setTeacher(TeacherModel.fromMap(data));
+          context.read<UserProvider>().setTeacher(TeacherModel.fromMap(data.toMap()));
         }
         setState(() {
-          userType = data['type'];
+          userType = data.type;
         });
       }
     }

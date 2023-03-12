@@ -1,14 +1,16 @@
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:gla_engage/backend/models.dart';
+import 'package:gla_engage/root/pages/public_profile.dart';
+import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import '../../backend/providers.dart';
 import 'self_profile.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -23,23 +25,19 @@ class _SearchPageState extends State<SearchPage> {
   SpeechToText speechToText = SpeechToText();
   TextEditingController search = TextEditingController();
   var isListening = false;
-  @override
 
-  //  ------------------------------------------------------
-  requestMicrophonePermission() async {
-    bool MicPermission = await Permission.microphone.isGranted;
-    if (!MicPermission) {
-      PermissionStatus t = await Permission.microphone.request();
-      MicPermission = t.isGranted;
-    } else {
-      print("Your Already Have Permission");
-    }
-  }
-  // ---------------------------------------------------------
+  // requestMicrophonePermission() async {
+  //   bool micPermission = await Permission.microphone.isGranted;
+  //   if (!micPermission) {
+  //     PermissionStatus t = await Permission.microphone.request();
+  //     micPermission = t.isGranted;
+  //   } else {
+  //     log("Your Already Have Permission");
+  //   }
+  // }
 
   void clear() {
     search.clear();
-    // super.dispose();
   }
 
   @override
@@ -53,8 +51,30 @@ class _SearchPageState extends State<SearchPage> {
               children: [
                 Row(
                   children: [
-                    Avatar(),
-                    Container(
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PublicProfile(
+                                      email: FirebaseAuth
+                                          .instance.currentUser!.email!,
+                                    )));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: CircleAvatar(
+                          radius: 24,
+                          backgroundImage: NetworkImage(
+                              '${context.watch<UserProvider>().getProfile!.imgUrl}'),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       width: MediaQuery.of(context).size.width - 120,
                       height: 45,
                       child: TextFormField(
@@ -93,61 +113,61 @@ class _SearchPageState extends State<SearchPage> {
                         },
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        isListening ? Icons.mic : Icons.mic_none_outlined,
-                        size: 30,
-                        color: Colors.grey.shade600,
-                      ),
-                      onPressed: () {
-                        gettingvoice();
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) {
-                            Future.delayed(const Duration(seconds: 5), () {
-                              Navigator.of(context).pop(true);
-                            });
-                            return AlertDialog(
-                              alignment: Alignment.center,
-                              content: Container(
-                                height: 250,
-                                width: 100,
-                                alignment: Alignment.center,
-                                child: Column(
-                                  children: [
-                                    AvatarGlow(
-                                      endRadius: 75.0,
-                                      animate: isListening,
-                                      duration:
-                                          const Duration(milliseconds: 2000),
-                                      glowColor: Colors.green.shade300,
-                                      repeat: true,
-                                      showTwoGlows: true,
-                                      repeatPauseDuration:
-                                          const Duration(milliseconds: 100),
-                                      child: IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(
-                                            Icons.mic_none_outlined,
-                                            size: 50,
-                                          )),
-                                    ),
-                                    const Text(
-                                      "Listening...",
-                                      style: TextStyle(),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30))),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    // IconButton(
+                    //   icon: Icon(
+                    //     isListening ? Icons.mic : Icons.mic_none_outlined,
+                    //     size: 30,
+                    //     color: Colors.grey.shade600,
+                    //   ),
+                    //   onPressed: () {
+                    //     gettingvoice();
+                    //     showDialog(
+                    //       barrierDismissible: false,
+                    //       context: context,
+                    //       builder: (context) {
+                    //         Future.delayed(const Duration(seconds: 5), () {
+                    //           Navigator.of(context).pop(true);
+                    //         });
+                    //         return AlertDialog(
+                    //           alignment: Alignment.center,
+                    //           content: Container(
+                    //             height: 250,
+                    //             width: 100,
+                    //             alignment: Alignment.center,
+                    //             child: Column(
+                    //               children: [
+                    //                 AvatarGlow(
+                    //                   endRadius: 75.0,
+                    //                   animate: isListening,
+                    //                   duration:
+                    //                       const Duration(milliseconds: 2000),
+                    //                   glowColor: Colors.green.shade300,
+                    //                   repeat: true,
+                    //                   showTwoGlows: true,
+                    //                   repeatPauseDuration:
+                    //                       const Duration(milliseconds: 100),
+                    //                   child: IconButton(
+                    //                       onPressed: () {},
+                    //                       icon: const Icon(
+                    //                         Icons.mic_none_outlined,
+                    //                         size: 50,
+                    //                       )),
+                    //                 ),
+                    //                 const Text(
+                    //                   "Listening...",
+                    //                   style: TextStyle(),
+                    //                 )
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           shape: const RoundedRectangleBorder(
+                    //               borderRadius:
+                    //                   BorderRadius.all(Radius.circular(30))),
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                   ],
                 ),
                 //  Column .................
@@ -195,109 +215,92 @@ class _SearchPageState extends State<SearchPage> {
           //     },
           //   ),
           // )
-          Container(
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection("Users")
-                  .where("mail", isGreaterThanOrEqualTo: search.text)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.hasData) {
-                    QuerySnapshot datasnapshot = snapshot.data as QuerySnapshot;
-                    if (datasnapshot.docs.length > 0) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: datasnapshot.docs.length,
-                        itemBuilder: (context, index) {
-                          Map<String, dynamic> usermap =
-                              datasnapshot.docs[index].data()
-                                  as Map<String, dynamic>;
-                          StudentModel searcheduser =
-                              StudentModel.fromMap(usermap);
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: searcheduser.imgUrl != null
-                                  ? NetworkImage(searcheduser.imgUrl!)
-                                  : null,
-                              child: searcheduser.imgUrl == null
-                                  // ? Icon(Icons.person)
-                                  ? Image.asset("assets/images/profile.png")
-                                  : null,
-                            ),
-                            title: Text(searcheduser.name!),
-                            subtitle: Text(searcheduser.mail!),
-                            trailing: IconButton(
-                                onPressed: () async {},
-                                icon: const Icon(Icons.message_rounded)),
-                          );
-                        },
-                      );
-                    } else {
-                      return const Text("No Result Found");
-                    }
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("Users")
+                .where("mail", isGreaterThanOrEqualTo: search.text)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.hasData) {
+                  QuerySnapshot datasnapshot = snapshot.data as QuerySnapshot;
+                  if (datasnapshot.docs.isNotEmpty) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: datasnapshot.docs.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> usermap = datasnapshot.docs[index]
+                            .data() as Map<String, dynamic>;
+                        ProfileModel searcheduser =
+                            ProfileModel.fromMap(usermap);
+                        return ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PublicProfile(email: searcheduser.mail!),
+                              ),
+                            );
+                          },
+                          leading: CircleAvatar(
+                            backgroundImage: searcheduser.imgUrl != null
+                                ? NetworkImage(searcheduser.imgUrl!)
+                                : null,
+                            child: searcheduser.imgUrl == null
+                                // ? Icon(Icons.person)
+                                ? Image.asset("assets/images/profile.png")
+                                : null,
+                          ),
+                          title: Text(searcheduser.name!),
+                          subtitle: Text(searcheduser.mail!),
+                          trailing: IconButton(
+                              onPressed: () async {},
+                              icon: const Icon(Icons.message_rounded)),
+                        );
+                      },
+                    );
                   } else {
                     return const Text("No Result Found");
                   }
                 } else {
-                  return Container(
-                      alignment: Alignment.center,
-                      child: const CircularProgressIndicator());
+                  return const Text("No Result Found");
                 }
-              },
-            ),
+              } else {
+                return Container(
+                    alignment: Alignment.center,
+                    child: const CircularProgressIndicator());
+              }
+            },
           )
         ],
       ),
     );
   }
 
-  void gettingvoice() async {
-    try {
-      if (!isListening) {
-        var available = await speechToText.initialize();
-        if (available) {
-          isListening = true;
-          speechToText.listen(
-            onResult: (result) {
-              setState(() {
-                search.text = result.recognizedWords;
-              });
-            },
-          );
-        }
-      }
-      ;
-    } catch (e) {
-      print(e);
-    }
-    Future.delayed(const Duration(seconds: 5), () {
-      setState(() {
-        isListening = false;
-        // clear();
-      });
-    });
-  }
-
-  Widget Avatar() {
-    String img =
-        "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZT9ib3l8fHx8fHwxNjc4MjY4OTA3&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1600";
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const SelfProfile()));
-      },
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-        ),
-        child: CircleAvatar(
-          radius: 24,
-          backgroundImage: NetworkImage('$img'),
-        ),
-      ),
-    );
-  }
+  // void gettingvoice() async {
+  //   try {
+  //     if (!isListening) {
+  //       var available = await speechToText.initialize();
+  //       if (available) {
+  //         isListening = true;
+  //         speechToText.listen(
+  //           onResult: (result) {
+  //             setState(() {
+  //               search.text = result.recognizedWords;
+  //             });
+  //           },
+  //         );
+  //       }
+  //     }
+  //   } catch (e) {
+  //     log("$e");
+  //   }
+  //   Future.delayed(const Duration(seconds: 5), () {
+  //     setState(() {
+  //       isListening = false;
+  //       // clear();
+  //     });
+  //   });
 }
+// }

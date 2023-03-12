@@ -234,12 +234,14 @@ class _SelfProfileState extends State<SelfProfile> {
           ? [
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.green.shade50,
-                    boxShadow: const [
-                      BoxShadow(blurRadius: 1),
-                    ],
-                    borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(30))),
+                  // color: Colors.green.shade50,
+                  boxShadow: [
+                    BoxShadow(blurRadius: 3, color: Colors.grey.shade700),
+                    const BoxShadow(blurRadius: 1, color: Colors.white),
+                  ],
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.circular(30)),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -575,51 +577,68 @@ class _SelfProfileState extends State<SelfProfile> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Divider(),
-              const Text("Archiements or Jobs"),
-              model!.achievements != null && model!.achievements!.isNotEmpty
-                  ? AchievementCard(
-                      getProfileData: getProfileData,
-                      model: model!,
-                      index: 0,
-                    )
-                  : Text("No achievement added !!",
-                      style: TextStyle(
-                        color: Colors.red.shade900,
-                      )),
-              ButtonBar(
-                alignment: MainAxisAlignment.spaceAround,
-                children: [
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.show_chart),
-                    onPressed: model!.achievements != null &&
-                            model!.achievements!.length > 1
-                        ? () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AllAchievements(
-                                        getProfileData: getProfileData,
-                                        model: model!)));
-                          }
-                        : null,
-                    label: const Text("view more"),
+              Container(
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: const Offset(5, 5),
+                          blurRadius: 3,
+                          color: Colors.grey.shade700),
+                      const BoxShadow(
+                        blurRadius: 1,
+                        color: Colors.white,
+                      )
+                    ]),
+                child: Column(children: [
+                  const Text("Archiements or Jobs"),
+
+                  ///
+                  model!.achievements != null && model!.achievements!.isNotEmpty
+                      ? AchievementCard(
+                          getProfileData: getProfileData,
+                          model: model!,
+                          index: 0,
+                        )
+                      : Text("No achievement added !!",
+                          style: TextStyle(
+                            color: Colors.red.shade900,
+                          )),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.show_chart),
+                        onPressed: model!.achievements != null &&
+                                model!.achievements!.length > 1
+                            ? () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AllAchievements(
+                                            getProfileData: getProfileData,
+                                            model: model!)));
+                              }
+                            : null,
+                        label: const Text("view more"),
+                      ),
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NewAchievement(
+                                      model: model!,
+                                      getProfileData: getProfileData)));
+                        },
+                        label: const Text("add new"),
+                      ),
+                    ],
                   ),
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NewAchievement(
-                                  model: model!,
-                                  getProfileData: getProfileData)));
-                    },
-                    label: const Text("add new"),
-                  ),
-                ],
+                ]),
               ),
-              const Divider(),
               posts != null
                   ? GridView.builder(
                       padding: const EdgeInsets.all(10),
