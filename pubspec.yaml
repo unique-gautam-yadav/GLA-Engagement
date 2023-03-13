@@ -55,6 +55,7 @@ dependencies:
   image_cropper: ^3.0.1
   url_launcher: ^6.1.10
   palette_generator: ^0.3.3+2
+  firebase_database: ^10.0.15
 
 
 dev_dependencies:

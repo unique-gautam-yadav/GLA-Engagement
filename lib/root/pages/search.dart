@@ -189,37 +189,56 @@ class _SearchPageState extends State<SearchPage> {
           ),
           searchResult != null
               ? SizedBox(
-                  height: 500,
+                  height: MediaQuery.of(context).size.height - 68,
                   width: MediaQuery.of(context).size.width,
                   child: ListView.builder(
                     itemCount: searchResult!.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PublicProfile(
-                                  email: searchResult!.elementAt(index).mail!),
-                            ),
-                          );
-                        },
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              searchResult!.elementAt(index).imgUrl != null
+                      return Container(
+                        margin: const EdgeInsets.only(
+                            left: 16, right: 16, bottom: 16),
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: MaterialButton(
+                          padding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PublicProfile(
+                                    email:
+                                        searchResult!.elementAt(index).mail!),
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: searchResult!
+                                          .elementAt(index)
+                                          .imgUrl !=
+                                      null
                                   ? NetworkImage(
                                       searchResult!.elementAt(index).imgUrl!)
                                   : null,
-                          child: searchResult!.elementAt(index).imgUrl == null
-                              ? const Icon(Icons.person_4)
-                              : null,
+                              child:
+                                  searchResult!.elementAt(index).imgUrl == null
+                                      ? const Icon(Icons.person_4)
+                                      : null,
+                            ),
+                            title: Text(searchResult!.elementAt(index).name!),
+                            // title: Text(searcheduser.uid!),
+                            subtitle: Text(
+                                "${searchResult!.elementAt(index).course} (${searchResult!.elementAt(index).branch}) \n"
+                                " ${searchResult!.elementAt(index).mail!}"),
+                            // trailing: IconButton(
+                            //     onPressed: () async {},
+                            //     icon: const Icon(Icons.message_rounded)),
+                          ),
                         ),
-                        title: Text(searchResult!.elementAt(index).name!),
-                        // title: Text(searcheduser.uid!),
-                        subtitle: Text(searchResult!.elementAt(index).mail!),
-                        trailing: IconButton(
-                            onPressed: () async {},
-                            icon: const Icon(Icons.message_rounded)),
                       );
                     },
                   ),

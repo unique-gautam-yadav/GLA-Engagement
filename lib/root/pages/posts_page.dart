@@ -1,7 +1,10 @@
+import 'dart:collection';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gla_engage/backend/auth.dart';
+import 'package:gla_engage/root/pages/public_profile.dart';
 
 import '../../backend/models.dart';
 
@@ -71,11 +74,15 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   bool liked = false;
   bool showAdded = false;
+  int likeCounter = 0;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        likeCounter = widget.e['likes'].length;
+      });
       if (widget.e['likes'] != null) {
         var temp = widget.e['likes'] as List<dynamic>;
         if (temp.contains(FirebaseAuth.instance.currentUser!.email!)) {
@@ -96,6 +103,8 @@ class _PostCardState extends State<PostCard> {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.green.shade50,
         border: Border.all(),
       ),
       child: Column(
@@ -103,9 +112,7 @@ class _PostCardState extends State<PostCard> {
           MaterialButton(
             padding: EdgeInsets.zero,
             onPressed: () {
-              ///
-              ///
-              ///
+              Navigator.pop(context);
             },
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -182,32 +189,40 @@ class _PostCardState extends State<PostCard> {
               children: [
                 Expanded(child: Text("${widget.e['caption']}")),
                 const SizedBox(width: 5),
-                OutlinedButton(
-                  onPressed: () async {
-                    if (!liked) {
-                      setState(() {
-                        liked = true;
-                      });
-                      await Auth.likePost(widget.e['postID']);
-                      setState(() {
-                        showAdded = true;
-                      });
-                      Future.delayed(const Duration(seconds: 2)).then((value) {
-                        setState(() {
-                          showAdded = false;
-                        });
-                      });
-                    } else {
-                      await Auth.unLikePost(widget.e['postID']);
-                      setState(() {
-                        liked = false;
-                        showAdded = false;
-                      });
-                    }
-                  },
-                  child: liked
-                      ? const Icon(CupertinoIcons.heart_fill)
-                      : const Icon(CupertinoIcons.heart),
+                Column(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () async {
+                        if (!liked) {
+                          setState(() {
+                            liked = true;
+                            likeCounter += 1;
+                          });
+                          await Auth.likePost(widget.e['postID']);
+                          setState(() {
+                            showAdded = true;
+                          });
+                          Future.delayed(const Duration(seconds: 2))
+                              .then((value) {
+                            setState(() {
+                              showAdded = false;
+                            });
+                          });
+                        } else {
+                          await Auth.unLikePost(widget.e['postID']);
+                          setState(() {
+                            liked = false;
+                            showAdded = false;
+                            likeCounter -= 1;
+                          });
+                        }
+                      },
+                      child: liked
+                          ? const Icon(CupertinoIcons.heart_fill)
+                          : const Icon(CupertinoIcons.heart),
+                    ),
+                    Text("$likeCounter")
+                  ],
                 ),
               ],
             ),

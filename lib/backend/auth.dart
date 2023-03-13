@@ -269,17 +269,25 @@ class Auth {
         .where("mail", isGreaterThanOrEqualTo: keyword)
         // .where('name', isGreaterThanOrEqualTo: keyword)
         .get();
-    log("${res.docs.length}");
-    for (var e in res.docs) {
-      log("${e.data() as Map<String, dynamic>}");
-    }
     List<ProfileModel> data = [];
     for (var e in res.docs) {
       ProfileModel form =
           ProfileModel.fromMap(e.data() as Map<String, dynamic>);
-      // if (form.mail!.startsWith(keyword, 0)) {
-      data.add(form);
-      // }
+      if (form.mail!.startsWith(keyword, 0)) {
+        data.add(form);
+      }
+    }
+    QuerySnapshot<Object?> res2 =
+        await studentsRef.where("name", isGreaterThanOrEqualTo: keyword).get();
+    for (var e in res2.docs) {
+      ProfileModel temp =
+          ProfileModel.fromMap(e.data() as Map<String, dynamic>);
+      if (temp.name!.startsWith(keyword, 0)) {
+        if (data.contains(temp)) {
+        } else {
+          data.add(temp);
+        }
+      }
     }
     return data;
   }
