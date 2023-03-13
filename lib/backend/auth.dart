@@ -39,7 +39,6 @@ class Auth {
     }
   }
 
-
   static logOut() async {
     await FirebaseAuth.instance.signOut();
   }
@@ -263,5 +262,25 @@ class Auth {
       'likes':
           FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.email!])
     });
+  }
+
+  static Future<List<ProfileModel>> searchUser(String keyword) async {
+    QuerySnapshot<Object?> res = await studentsRef
+        .where("mail", isGreaterThanOrEqualTo: keyword)
+        // .where('name', isGreaterThanOrEqualTo: keyword)
+        .get();
+    log("${res.docs.length}");
+    for (var e in res.docs) {
+      log("${e.data() as Map<String, dynamic>}");
+    }
+    List<ProfileModel> data = [];
+    for (var e in res.docs) {
+      ProfileModel form =
+          ProfileModel.fromMap(e.data() as Map<String, dynamic>);
+      // if (form.mail!.startsWith(keyword, 0)) {
+      data.add(form);
+      // }
+    }
+    return data;
   }
 }

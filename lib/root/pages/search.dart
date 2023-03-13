@@ -1,16 +1,11 @@
-import 'dart:developer';
-
-import 'package:avatar_glow/avatar_glow.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gla_engage/backend/models.dart';
+import 'package:gla_engage/backend/auth.dart';
 import 'package:gla_engage/root/pages/public_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import '../../backend/models.dart';
 import '../../backend/providers.dart';
-import 'self_profile.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -25,6 +20,9 @@ class _SearchPageState extends State<SearchPage> {
   SpeechToText speechToText = SpeechToText();
   TextEditingController search = TextEditingController();
   var isListening = false;
+  bool showClear = false;
+
+  List<ProfileModel>? searchResult;
 
   // requestMicrophonePermission() async {
   //   bool micPermission = await Permission.microphone.isGranted;
@@ -79,40 +77,55 @@ class _SearchPageState extends State<SearchPage> {
                       height: 45,
                       child: TextFormField(
                         controller: search,
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            setState(() {
+                              showClear = true;
+                            });
+                          } else {
+                            setState(() {
+                              showClear = false;
+                            });
+                          }
+                        },
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 15.0),
+                          contentPadding: const EdgeInsets.all(15.0),
+                          border: const UnderlineInputBorder(),
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: "Search Name or Post ",
-                          labelText: "Search...",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: const BorderSide(width: 0.5)),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            size: 25,
-                            color: Colors.grey.shade400,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              Icons.clear,
-                              size: 25,
-                              color: Colors.grey.shade600,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                FocusScope.of(context).unfocus();
-                                clear();
-                              });
-                            },
-                          ),
+                          hintText: "Search...",
+                          suffixIcon: search.text.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.clear,
+                                    size: 25,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      FocusScope.of(context).unfocus();
+                                      clear();
+                                    });
+                                  },
+                                )
+                              : null,
                         ),
-                        onChanged: (value) {
-                          setState(() {});
-                        },
                       ),
                     ),
+                    IconButton(
+                        onPressed: () async {
+                          if (search.text.isNotEmpty) {
+                            setState(() {
+                              searchResult = null;
+                            });
+                            List<ProfileModel> d =
+                                await Auth.searchUser(search.text);
+                            setState(() {
+                              searchResult = d;
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.search))
                     // IconButton(
                     //   icon: Icon(
                     //     isListening ? Icons.mic : Icons.mic_none_outlined,
@@ -174,6 +187,44 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
           ),
+          searchResult != null
+              ? SizedBox(
+                  height: 500,
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    itemCount: searchResult!.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PublicProfile(
+                                  email: searchResult!.elementAt(index).mail!),
+                            ),
+                          );
+                        },
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              searchResult!.elementAt(index).imgUrl != null
+                                  ? NetworkImage(
+                                      searchResult!.elementAt(index).imgUrl!)
+                                  : null,
+                          child: searchResult!.elementAt(index).imgUrl == null
+                              ? const Icon(Icons.person_4)
+                              : null,
+                        ),
+                        title: Text(searchResult!.elementAt(index).name!),
+                        // title: Text(searcheduser.uid!),
+                        subtitle: Text(searchResult!.elementAt(index).mail!),
+                        trailing: IconButton(
+                            onPressed: () async {},
+                            icon: const Icon(Icons.message_rounded)),
+                      );
+                    },
+                  ),
+                )
+              : const SizedBox.shrink()
           // Container(
           //   child: StreamBuilder(
           //     stream: FirebaseFirestore.instance
@@ -215,64 +266,64 @@ class _SearchPageState extends State<SearchPage> {
           //     },
           //   ),
           // )
-          StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection("Users")
-                .where("mail", isGreaterThanOrEqualTo: search.text)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.hasData) {
-                  QuerySnapshot datasnapshot = snapshot.data as QuerySnapshot;
-                  if (datasnapshot.docs.isNotEmpty) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: datasnapshot.docs.length,
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic> usermap = datasnapshot.docs[index]
-                            .data() as Map<String, dynamic>;
-                        ProfileModel searcheduser =
-                            ProfileModel.fromMap(usermap);
-                        return ListTile(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PublicProfile(email: searcheduser.mail!),
-                              ),
-                            );
-                          },
-                          leading: CircleAvatar(
-                            backgroundImage: searcheduser.imgUrl != null
-                                ? NetworkImage(searcheduser.imgUrl!)
-                                : null,
-                            child: searcheduser.imgUrl == null
-                                // ? Icon(Icons.person)
-                                ? Image.asset("assets/images/profile.png")
-                                : null,
-                          ),
-                          title: Text(searcheduser.name!),
-                          subtitle: Text(searcheduser.mail!),
-                          trailing: IconButton(
-                              onPressed: () async {},
-                              icon: const Icon(Icons.message_rounded)),
-                        );
-                      },
-                    );
-                  } else {
-                    return const Text("No Result Found");
-                  }
-                } else {
-                  return const Text("No Result Found");
-                }
-              } else {
-                return Container(
-                    alignment: Alignment.center,
-                    child: const CircularProgressIndicator());
-              }
-            },
-          )
+          // StreamBuilder(
+          //   stream: FirebaseFirestore.instance
+          //       .collection("Users")
+          //       .where("mail", isGreaterThanOrEqualTo: search.text)
+          //       .snapshots(),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.active) {
+          //       if (snapshot.hasData) {
+          //         QuerySnapshot datasnapshot = snapshot.data as QuerySnapshot;
+          //         if (datasnapshot.docs.isNotEmpty) {
+          //           return ListView.builder(
+          //             shrinkWrap: true,
+          //             itemCount: datasnapshot.docs.length,
+          //             itemBuilder: (context, index) {
+          //               Map<String, dynamic> usermap = datasnapshot.docs[index]
+          //                   .data() as Map<String, dynamic>;
+          //               ProfileModel searcheduser =
+          //                   ProfileModel.fromMap(usermap);
+          //               return ListTile(
+          //                 onTap: () {
+          //                   Navigator.push(
+          //                     context,
+          //                     MaterialPageRoute(
+          //                       builder: (context) =>
+          //                           PublicProfile(email: searcheduser.mail!),
+          //                     ),
+          //                   );
+          //                 },
+          //                 leading: CircleAvatar(
+          //                   backgroundImage: searcheduser.imgUrl != null
+          //                       ? NetworkImage(searcheduser.imgUrl!)
+          //                       : null,
+          //                   child: searcheduser.imgUrl == null
+          //                       // ? Icon(Icons.person)
+          //                       ? Image.asset("assets/images/profile.png")
+          //                       : null,
+          //                 ),
+          //                 title: Text(searcheduser.name!),
+          //                 subtitle: Text(searcheduser.mail!),
+          //                 trailing: IconButton(
+          //                     onPressed: () async {},
+          //                     icon: const Icon(Icons.message_rounded)),
+          //               );
+          //             },
+          //           );
+          //         } else {
+          //           return const Text("No Result Found");
+          //         }
+          //       } else {
+          //         return const Text("No Result Found");
+          //       }
+          //     } else {
+          //       return Container(
+          //           alignment: Alignment.center,
+          //           child: const CircularProgressIndicator());
+          //     }
+          //   },
+          // )
         ],
       ),
     );

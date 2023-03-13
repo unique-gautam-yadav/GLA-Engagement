@@ -28,8 +28,7 @@ class _PostsFromProfileState extends State<PostsFromProfile> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       scrollController.animateTo((630 * widget.currentIndex).toDouble(),
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.decelerate);
+          duration: const Duration(milliseconds: 500), curve: Curves.linear);
     });
     super.initState();
   }
@@ -77,10 +76,16 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var temp = widget.e['likes'] as List<dynamic>;
-      if (temp.contains(FirebaseAuth.instance.currentUser!.email!)) {
+      if (widget.e['likes'] != null) {
+        var temp = widget.e['likes'] as List<dynamic>;
+        if (temp.contains(FirebaseAuth.instance.currentUser!.email!)) {
+          setState(() {
+            liked = true;
+          });
+        }
+      } else {
         setState(() {
-          liked = true;
+          liked = false;
         });
       }
     });
