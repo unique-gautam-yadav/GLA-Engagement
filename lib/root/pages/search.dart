@@ -101,22 +101,23 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       ),
                     ),
-                    IconButton(
-                        onPressed: () async {
-                          if (search.text.isNotEmpty) {
-                            setState(() {
-                              searchResult = null;
-                            });
-                            List<ProfileModel> d =
-                                await Auth.searchUser(search.text);
-                            setState(() {
-                              searchResult = d;
-                            });
-                          }
-                        },
-                        icon: const Icon(Icons.search))
+                    IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt))
                   ],
                 ),
+                ElevatedButton(
+                    onPressed: () async {
+                      if (search.text.isNotEmpty) {
+                        setState(() {
+                          searchResult = null;
+                        });
+                        List<ProfileModel> d =
+                            await Auth.searchUser(search.text);
+                        setState(() {
+                          searchResult = d;
+                        });
+                      }
+                    },
+                    child: Text("search")),
               ],
             ),
           ),
