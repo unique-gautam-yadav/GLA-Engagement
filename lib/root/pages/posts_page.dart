@@ -81,9 +81,12 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        likeCounter = widget.e['likes'].length;
-      });
+      if (widget.e['likes'] != null) {
+        setState(() {
+          likeCounter = widget.e['likes']!.length;
+        });
+      }
+
       if (widget.e['likes'] != null) {
         var temp = widget.e['likes'] as List<dynamic>;
         if (temp.contains(FirebaseAuth.instance.currentUser!.email!)) {
@@ -163,7 +166,9 @@ class _PostCardState extends State<PostCard> {
             height: (MediaQuery.of(context).size.width - 40) * (4 / 3),
             decoration: BoxDecoration(color: Colors.green.shade200),
             child: Stack(children: [
-              CachedNetworkImage(imageUrl: widget.e['imgUrl']),
+              widget.e['imgUrl'] != null
+                  ? CachedNetworkImage(imageUrl: widget.e['imgUrl']!)
+                  : SizedBox.shrink(),
               showAdded
                   ? Align(
                       alignment: Alignment.bottomCenter,
