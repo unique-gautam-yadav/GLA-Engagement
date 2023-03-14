@@ -1,13 +1,9 @@
-import 'dart:collection';
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gla_engage/backend/auth.dart';
 import 'package:gla_engage/root/pages/public_profile.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../backend/models.dart';
 

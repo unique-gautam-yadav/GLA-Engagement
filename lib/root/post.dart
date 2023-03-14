@@ -5,14 +5,12 @@ class Post extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-child: Column(
-  children: [
-    Image.network("src"),
-    Text("lorem ipsum whdfbwijs scwds ax adjbawdca dfjbqewdcherfbehcedbfuehf ewdc asdfuhbqddfj dcqkjdbfcqwe cedcbeq cjqkdc qdcbe fkjdc eajb fqwdjc edfdhb edfcdbcjkn qdcjkqwbdc jqwkdc wqjcqw cjbqw dqwkdjf dqhbqwedfjqwb wceqdfjbe dfhdqw ckedfhbefjqw efjkwfb wqjfj wfjewfwqedfjkbhwewfjhewf"),
-
-  ],
-),
+    return Column(
+      children: [
+        Image.network("src"),
+        const Text(
+            "lorem ipsum whdfbwijs scwds ax adjbawdca dfjbqewdcherfbehcedbfuehf ewdc asdfuhbqddfj dcqkjdbfcqwe cedcbeq cjqkdc qdcbe fkjdc eajb fqwdjc edfdhb edfcdbcjkn qdcjkqwbdc jqwkdc wqjcqw cjbqw dqwkdjf dqhbqwedfjqwb wceqdfjbe dfhdqw ckedfhbefjqw efjkwfb wqjfj wfjewfwqedfjkbhwewfjhewf"),
+      ],
     );
   }
 }
