@@ -675,3 +675,12 @@ class PostModel {
     );
   }
 }
+
+class HomePagePosts {
+  PostModel? post;
+  ProfileModel? profile;
+  HomePagePosts({
+    this.post,
+    this.profile,
+  });
+}

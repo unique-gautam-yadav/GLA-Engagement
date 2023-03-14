@@ -709,6 +709,12 @@ class _SelfProfileState extends State<SelfProfile> {
             ],
     );
   }
+
+  @override
+  void dispose() {
+    bioController.dispose();
+    super.dispose();
+  }
 }
 
 class AchievementCard extends StatefulWidget {
@@ -951,7 +957,6 @@ class AddSocialButton extends StatelessWidget {
 
   final ProfileModel model;
   final VoidCallback getProfileData;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -1226,5 +1231,13 @@ class _NewAchievementState extends State<NewAchievement> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    title.dispose();
+    briefD.dispose();
+    detailD.dispose();
+    super.dispose();
   }
 }

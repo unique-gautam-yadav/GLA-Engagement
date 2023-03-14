@@ -62,10 +62,12 @@ class PostCard extends StatefulWidget {
     super.key,
     required this.e,
     required this.profileData,
+    this.fromProfile,
   });
 
   final Map<String, dynamic> e;
   final ProfileModel profileData;
+  final bool? fromProfile;
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -112,7 +114,17 @@ class _PostCardState extends State<PostCard> {
           MaterialButton(
             padding: EdgeInsets.zero,
             onPressed: () {
-              Navigator.pop(context);
+              if (widget.fromProfile == null || widget.fromProfile == true) {
+                Navigator.pop(context);
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        PublicProfile(email: widget.profileData.mail!),
+                  ),
+                );
+              }
             },
             child: Padding(
               padding: const EdgeInsets.all(10),

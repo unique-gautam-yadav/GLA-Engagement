@@ -55,7 +55,7 @@ class _NavBarViewState extends State<NavBarView> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(25),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  filter: ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
                   child: ButtonBar(
                     alignment: MainAxisAlignment.spaceAround,
                     children: [
