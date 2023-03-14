@@ -1,10 +1,13 @@
 import 'dart:collection';
+import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gla_engage/backend/auth.dart';
 import 'package:gla_engage/root/pages/public_profile.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../backend/models.dart';
 
@@ -162,38 +165,39 @@ class _PostCardState extends State<PostCard> {
             margin: const EdgeInsets.only(left: 10, right: 10),
             width: MediaQuery.of(context).size.width,
             height: (MediaQuery.of(context).size.width - 40) * (4 / 3),
-            decoration: BoxDecoration(
-                color: Colors.green.shade200,
-                image: DecorationImage(
-                    image: NetworkImage("${widget.e['imgUrl']}"))),
-            child: showAdded
-                ? Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 20, left: 1, right: 1),
-                      width: MediaQuery.of(context).size.width,
-                      height: 30,
-                      decoration: const BoxDecoration(color: Colors.black),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.only(left: 5),
-                            child: Text(
-                              "Added to Liked",
-                              style: TextStyle(color: Colors.white),
+            decoration: BoxDecoration(color: Colors.green.shade200),
+            child: Stack(children: [
+              CachedNetworkImage(imageUrl: widget.e['imgUrl']),
+              showAdded
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin:
+                            const EdgeInsets.only(top: 20, left: 1, right: 1),
+                        width: MediaQuery.of(context).size.width,
+                        height: 30,
+                        decoration: const BoxDecoration(color: Colors.black),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.only(left: 5),
+                              child: Text(
+                                "Added to Liked",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child: Icon(CupertinoIcons.heart_fill,
-                                color: Colors.white),
-                          ),
-                        ],
+                            Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Icon(CupertinoIcons.heart_fill,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                : const SizedBox.shrink(),
+                    )
+                  : const SizedBox.shrink(),
+            ]),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),

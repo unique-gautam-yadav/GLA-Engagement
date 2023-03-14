@@ -1,12 +1,15 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gla_engage/backend/providers.dart';
 import 'package:gla_engage/root/pages/add_post.dart';
 import 'package:gla_engage/root/pages/chats.dart';
 import 'package:gla_engage/root/pages/home.dart';
 import 'package:gla_engage/root/pages/search.dart';
 import 'package:gla_engage/root/pages/self_profile.dart';
+import 'package:provider/provider.dart';
 
 class NavBarView extends StatefulWidget {
   const NavBarView({super.key});
@@ -27,8 +30,72 @@ class _NavBarViewState extends State<NavBarView> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
+    return Scaffold(
+      appBar: curPageIndex == 0
+          ? AppBar(
+              title: const Text("Sdfklj"),
+            )
+          : null,
+      drawer: Drawer(
+          child: ListView(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(bottom: 20),
+            decoration: BoxDecoration(
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(20)),
+                color: Colors.green.shade50,
+                boxShadow: const [
+                  BoxShadow(blurRadius: 3, color: Colors.white),
+                  BoxShadow(
+                      blurRadius: 5, color: Colors.grey, offset: Offset(0, 3))
+                ]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  height: 100,
+                  width: 100,
+                  child: CircleAvatar(
+                      backgroundImage: context
+                                  .watch<UserProvider>()
+                                  .getProfile!
+                                  .imgUrl !=
+                              null
+                          ? NetworkImage(
+                              context.watch<UserProvider>().getProfile!.imgUrl!,
+                              scale: 1)
+                          : null,
+                      child: context.watch<UserProvider>().getProfile!.imgUrl ==
+                              null
+                          ? const Icon(Icons.person_3)
+                          : null),
+                ),
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${context.watch<UserProvider>().getProfile!.name}"),
+                      Text("${context.watch<UserProvider>().getProfile!.mail}"),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          ListTile(
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+            },
+            leading: const Icon(Icons.logout),
+            title: const Text("Log Out"),
+          ),
+        ],
+      )),
+      body: Stack(
         children: [
           Positioned(
             bottom: 0,

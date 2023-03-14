@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        drawerTheme: const DrawerThemeData(backgroundColor: Colors.white),
         colorSchemeSeed: Colors.green,
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -102,13 +103,19 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       } else {
         if (data.type == KeyWords.studentUser) {
           context.read<UserProvider>().setUserType(KeyWords.studentUser);
-          context.read<UserProvider>().setStudent(StudentModel.fromMap(data.toMap()));
+          context
+              .read<UserProvider>()
+              .setStudent(StudentModel.fromMap(data.toMap()));
         } else if (data.type == KeyWords.alumniUser) {
           context.read<UserProvider>().setUserType(KeyWords.alumniUser);
-          context.read<UserProvider>().setAlumni(AlumniModel.fromMap(data.toMap()));
+          context
+              .read<UserProvider>()
+              .setAlumni(AlumniModel.fromMap(data.toMap()));
         } else if (data.type == KeyWords.teacherUser) {
           context.read<UserProvider>().setUserType(KeyWords.teacherUser);
-          context.read<UserProvider>().setTeacher(TeacherModel.fromMap(data.toMap()));
+          context
+              .read<UserProvider>()
+              .setTeacher(TeacherModel.fromMap(data.toMap()));
         }
         setState(() {
           userType = data.type;

@@ -24,16 +24,6 @@ class _SearchPageState extends State<SearchPage> {
 
   List<ProfileModel>? searchResult;
 
-  // requestMicrophonePermission() async {
-  //   bool micPermission = await Permission.microphone.isGranted;
-  //   if (!micPermission) {
-  //     PermissionStatus t = await Permission.microphone.request();
-  //     micPermission = t.isGranted;
-  //   } else {
-  //     log("Your Already Have Permission");
-  //   }
-  // }
-
   void clear() {
     search.clear();
   }
@@ -126,64 +116,8 @@ class _SearchPageState extends State<SearchPage> {
                           }
                         },
                         icon: const Icon(Icons.search))
-                    // IconButton(
-                    //   icon: Icon(
-                    //     isListening ? Icons.mic : Icons.mic_none_outlined,
-                    //     size: 30,
-                    //     color: Colors.grey.shade600,
-                    //   ),
-                    //   onPressed: () {
-                    //     gettingvoice();
-                    //     showDialog(
-                    //       barrierDismissible: false,
-                    //       context: context,
-                    //       builder: (context) {
-                    //         Future.delayed(const Duration(seconds: 5), () {
-                    //           Navigator.of(context).pop(true);
-                    //         });
-                    //         return AlertDialog(
-                    //           alignment: Alignment.center,
-                    //           content: Container(
-                    //             height: 250,
-                    //             width: 100,
-                    //             alignment: Alignment.center,
-                    //             child: Column(
-                    //               children: [
-                    //                 AvatarGlow(
-                    //                   endRadius: 75.0,
-                    //                   animate: isListening,
-                    //                   duration:
-                    //                       const Duration(milliseconds: 2000),
-                    //                   glowColor: Colors.green.shade300,
-                    //                   repeat: true,
-                    //                   showTwoGlows: true,
-                    //                   repeatPauseDuration:
-                    //                       const Duration(milliseconds: 100),
-                    //                   child: IconButton(
-                    //                       onPressed: () {},
-                    //                       icon: const Icon(
-                    //                         Icons.mic_none_outlined,
-                    //                         size: 50,
-                    //                       )),
-                    //                 ),
-                    //                 const Text(
-                    //                   "Listening...",
-                    //                   style: TextStyle(),
-                    //                 )
-                    //               ],
-                    //             ),
-                    //           ),
-                    //           shape: const RoundedRectangleBorder(
-                    //               borderRadius:
-                    //                   BorderRadius.all(Radius.circular(30))),
-                    //         );
-                    //       },
-                    //     );
-                    //   },
-                    // ),
                   ],
                 ),
-                //  Column .................
               ],
             ),
           ),
@@ -230,13 +164,9 @@ class _SearchPageState extends State<SearchPage> {
                                       : null,
                             ),
                             title: Text(searchResult!.elementAt(index).name!),
-                            // title: Text(searcheduser.uid!),
                             subtitle: Text(
                                 "${searchResult!.elementAt(index).course} (${searchResult!.elementAt(index).branch}) \n"
                                 " ${searchResult!.elementAt(index).mail!}"),
-                            // trailing: IconButton(
-                            //     onPressed: () async {},
-                            //     icon: const Icon(Icons.message_rounded)),
                           ),
                         ),
                       );
@@ -244,133 +174,8 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 )
               : const SizedBox.shrink()
-          // Container(
-          //   child: StreamBuilder(
-          //     stream: FirebaseFirestore.instance
-          //         .collection("Users")
-          //         .where("mail", isGreaterThanOrEqualTo: search.text)
-          //         // .where("email", isNotEqualTo: Widget.Usermode.email)
-          //         .snapshots(),
-          //     builder: (context, snapshot) {
-          //       if (snapshot.connectionState == ConnectionState.active) {
-          //         if (snapshot.hasData) {
-          //           QuerySnapshot datasnapshot = snapshot.data as QuerySnapshot;
-          //           if (datasnapshot.docs.length > 0) {
-          //             Map<String, dynamic> usermap =
-          //                 datasnapshot.docs[0].data() as Map<String, dynamic>;
-          //             StudentModel searcheduser = StudentModel.fromMap(usermap);
-          //             return ListTile(
-          //               leading: CircleAvatar(
-          //                 backgroundImage: NetworkImage(searcheduser.imgUrl!),
-          //               ),
-          //               title: Text(searcheduser.name!),
-          //               // title: Text(searcheduser.uid!),
-          //               subtitle: Text(searcheduser.mail!),
-          //               trailing: IconButton(
-          //                   onPressed: () async {},
-          //                   icon: Icon(Icons.message_rounded)),
-          //             );
-          //           } else {
-          //             return Text("No Result Found");
-          //           }
-          //           // } else if (snapshot.hasError) {
-          //         } else {
-          //           return Text("No Result Found");
-          //         }
-          //       } else {
-          //         return Container(
-          //             alignment: Alignment.center,
-          //             child: CircularProgressIndicator());
-          //       }
-          //     },
-          //   ),
-          // )
-          // StreamBuilder(
-          //   stream: FirebaseFirestore.instance
-          //       .collection("Users")
-          //       .where("mail", isGreaterThanOrEqualTo: search.text)
-          //       .snapshots(),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.connectionState == ConnectionState.active) {
-          //       if (snapshot.hasData) {
-          //         QuerySnapshot datasnapshot = snapshot.data as QuerySnapshot;
-          //         if (datasnapshot.docs.isNotEmpty) {
-          //           return ListView.builder(
-          //             shrinkWrap: true,
-          //             itemCount: datasnapshot.docs.length,
-          //             itemBuilder: (context, index) {
-          //               Map<String, dynamic> usermap = datasnapshot.docs[index]
-          //                   .data() as Map<String, dynamic>;
-          //               ProfileModel searcheduser =
-          //                   ProfileModel.fromMap(usermap);
-          //               return ListTile(
-          //                 onTap: () {
-          //                   Navigator.push(
-          //                     context,
-          //                     MaterialPageRoute(
-          //                       builder: (context) =>
-          //                           PublicProfile(email: searcheduser.mail!),
-          //                     ),
-          //                   );
-          //                 },
-          //                 leading: CircleAvatar(
-          //                   backgroundImage: searcheduser.imgUrl != null
-          //                       ? NetworkImage(searcheduser.imgUrl!)
-          //                       : null,
-          //                   child: searcheduser.imgUrl == null
-          //                       // ? Icon(Icons.person)
-          //                       ? Image.asset("assets/images/profile.png")
-          //                       : null,
-          //                 ),
-          //                 title: Text(searcheduser.name!),
-          //                 subtitle: Text(searcheduser.mail!),
-          //                 trailing: IconButton(
-          //                     onPressed: () async {},
-          //                     icon: const Icon(Icons.message_rounded)),
-          //               );
-          //             },
-          //           );
-          //         } else {
-          //           return const Text("No Result Found");
-          //         }
-          //       } else {
-          //         return const Text("No Result Found");
-          //       }
-          //     } else {
-          //       return Container(
-          //           alignment: Alignment.center,
-          //           child: const CircularProgressIndicator());
-          //     }
-          //   },
-          // )
         ],
       ),
     );
   }
-
-  // void gettingvoice() async {
-  //   try {
-  //     if (!isListening) {
-  //       var available = await speechToText.initialize();
-  //       if (available) {
-  //         isListening = true;
-  //         speechToText.listen(
-  //           onResult: (result) {
-  //             setState(() {
-  //               search.text = result.recognizedWords;
-  //             });
-  //           },
-  //         );
-  //       }
-  //     }
-  //   } catch (e) {
-  //     log("$e");
-  //   }
-  //   Future.delayed(const Duration(seconds: 5), () {
-  //     setState(() {
-  //       isListening = false;
-  //       // clear();
-  //     });
-  //   });
 }
-// }
