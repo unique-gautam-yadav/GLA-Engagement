@@ -273,7 +273,8 @@ class Auth {
     for (var e in res.docs) {
       ProfileModel form =
           ProfileModel.fromMap(e.data() as Map<String, dynamic>);
-      if (form.mail!.startsWith(keyword, 0)) {
+      if (form.mail!.startsWith(keyword, 0) &&
+          form.mail != FirebaseAuth.instance.currentUser!.email) {
         data.add(form);
       }
     }
@@ -282,7 +283,8 @@ class Auth {
     for (var e in res2.docs) {
       ProfileModel temp =
           ProfileModel.fromMap(e.data() as Map<String, dynamic>);
-      if (temp.name!.startsWith(keyword, 0)) {
+      if (temp.name!.startsWith(keyword, 0) &&
+          temp.mail != FirebaseAuth.instance.currentUser!.email) {
         if (data.contains(temp)) {
         } else {
           data.add(temp);
