@@ -33,7 +33,13 @@ class _NavBarViewState extends State<NavBarView> {
     return Scaffold(
       appBar: curPageIndex == 0
           ? AppBar(
-              title: const Text("Sdfklj"),
+              title: const Text(
+                "GLA Engage",
+                style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
             )
           : null,
       drawer: Drawer(
