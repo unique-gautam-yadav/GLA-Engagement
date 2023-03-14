@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gla_engage/backend/auth.dart';
 import 'package:gla_engage/root/pages/public_profile.dart';
 import 'package:provider/provider.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 import '../../backend/models.dart';
 import '../../backend/providers.dart';
 
@@ -17,7 +16,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  SpeechToText speechToText = SpeechToText();
+  // SpeechToText speechToText = SpeechToText();
   TextEditingController search = TextEditingController();
   var isListening = false;
   bool showClear = false;
