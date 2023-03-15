@@ -5,6 +5,7 @@ import 'package:gla_engage/backend/backend.dart';
 import 'package:gla_engage/root/pages/chat_screen.dart';
 import 'package:gla_engage/root/pages/public_profile.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../backend/auth.dart';
 import '../../backend/models.dart';
@@ -59,18 +60,9 @@ class _ChatState extends State<Chat> {
                                   FirebaseAuth.instance.currentUser!.email
                               ? recent!.elementAt(index).users![1]
                               : recent!.elementAt(index).users![0];
-                      return ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                    chatRoom: recent!.elementAt(index),
-                                    targetUserMail: targetUserMail),
-                              ));
-                        },
-                        title: Text(targetUserMail),
-                      );
+                      return RecentChatCard(
+                          chatRoom: recent!.elementAt(index),
+                          targetUserMail: targetUserMail);
                     },
                   )
                 : const Center(
@@ -79,6 +71,139 @@ class _ChatState extends State<Chat> {
             : const Center(
                 child: SpinKitCircle(color: Colors.green, size: 55),
               ));
+  }
+}
+
+class RecentChatCard extends StatefulWidget {
+  const RecentChatCard({
+    super.key,
+    required this.chatRoom,
+    required this.targetUserMail,
+  });
+
+  final ChatRoomModel chatRoom;
+  final String targetUserMail;
+
+  @override
+  State<RecentChatCard> createState() => _RecentChatCardState();
+}
+
+class _RecentChatCardState extends State<RecentChatCard> {
+  ProfileModel? targetUser;
+  getProfile() async {
+    ProfileModel? temp = await Auth.getProfileByMail(widget.targetUserMail);
+    setState(() {
+      targetUser = temp;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getProfile();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return targetUser != null
+        ? ListTile(
+            leading: MaterialButton(
+              padding: const EdgeInsets.all(5),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
+              minWidth: 0,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.width * .7,
+                        width: MediaQuery.of(context).size.width * .7,
+                        child: targetUser!.imgUrl != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  "${targetUser!.imgUrl}",
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : const Center(child: Text("No profile pic!!")),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: CircleAvatar(
+                  backgroundImage: targetUser!.imgUrl != null
+                      ? NetworkImage(targetUser!.imgUrl!)
+                      : null,
+                  child: targetUser!.imgUrl == null
+                      ? const Icon(Icons.person_3)
+                      : null),
+            ),
+            title: Text("${targetUser!.name}"),
+            // subtitle: Text(
+            //     "${targetUser!.type!.toUpperCase()} ${targetUser!.course} (${targetUser!.branch})"),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatScreen(
+                      targetUser: targetUser!,
+                      chatRoom: widget.chatRoom,
+                      targetUserMail: widget.targetUserMail,
+                    ),
+                  ));
+            },
+          )
+        : Container(
+            margin: const EdgeInsets.all(10),
+            child: Shimmer.fromColors(
+              period: const Duration(seconds: 2),
+              enabled: true,
+              baseColor: Colors.grey.withOpacity(.25),
+              highlightColor: Colors.white.withOpacity(.6),
+              child: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.grey.withOpacity(.9),
+                    ),
+                    height: 50,
+                    width: 50,
+                  ),
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 15,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(.6),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      const SizedBox(height: 5),
+                      Container(
+                        height: 15,
+                        width: MediaQuery.of(context).size.width - 100,
+                        decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(.6),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
   }
 }
 
@@ -268,6 +393,8 @@ class _SearchAndChatState extends State<SearchAndChat> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ChatScreen(
+                                      targetUser:
+                                          searchResult!.elementAt(index),
                                       chatRoom: c,
                                       targetUserMail:
                                           searchResult!.elementAt(index).mail!),

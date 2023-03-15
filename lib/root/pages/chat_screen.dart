@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gla_engage/backend/backend.dart';
-import 'package:gla_engage/root/pages/chats.dart';
 
 import '../../backend/models.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen(
-      {super.key, required this.chatRoom, required this.targetUserMail});
+      {super.key,
+      required this.chatRoom,
+      required this.targetUserMail,
+      required this.targetUser});
 
   final ChatRoomModel chatRoom;
   final String targetUserMail;
+  final ProfileModel targetUser;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -35,33 +38,41 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 40,
-        title: Row(
-          children: [
-            // CircleAvatar(
-            //   backgroundImage: widget.targetUser.imgUrl != null
-            //       ? NetworkImage(widget.targetUser.imgUrl!)
-            //       : null,
-            //   child: widget.targetUser.imgUrl == null
-            //       ? const Icon(Icons.person_3)
-            //       : null,
-            // ),
-            const SizedBox(width: 10),
-            Column(
-              children: [
-                Text(
-                  widget.targetUserMail,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w500),
+        title: Expanded(
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: widget.targetUser.imgUrl != null
+                    ? NetworkImage(widget.targetUser.imgUrl!)
+                    : null,
+                child: widget.targetUser.imgUrl == null
+                    ? const Icon(Icons.person_3)
+                    : null,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.targetUser.name!,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      child: Text(
+                        overflow: TextOverflow.ellipsis,
+                        widget.targetUser.mail!,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  widget.targetUserMail,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
       body: Column(
