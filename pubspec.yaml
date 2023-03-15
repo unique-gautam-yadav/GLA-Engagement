@@ -53,6 +53,8 @@ dependencies:
   palette_generator: ^0.3.3+2
   firebase_database: ^10.0.15
   shimmer: ^2.0.0
+  chat_bubbles: ^1.4.0
+  uuid: ^3.0.7
 
 
 dev_dependencies:

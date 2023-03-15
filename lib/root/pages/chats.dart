@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gla_engage/backend/backend.dart';
 import 'package:gla_engage/root/pages/chat_screen.dart';
 import 'package:gla_engage/root/pages/public_profile.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +18,81 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  List<ChatRoomModel>? recent;
+
+  getRecentChats() async {
+    List<ChatRoomModel> temp = await BackEnd.getRecentChats();
+    setState(() {
+      recent = temp;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getRecentChats();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text("Recent chats")),
+        floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SearchAndChat(),
+                  ));
+            },
+            icon: const Icon(Icons.add),
+            label: const Text("New Chat")),
+        body: recent != null
+            ? recent!.isNotEmpty
+                ? ListView.builder(
+                    itemCount: recent!.length,
+                    itemBuilder: (context, index) {
+                      String targetUserMail =
+                          recent!.elementAt(index).users![0] ==
+                                  FirebaseAuth.instance.currentUser!.email
+                              ? recent!.elementAt(index).users![1]
+                              : recent!.elementAt(index).users![0];
+                      return ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatScreen(
+                                    chatRoom: recent!.elementAt(index),
+                                    targetUserMail: targetUserMail),
+                              ));
+                        },
+                        title: Text(targetUserMail),
+                      );
+                    },
+                  )
+                : const Center(
+                    child: Text("No recent chat!!"),
+                  )
+            : const Center(
+                child: SpinKitCircle(color: Colors.green, size: 55),
+              ));
+  }
+}
+
+class SearchAndChat extends StatefulWidget {
+  const SearchAndChat({super.key});
+
+  @override
+  State<SearchAndChat> createState() => _SearchAndChatState();
+}
+
+class _SearchAndChatState extends State<SearchAndChat> {
   TextEditingController search = TextEditingController();
   bool showClear = false;
   List<ProfileModel>? searchResult;
-
   clear() {
     search.clear();
   }
@@ -185,15 +258,22 @@ class _ChatState extends State<Chat> {
                                     : null),
                           ),
                           title: Text("${searchResult!.elementAt(index).name}"),
-                          subtitle: const Text("last Chat"),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const ChatScreen(roomID: "roomID"),
-                              ),
-                            );
+                          subtitle: Text(
+                              "${searchResult!.elementAt(index).type!.toUpperCase()} ${searchResult!.elementAt(index).course} (${searchResult!.elementAt(index).branch})"),
+                          onTap: () async {
+                            ChatRoomModel c = await BackEnd.getChatRoom(
+                                searchResult!.elementAt(index));
+                            if (context.mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                      chatRoom: c,
+                                      targetUserMail:
+                                          searchResult!.elementAt(index).mail!),
+                                ),
+                              );
+                            }
                           },
                         );
                       },

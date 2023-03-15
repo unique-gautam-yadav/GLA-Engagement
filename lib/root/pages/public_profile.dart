@@ -36,9 +36,11 @@ class _PublicProfileState extends State<PublicProfile> {
     if (model!.coverImage != null) {
       PaletteGenerator d = await PaletteGenerator.fromImageProvider(
           maximumColorCount: 5, NetworkImage(model!.coverImage!));
-      setState(() {
-        appBarColor = Color.alphaBlend(d.colors.first, d.colors.last);
-      });
+      if (mounted) {
+        setState(() {
+          appBarColor = Color.alphaBlend(d.colors.first, d.colors.last);
+        });
+      }
       if (ThemeData.estimateBrightnessForColor(appBarColor!) ==
           Brightness.light) {
         iconColor = Colors.black;

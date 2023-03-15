@@ -18,9 +18,11 @@ class _HomePageState extends State<HomePage> {
 
   getData() async {
     List<HomePagePosts> temp = await Auth.getPosts();
-    setState(() {
-      data = temp;
-    });
+    if (mounted) {
+      setState(() {
+        data = temp;
+      });
+    }
   }
 
   @override
