@@ -20,8 +20,16 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController search = TextEditingController();
   var isListening = false;
   bool showClear = false;
-
   List<ProfileModel>? searchResult;
+  List<String> sortby = [
+    'year',
+    'company',
+    'passoutyear',
+    'course',
+    'addmissionyear',
+    'name',
+    'branch',
+  ];
 
   void clear() {
     search.clear();
@@ -101,10 +109,7 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       ),
                     ),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt))
-                  ],
-                ),
-                ElevatedButton(
+                    IconButton(
                     onPressed: () async {
                       if (search.text.isNotEmpty) {
                         setState(() {
@@ -117,7 +122,54 @@ class _SearchPageState extends State<SearchPage> {
                         });
                       }
                     },
-                    child: Text("search")),
+                    icon: Icon(Icons.search_rounded)),
+                  
+                  ],
+                ),
+                  IconButton(
+                        onPressed: () {
+                          //sortby function
+                          showModalBottomSheet(context: context,
+                           builder: (context) {
+                            return ListView.builder(
+                            itemCount: sortby.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ListTile(
+                                title: Text(sortby[index]),
+                              );
+                            },
+                          );
+                          });
+                         
+// var filtered;
+//  List<ProfileModel> d =  await Auth.searchUser();
+
+// var yearOptions=<String>[];
+// void addyearFilter(String year) {
+//   yearOptions.add(year);
+//   reubuildFilter();
+// }
+
+// void rebuildFilter()async {
+
+//   // ignore: iterable_contains_unrelated_type
+//   filtered=d.where((e) => e.branch  || e.addmissionYear|| e.course|| e.name|| e.passoutYear).where((e) => yearOptions.isEmpty || yearOptions.contains(e));
+
+//   // notifyListeners();
+// }
+// void removeFilters() {
+//   branch=null;
+//   addmissionYear=null;
+//   course= null;
+//   name=null;
+//   passoutYear= null;
+
+//   // notifyListeners();
+// }
+
+// void getFiltered() => filtered??d;
+                        },
+                        icon: Icon(Icons.sort_rounded)), IconButton(onPressed: (){}, icon: Icon(Icons.filter_alt))
               ],
             ),
           ),
