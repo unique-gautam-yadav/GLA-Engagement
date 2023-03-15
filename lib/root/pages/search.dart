@@ -5,6 +5,7 @@ import 'package:gla_engage/root/pages/public_profile.dart';
 import 'package:provider/provider.dart';
 import '../../backend/models.dart';
 import '../../backend/providers.dart';
+import 'filters.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -110,66 +111,47 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                     IconButton(
-                    onPressed: () async {
-                      if (search.text.isNotEmpty) {
-                        setState(() {
-                          searchResult = null;
-                        });
-                        List<ProfileModel> d =
-                            await Auth.searchUser(search.text);
-                        setState(() {
-                          searchResult = d;
-                        });
-                      }
-                    },
-                    icon: Icon(Icons.search_rounded)),
-                  
+                        onPressed: () async {
+                          if (search.text.isNotEmpty) {
+                            setState(() {
+                              searchResult = null;
+                            });
+                            List<ProfileModel> d =
+                                await Auth.searchUser(search.text);
+                            setState(() {
+                              searchResult = d;
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.search_rounded)),
                   ],
                 ),
-                  IconButton(
-                        onPressed: () {
-                          //sortby function
-                          showModalBottomSheet(context: context,
-                           builder: (context) {
+                IconButton(
+                    onPressed: () {
+                      //sortby function
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
                             return ListView.builder(
-                            itemCount: sortby.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return ListTile(
-                                title: Text(sortby[index]),
-                              );
-                            },
-                          );
+                              itemCount: sortby.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  title: Text(sortby[index]),
+                                );
+                              },
+                            );
                           });
-                         
-// var filtered;
-//  List<ProfileModel> d =  await Auth.searchUser();
-
-// var yearOptions=<String>[];
-// void addyearFilter(String year) {
-//   yearOptions.add(year);
-//   reubuildFilter();
-// }
-
-// void rebuildFilter()async {
-
-//   // ignore: iterable_contains_unrelated_type
-//   filtered=d.where((e) => e.branch  || e.addmissionYear|| e.course|| e.name|| e.passoutYear).where((e) => yearOptions.isEmpty || yearOptions.contains(e));
-
-//   // notifyListeners();
-// }
-// void removeFilters() {
-//   branch=null;
-//   addmissionYear=null;
-//   course= null;
-//   name=null;
-//   passoutYear= null;
-
-//   // notifyListeners();
-// }
-
-// void getFiltered() => filtered??d;
-                        },
-                        icon: Icon(Icons.sort_rounded)), IconButton(onPressed: (){}, icon: Icon(Icons.filter_alt))
+                    },
+                    icon: Icon(Icons.sort_rounded)),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyFilterPage(),
+                          ));
+                    },
+                    icon: Icon(Icons.filter_alt)),
               ],
             ),
           ),
