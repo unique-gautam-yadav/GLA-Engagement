@@ -165,7 +165,7 @@ class _NavBarViewState extends State<NavBarView> {
                         icon: Icon(
                           Icons.chat_rounded,
                           color: curPageIndex == 1
-                              ? Colors.green.shade900
+                              ? Theme.of(context).primaryColor
                               : Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),

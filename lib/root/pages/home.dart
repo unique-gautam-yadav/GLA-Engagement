@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gla_engage/backend/models.dart';
 import 'package:gla_engage/root/pages/posts_page.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../backend/auth.dart';
 
@@ -48,8 +49,91 @@ class _HomePageState extends State<HomePage> {
                           profileData: e.profile!,
                           fromProfile: false);
                     }).toList(),
+                    // children: [
+                    //   PostCard(
+                    //       e: data!.first.post!.toMap(),
+                    //       profileData: data!.first.profile!)
+                    // ],
                   )
-                : const SizedBox.shrink(),
+                : Shimmer.fromColors(
+                    baseColor: Colors.grey.withOpacity(.25),
+                    highlightColor: Colors.white.withOpacity(.6),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(.9),
+                                    borderRadius: BorderRadius.circular(50)),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 10,
+                                    width: 300,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(.9),
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    height: 10,
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(.9),
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                                left: 10, right: 10, top: 10),
+                            width: MediaQuery.of(context).size.width,
+                            height: (MediaQuery.of(context).size.width - 20) *
+                                (4 / 3),
+                            decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(.9),
+                                borderRadius: BorderRadius.circular(20)),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 10),
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(.9),
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 10),
+                                width: 200,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(.9),
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
