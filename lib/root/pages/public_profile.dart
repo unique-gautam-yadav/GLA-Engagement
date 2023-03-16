@@ -370,17 +370,17 @@ class _PublicProfileState extends State<PublicProfile> {
                                 ],
                               ),
                             ))
-                      : const Center(
+                      : Center(
                           child: SpinKitCircle(
-                            color: Colors.green,
+                            color: Theme.of(context).primaryColor,
                             size: 55,
                           ),
                         ),
                 ]
-              : const [
+              : [
                   Center(
                     child: SpinKitCircle(
-                      color: Colors.green,
+                      color: Theme.of(context).primaryColor,
                       size: 55,
                     ),
                   ),
@@ -414,7 +414,7 @@ class _AchievementCardState extends State<AchievementCard> {
       child: MaterialButton(
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        splashColor: Colors.green.shade300,
+        splashColor: Theme.of(context).primaryColor.withOpacity(.5),
         onPressed: () {
           setState(() {
             isExpanded = !isExpanded;
@@ -532,16 +532,17 @@ class ProfileLink extends StatelessWidget {
             }
           },
           minWidth: 2,
-          splashColor: Colors.green.shade300,
+          splashColor: Theme.of(context).primaryColor.withOpacity(.5),
           child: Container(
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.green.withOpacity(.6)),
+                  border: Border.all(
+                      color: Theme.of(context).primaryColor.withOpacity(.6)),
                   borderRadius: BorderRadius.circular(50)),
-              child: const Icon(
+              child: Icon(
                 Icons.link,
-                color: Colors.green,
+                color: Theme.of(context).primaryColor,
               )),
         ),
         Text(e['title'])

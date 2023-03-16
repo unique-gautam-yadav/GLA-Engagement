@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gla_engage/backend/backend.dart';
 import 'package:gla_engage/root/pages/chat_screen.dart';
 import 'package:gla_engage/root/pages/public_profile.dart';
@@ -39,38 +38,87 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Recent chats")),
-        floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SearchAndChat(),
-                  ));
-            },
-            icon: const Icon(Icons.add),
-            label: const Text("New Chat")),
-        body: recent != null
-            ? recent!.isNotEmpty
-                ? ListView.builder(
-                    itemCount: recent!.length,
-                    itemBuilder: (context, index) {
-                      String targetUserMail =
-                          recent!.elementAt(index).users![0] ==
-                                  FirebaseAuth.instance.currentUser!.email
-                              ? recent!.elementAt(index).users![1]
-                              : recent!.elementAt(index).users![0];
-                      return RecentChatCard(
-                          chatRoom: recent!.elementAt(index),
-                          targetUserMail: targetUserMail);
-                    },
-                  )
-                : const Center(
-                    child: Text("No recent chat!!"),
-                  )
-            : const Center(
-                child: SpinKitCircle(color: Colors.green, size: 55),
-              ));
+      appBar: AppBar(title: const Text("Recent chats")),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchAndChat(),
+                ));
+          },
+          icon: const Icon(Icons.add),
+          label: const Text("New Chat")),
+      body: recent != null
+          ? recent!.isNotEmpty
+              ? ListView.builder(
+                  itemCount: recent!.length,
+                  itemBuilder: (context, index) {
+                    String targetUserMail =
+                        recent!.elementAt(index).users![0] ==
+                                FirebaseAuth.instance.currentUser!.email
+                            ? recent!.elementAt(index).users![1]
+                            : recent!.elementAt(index).users![0];
+                    return RecentChatCard(
+                        chatRoom: recent!.elementAt(index),
+                        targetUserMail: targetUserMail);
+                  },
+                )
+              : const Center(
+                  child: Text("No recent chat!!"),
+                )
+          : Shimmer.fromColors(
+              baseColor: Colors.grey.withOpacity(.25),
+              highlightColor: Colors.white.withOpacity(.6),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                  itemCount: 10,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Colors.grey.withOpacity(.9),
+                            ),
+                            height: 50,
+                            width: 50,
+                          ),
+                          const SizedBox(width: 20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 15,
+                                width: 200,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(.6),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                height: 15,
+                                width: MediaQuery.of(context).size.width - 100,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(.6),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+    );
   }
 }
 
@@ -278,8 +326,6 @@ class _SearchAndChatState extends State<SearchAndChat> {
                             }
                           },
                           decoration: InputDecoration(
-                            focusColor: Colors.green,
-                            hoverColor: Colors.amber,
                             contentPadding: const EdgeInsets.all(15.0),
                             border: InputBorder.none,
                             filled: true,

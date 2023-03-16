@@ -87,7 +87,7 @@ class _SignInPageState extends State<SignInPage> {
                           height: 250,
                           width: 250,
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: const Center(

@@ -110,8 +110,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Text("No messages yet!!"));
                     }
                   } else {
-                    return const Center(
-                        child: SpinKitCircle(color: Colors.green, size: 55));
+                    return Center(
+                        child: SpinKitCircle(
+                            color: Theme.of(context).primaryColor, size: 55));
                   }
                 }),
           ),
@@ -124,7 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Expanded(
                   child: TextFormField(
-                    cursorColor: Colors.green,
+                    cursorColor: Theme.of(context).primaryColor,
                     autocorrect: true,
                     controller: msgcontrol,
                     textAlign: TextAlign.start,

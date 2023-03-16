@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         drawerTheme: const DrawerThemeData(backgroundColor: Colors.white),
-        colorSchemeSeed: Colors.indigo,
+        colorSchemeSeed: Colors.deepPurple,
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -52,7 +52,8 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(Colors.indigo),
+            backgroundColor:
+                MaterialStateProperty.all(Theme.of(context).primaryColor),
           ),
         ),
       ),
