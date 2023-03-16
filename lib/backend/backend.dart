@@ -10,9 +10,9 @@ final FirebaseFirestore store = FirebaseFirestore.instance;
 final CollectionReference chatRoomRef = store.collection("chatrooms");
 
 class BackEnd {
-  static Future<ChatRoomModel> getChatRoom(ProfileModel targetUser) async {
+  static Future<ChatRoomModel> getChatRoom(String targetUserMail) async {
     QuerySnapshot<Object?> d = await chatRoomRef
-        .where('participants.${targetUser.mail!.hashCode}', isEqualTo: true)
+        .where('participants.${targetUserMail.hashCode}', isEqualTo: true)
         .where(
             "participants.${FirebaseAuth.instance.currentUser!.email!.hashCode}",
             isEqualTo: true)
@@ -24,10 +24,10 @@ class BackEnd {
       ChatRoomModel model =
           ChatRoomModel(chatroomid: const Uuid().v1(), participants: {
         FirebaseAuth.instance.currentUser!.email!.hashCode.toString(): true,
-        targetUser.mail!.hashCode.toString(): true
+        targetUserMail.hashCode.toString(): true
       }, users: [
         FirebaseAuth.instance.currentUser!.email!,
-        targetUser.mail!,
+        targetUserMail,
       ]);
       await chatRoomRef.doc(model.chatroomid).set(model.toMap());
       return model;

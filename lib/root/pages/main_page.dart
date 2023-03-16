@@ -7,6 +7,7 @@ import 'package:gla_engage/backend/providers.dart';
 import 'package:gla_engage/root/pages/add_post.dart';
 import 'package:gla_engage/root/pages/chats.dart';
 import 'package:gla_engage/root/pages/home.dart';
+import 'package:gla_engage/root/pages/public_profile.dart';
 import 'package:gla_engage/root/pages/search.dart';
 import 'package:gla_engage/root/pages/self_profile.dart';
 import 'package:provider/provider.dart';
@@ -85,6 +86,18 @@ class _NavBarViewState extends State<NavBarView> {
                     children: [
                       Text("${context.watch<UserProvider>().getProfile!.name}"),
                       Text("${context.watch<UserProvider>().getProfile!.mail}"),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PublicProfile(
+                                    email: FirebaseAuth
+                                        .instance.currentUser!.email!),
+                              ));
+                        },
+                        child: const Text("View Profile"),
+                      )
                     ],
                   ),
                 )
@@ -122,7 +135,7 @@ class _NavBarViewState extends State<NavBarView> {
               decoration: BoxDecoration(
                   border: Border.all(
                       color: Theme.of(context).primaryColor.withOpacity(.1)),
-                  color: Colors.indigo,
+                  color: Colors.indigo.shade400,
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(25))),
               child: ClipRRect(
@@ -173,12 +186,13 @@ class _NavBarViewState extends State<NavBarView> {
                         height: 50,
                         child: IconButton(
                             style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(25),
                                 shape: MaterialStateProperty.all(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12))),
+                                            BorderRadius.circular(200))),
                                 backgroundColor: MaterialStateProperty.all(
-                                    Theme.of(context).primaryColor)),
+                                    Colors.indigoAccent.shade200)),
                             onPressed: () {
                               Navigator.push(
                                   context,

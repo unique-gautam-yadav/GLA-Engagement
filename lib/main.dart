@@ -13,7 +13,6 @@ import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
 import 'root/pages/auth/signup.dart';
 import 'root/pages/main_page.dart';
-import 'splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding();
@@ -57,7 +56,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const Splash(),
+      home: const SplashScreen(),
     );
   }
 }

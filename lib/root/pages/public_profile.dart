@@ -1,8 +1,12 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gla_engage/backend/backend.dart';
+import 'package:gla_engage/root/pages/chat_screen.dart';
+import 'package:gla_engage/root/pages/chats.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -184,6 +188,35 @@ class _PublicProfileState extends State<PublicProfile> {
                             ],
                           ),
                         ),
+                        widget.email != FirebaseAuth.instance.currentUser!.email
+                            ? ButtonBar(
+                                children: [
+                                  OutlinedButton.icon(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.public_sharp),
+                                      label: const Text("Follow")),
+                                  OutlinedButton.icon(
+                                      onPressed: () async {
+                                        ChatRoomModel chatRoom =
+                                            await BackEnd.getChatRoom(
+                                                model!.mail!);
+                                        if (context.mounted) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ChatScreen(
+                                                  chatRoom: chatRoom,
+                                                  targetUserMail: model!.mail!,
+                                                  targetUser: model!),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      icon: const Icon(Icons.message_outlined),
+                                      label: const Text("Message")),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
                         const Divider(),
                         SizedBox(
                           width: double.infinity,
