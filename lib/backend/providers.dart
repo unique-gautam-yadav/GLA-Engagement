@@ -5,6 +5,8 @@ import 'package:gla_engage/backend/models.dart';
 class UserProvider extends ChangeNotifier {
   late String _userType;
 
+  late UserDetails _userDetails;
+
   String get getUserType => _userType;
 
   AlumniModel? _alumni;
@@ -18,6 +20,8 @@ class UserProvider extends ChangeNotifier {
   StudentModel? get getStudent => _student;
 
   TeacherModel? get getTeacher => _teacher;
+
+  UserDetails? get getUserDetails => _userDetails;
 
   ProfileModel? get getProfile {
     if (_userType == KeyWords.alumniUser) {
@@ -40,6 +44,11 @@ class UserProvider extends ChangeNotifier {
       return _teacher!.toMap();
     }
     return {};
+  }
+
+  void setUserDetails(UserDetails data) {
+    _userDetails = data;
+    notifyListeners();
   }
 
   void setUserType(String userType) {

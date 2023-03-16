@@ -787,3 +787,45 @@ class ChatModel {
     );
   }
 }
+
+class UserDetails {
+  List<String>? followers;
+  List<String>? following;
+  UserDetails({
+    this.followers,
+    this.following,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'followers': followers,
+      'following': following,
+    };
+  }
+
+  factory UserDetails.fromMap(Map<String, dynamic> map) {
+    return UserDetails(
+      followers: map['followers'] != null
+          ? List<String>.from((map['followers'] as List<dynamic>))
+          : null,
+      following: map['following'] != null
+          ? List<String>.from((map['following'] as List<dynamic>))
+          : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory UserDetails.fromJson(String source) =>
+      UserDetails.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  UserDetails copyWith({
+    List<String>? followers,
+    List<String>? following,
+  }) {
+    return UserDetails(
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
+    );
+  }
+}
