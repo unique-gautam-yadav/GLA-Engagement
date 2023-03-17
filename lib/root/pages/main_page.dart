@@ -7,6 +7,7 @@ import 'package:gla_engage/backend/providers.dart';
 import 'package:gla_engage/root/pages/add_post.dart';
 import 'package:gla_engage/root/pages/chats.dart';
 import 'package:gla_engage/root/pages/home.dart';
+import 'package:gla_engage/root/pages/public_profile.dart';
 import 'package:gla_engage/root/pages/search.dart';
 import 'package:gla_engage/root/pages/self_profile.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,8 @@ class _NavBarViewState extends State<NavBarView> {
 
   int curPageIndex = 0;
 
+  Color selectedIconColor = Colors.white;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,16 +49,13 @@ class _NavBarViewState extends State<NavBarView> {
           child: ListView(
         children: [
           Container(
-            padding: const EdgeInsets.only(bottom: 20),
+            padding: const EdgeInsets.only(bottom: 20, top: 10),
+            margin: const EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
-                borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(20)),
-                color: Colors.green.shade50,
-                boxShadow: const [
-                  BoxShadow(blurRadius: 3, color: Colors.white),
-                  BoxShadow(
-                      blurRadius: 5, color: Colors.grey, offset: Offset(0, 3))
-                ]),
+              borderRadius:
+                  const BorderRadius.vertical(bottom: Radius.circular(20)),
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -86,6 +86,18 @@ class _NavBarViewState extends State<NavBarView> {
                     children: [
                       Text("${context.watch<UserProvider>().getProfile!.name}"),
                       Text("${context.watch<UserProvider>().getProfile!.mail}"),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PublicProfile(
+                                    email: FirebaseAuth
+                                        .instance.currentUser!.email!),
+                              ));
+                        },
+                        child: const Text("View Profile"),
+                      )
                     ],
                   ),
                 )
@@ -115,20 +127,20 @@ class _NavBarViewState extends State<NavBarView> {
             ),
           ),
           Positioned(
-            bottom: 10,
-            left: 12,
-            right: 12,
+            bottom: 0,
+            left: 0,
+            right: 0,
             child: Container(
               height: 65,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.green.shade100),
-                color: Theme.of(context).primaryColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(25),
-              ),
+                  border: Border.all(
+                      color: Theme.of(context).primaryColor.withOpacity(.1)),
+                  color: Colors.indigo.shade300,
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(25))),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
+                  filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
                   child: ButtonBar(
                     alignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -146,7 +158,7 @@ class _NavBarViewState extends State<NavBarView> {
                         child: Icon(
                           Icons.home_filled,
                           color: curPageIndex == 0
-                              ? Colors.green.shade900
+                              ? selectedIconColor
                               : Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),
@@ -165,7 +177,7 @@ class _NavBarViewState extends State<NavBarView> {
                         icon: Icon(
                           Icons.chat_rounded,
                           color: curPageIndex == 1
-                              ? Colors.green.shade900
+                              ? selectedIconColor
                               : Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),
@@ -174,12 +186,13 @@ class _NavBarViewState extends State<NavBarView> {
                         height: 50,
                         child: IconButton(
                             style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(25),
                                 shape: MaterialStateProperty.all(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12))),
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.green)),
+                                            BorderRadius.circular(200))),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.indigoAccent.shade200)),
                             onPressed: () {
                               Navigator.push(
                                   context,
@@ -187,7 +200,10 @@ class _NavBarViewState extends State<NavBarView> {
                                     builder: (context) => const NewPostPage(),
                                   ));
                             },
-                            icon: const Icon(Icons.add)),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            )),
                       ),
                       IconButton(
                         onPressed: () {
@@ -200,7 +216,7 @@ class _NavBarViewState extends State<NavBarView> {
                         icon: Icon(
                           Icons.search_rounded,
                           color: curPageIndex == 2
-                              ? Colors.green.shade900
+                              ? selectedIconColor
                               : Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),
@@ -215,7 +231,7 @@ class _NavBarViewState extends State<NavBarView> {
                         icon: Icon(
                           CupertinoIcons.person_alt_circle,
                           color: curPageIndex == 3
-                              ? Colors.green.shade900
+                              ? selectedIconColor
                               : Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),

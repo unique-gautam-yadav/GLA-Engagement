@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gla_engage/backend/keywords.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:validators/validators.dart' as valdi;
 import 'package:gla_engage/backend/auth.dart';
@@ -292,8 +293,8 @@ class _SelfProfileState extends State<SelfProfile> {
                                               )),
                                             ),
                                           )
-                                    : const SpinKitCircle(
-                                        color: Colors.green,
+                                    : SpinKitCircle(
+                                        color: Theme.of(context).primaryColor,
                                         size: 35,
                                       ),
                               )),
@@ -332,8 +333,8 @@ class _SelfProfileState extends State<SelfProfile> {
                                             },
                                             child: const Icon(Icons.person_2,
                                                 size: 55))
-                                    : const SpinKitCircle(
-                                        color: Colors.green,
+                                    : SpinKitCircle(
+                                        color: Theme.of(context).primaryColor,
                                         size: 45,
                                       ),
                               ),
@@ -495,7 +496,9 @@ class _SelfProfileState extends State<SelfProfile> {
                                     ),
                                   );
                                 },
-                                splashColor: Colors.green.shade300,
+                                splashColor: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(.5),
                                 padding: EdgeInsets.zero,
                                 minWidth: 1,
                                 height: 10,
@@ -510,13 +513,13 @@ class _SelfProfileState extends State<SelfProfile> {
                                                 Colors.black.withOpacity(.6)),
                                         borderRadius:
                                             BorderRadius.circular(15)),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.edit,
-                                      color: Colors.green,
+                                      color: Theme.of(context).primaryColor,
                                     )),
                               )
                             ],
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -699,10 +702,10 @@ class _SelfProfileState extends State<SelfProfile> {
                       })
                   : const SizedBox.shrink(),
             ]
-          : const [
+          : [
               Center(
                 child: SpinKitCircle(
-                  color: Colors.green,
+                  color: Theme.of(context).primaryColor,
                   size: 55,
                 ),
               ),
@@ -742,7 +745,7 @@ class _AchievementCardState extends State<AchievementCard> {
       child: MaterialButton(
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        splashColor: Colors.green.shade300,
+        splashColor: Theme.of(context).primaryColor.withOpacity(.5),
         onLongPress: () {
           showModalBottomSheet(
             context: context,
@@ -933,17 +936,16 @@ class ProfileLink extends StatelessWidget {
             }
           },
           minWidth: 2,
-          splashColor: Colors.green.shade300,
+          splashColor: Theme.of(context).primaryColor.withOpacity(.5),
           child: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.green.withOpacity(.6)),
-                  borderRadius: BorderRadius.circular(50)),
-              child: const Icon(
-                Icons.link,
-                color: Colors.green,
-              )),
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: Theme.of(context).primaryColor.withOpacity(.6)),
+                borderRadius: BorderRadius.circular(50)),
+            child: SocialMeda.getIcon(e['url']),
+          ),
         ),
         Text(e['title'])
       ],
@@ -964,7 +966,7 @@ class AddSocialButton extends StatelessWidget {
         MaterialButton(
           padding: EdgeInsets.zero,
           minWidth: 2,
-          splashColor: Colors.green.shade300,
+          splashColor: Theme.of(context).primaryColor.withOpacity(.5),
           onPressed: () {
             final fKey = GlobalKey<FormState>();
             TextEditingController title = TextEditingController();

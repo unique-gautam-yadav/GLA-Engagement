@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gla_engage/splash.dart';
 import 'package:provider/provider.dart';
-
 import 'backend/auth.dart';
 import 'backend/keywords.dart';
 import 'backend/models.dart';
@@ -14,14 +13,18 @@ import 'root/pages/auth/login.dart';
 import 'root/pages/auth/signup.dart';
 import 'root/pages/main_page.dart';
 import 'splash_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+   await messaging.requestPermission();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await messaging.getToken();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
   ], child: const MyApp()));
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         drawerTheme: const DrawerThemeData(backgroundColor: Colors.white),
-        colorSchemeSeed: Colors.green,
+        colorSchemeSeed: Colors.deepPurple,
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -52,11 +55,12 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(Colors.green),
+            backgroundColor:
+                MaterialStateProperty.all(Theme.of(context).primaryColor),
           ),
         ),
       ),
-      home: const Splash(),
+      home: const SplashScreen(),
     );
   }
 }
@@ -97,29 +101,31 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   getData() async {
     ProfileModel? data = await Auth.getProfileByMail(
         FirebaseAuth.instance.currentUser!.email ?? "");
-    if (context.mounted) {
-      if (data == null) {
-        FirebaseAuth.instance.signOut();
-      } else {
-        if (data.type == KeyWords.studentUser) {
-          context.read<UserProvider>().setUserType(KeyWords.studentUser);
-          context
-              .read<UserProvider>()
-              .setStudent(StudentModel.fromMap(data.toMap()));
-        } else if (data.type == KeyWords.alumniUser) {
-          context.read<UserProvider>().setUserType(KeyWords.alumniUser);
-          context
-              .read<UserProvider>()
-              .setAlumni(AlumniModel.fromMap(data.toMap()));
-        } else if (data.type == KeyWords.teacherUser) {
-          context.read<UserProvider>().setUserType(KeyWords.teacherUser);
-          context
-              .read<UserProvider>()
-              .setTeacher(TeacherModel.fromMap(data.toMap()));
+    if (mounted) {
+      if (context.mounted) {
+        if (data == null) {
+          FirebaseAuth.instance.signOut();
+        } else {
+          if (data.type == KeyWords.studentUser) {
+            context.read<UserProvider>().setUserType(KeyWords.studentUser);
+            context
+                .read<UserProvider>()
+                .setStudent(StudentModel.fromMap(data.toMap()));
+          } else if (data.type == KeyWords.alumniUser) {
+            context.read<UserProvider>().setUserType(KeyWords.alumniUser);
+            context
+                .read<UserProvider>()
+                .setAlumni(AlumniModel.fromMap(data.toMap()));
+          } else if (data.type == KeyWords.teacherUser) {
+            context.read<UserProvider>().setUserType(KeyWords.teacherUser);
+            context
+                .read<UserProvider>()
+                .setTeacher(TeacherModel.fromMap(data.toMap()));
+          }
+          setState(() {
+            userType = data.type;
+          });
         }
-        setState(() {
-          userType = data.type;
-        });
       }
     }
   }

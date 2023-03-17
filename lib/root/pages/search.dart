@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gla_engage/backend/auth.dart';
@@ -22,6 +24,7 @@ class _SearchPageState extends State<SearchPage> {
   var isListening = false;
   bool showClear = false;
   List<ProfileModel>? searchResult;
+  List<ProfileModel>? suggestion;
   List<String> sortby = [
     'year',
     'company',
@@ -34,6 +37,21 @@ class _SearchPageState extends State<SearchPage> {
 
   void clear() {
     search.clear();
+  }
+
+  @override
+  initState() {
+    super.initState();
+    suggestionlist();
+  }
+
+  suggestionlist() async {
+    // List<ProfileModel> s = await Auth.suggestion(
+    //     context.watch<UserProvider>().getProfile!.branch!);
+    List<ProfileModel> s = await Auth.suggestion("cs");
+    setState(() {
+      suggestion = s;
+    });
   }
 
   @override
@@ -126,32 +144,32 @@ class _SearchPageState extends State<SearchPage> {
                         icon: Icon(Icons.search_rounded)),
                   ],
                 ),
-                IconButton(
-                    onPressed: () {
-                      //sortby function
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return ListView.builder(
-                              itemCount: sortby.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                  title: Text(sortby[index]),
-                                );
-                              },
-                            );
-                          });
-                    },
-                    icon: Icon(Icons.sort_rounded)),
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyFilterPage(),
-                          ));
-                    },
-                    icon: Icon(Icons.filter_alt)),
+                // IconButton(
+                //     onPressed: () {
+                //       //sortby function
+                //       showModalBottomSheet(
+                //           context: context,
+                //           builder: (context) {
+                //             return ListView.builder(
+                //               itemCount: sortby.length,
+                //               itemBuilder: (BuildContext context, int index) {
+                //                 return ListTile(
+                //                   title: Text(sortby[index]),
+                //                 );
+                //               },
+                //             );
+                //           });
+                //     },
+                //     icon: Icon(Icons.sort_rounded)),
+                // IconButton(
+                //     onPressed: () {
+                //       Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //             builder: (context) => MyFilterPage(),
+                //           ));
+                //     },
+                //     icon: Icon(Icons.filter_alt)),
               ],
             ),
           ),
@@ -207,7 +225,76 @@ class _SearchPageState extends State<SearchPage> {
                     },
                   ),
                 )
-              : const SizedBox.shrink()
+              : const SizedBox.shrink(),
+          Align(
+            alignment: AlignmentDirectional.topStart,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 15,
+                bottom: 12,
+                top: 12,
+              ),
+              child: Text(
+                "Suggestions",
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
+          Container(
+            child: suggestion != null
+                ? SizedBox(
+                    height: MediaQuery.of(context).size.height - 68,
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView.builder(
+                      itemCount: suggestion!.length - 1,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.only(
+                              left: 16, right: 16, bottom: 16),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: MaterialButton(
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PublicProfile(
+                                      email:
+                                          suggestion!.elementAt(index).mail!),
+                                ),
+                              );
+                            },
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: suggestion!
+                                            .elementAt(index)
+                                            .imgUrl !=
+                                        null
+                                    ? NetworkImage(
+                                        suggestion!.elementAt(index).imgUrl!)
+                                    : null,
+                                child:
+                                    suggestion!.elementAt(index).imgUrl == null
+                                        ? const Icon(Icons.person_4)
+                                        : null,
+                              ),
+                              title: Text(suggestion!.elementAt(index).name!),
+                              subtitle: Text(
+                                  // "${suggestion!.elementAt(index).course} (${searchResult?.elementAt(index).branch}) \n"
+                                  " ${suggestion!.elementAt(index).mail!}"),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
       ),
     );
