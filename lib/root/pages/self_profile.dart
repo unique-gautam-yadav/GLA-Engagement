@@ -640,12 +640,68 @@ class _SelfProfileState extends State<SelfProfile> {
                   ),
                 ]),
               ),
-              Column(
-                  children: model!.skills != null && model!.skills!.isNotEmpty
-                      ? [
-                        ///
-                        ]
-                      : []),
+              const SizedBox(height: 15),
+              Container(
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: const Offset(5, 5),
+                          blurRadius: 3,
+                          color: Colors.grey.shade700),
+                      const BoxShadow(
+                        blurRadius: 1,
+                        color: Colors.white,
+                      )
+                    ]),
+                child: Column(
+                  children: [
+                    const Text("Skills"),
+                    model!.skills != null && model!.skills!.isNotEmpty
+                        ? SkillCard(
+                            index: 0,
+                            model: model!,
+                            getProfileData: getProfileData)
+                        : Text("No skill added !!",
+                            style: TextStyle(
+                              color: Colors.red.shade900,
+                            )),
+                    ButtonBar(
+                      alignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        OutlinedButton.icon(
+                          icon: const Icon(Icons.show_chart),
+                          onPressed: model!.skills != null &&
+                                  model!.skills!.length > 1
+                              ? () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AllAchievements(
+                                              getProfileData: getProfileData,
+                                              model: model!)));
+                                }
+                              : null,
+                          label: const Text("view more"),
+                        ),
+                        OutlinedButton.icon(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NewSkill(
+                                        model: model!,
+                                        getProfileData: getProfileData)));
+                          },
+                          label: const Text("add new"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               posts != null
                   ? GridView.builder(
                       padding: const EdgeInsets.all(10),
@@ -798,7 +854,7 @@ class _SkillCardState extends State<SkillCard> {
                 child: Text(
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  "${widget.model.skills!.elementAt(widget.index)['title'](widget.model.skills!.elementAt(widget.index)['title'])}",
+                  "${widget.model.skills!.elementAt(widget.index)['title']} (${widget.model.skills!.elementAt(widget.index)['level']})",
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
@@ -861,18 +917,19 @@ class _AchievementCardState extends State<AchievementCard> {
                         borderRadius: BorderRadius.circular(12)),
                   ),
                   OutlinedButton(
-                      onPressed: () async {
-                        await Auth.removeAchievement(
-                            data: widget.model.achievements!
-                                .elementAt(widget.index),
-                            context: context,
-                            user: widget.model);
-                        widget.getProfileData();
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: const Text("Remove"))
+                    onPressed: () async {
+                      await Auth.removeAchievement(
+                          data: widget.model.achievements!
+                              .elementAt(widget.index),
+                          context: context,
+                          user: widget.model);
+                      widget.getProfileData();
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text("Remove"),
+                  )
                 ],
               ),
             ),
@@ -1198,6 +1255,150 @@ class AllAchievements extends StatelessWidget {
               child: AchievementCard(
                   index: index, model: model, getProfileData: getProfileData));
         },
+      ),
+    );
+  }
+}
+
+class NewSkill extends StatefulWidget {
+  const NewSkill(
+      {super.key, required this.model, required this.getProfileData});
+
+  final ProfileModel model;
+  final VoidCallback getProfileData;
+
+  @override
+  State<NewSkill> createState() => _NewSkillState();
+}
+
+class _NewSkillState extends State<NewSkill> {
+  TextEditingController title = TextEditingController();
+  TextEditingController briefD = TextEditingController();
+  String? level;
+
+  bool processing = false;
+
+  final fKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("New Skill"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(
+            left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: fKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "This field is required";
+                          } else {
+                            return null;
+                          }
+                        },
+                        controller: title,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            labelText: "Skill"),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "This field is required";
+                          } else if (value.length < 3) {
+                            return "Description must have at least 3 char";
+                          } else {
+                            return null;
+                          }
+                        },
+                        maxLines: 2,
+                        controller: briefD,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            labelText: "Brief description of Skill"),
+                      ),
+                      const SizedBox(height: 20),
+                      DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          labelText: "Skill Level",
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                              value: "Beginner", child: Text("Beginner")),
+                          DropdownMenuItem(
+                              value: "Intermediate",
+                              child: Text("Intermediate")),
+                          DropdownMenuItem(
+                              value: "Advanced", child: Text("Advanced")),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            level = value;
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // const Expanded(child: SizedBox.shrink()),
+            ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    processing = !processing;
+                  });
+                  if (fKey.currentState!.validate()) {
+                    SkillModel data = SkillModel(
+                      description: briefD.text,
+                      level: level,
+                      title: title.text,
+                    );
+                    await Auth.addSkill(
+                        data: data.toMap(),
+                        context: context,
+                        user: widget.model);
+                    widget.getProfileData();
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  }
+                  setState(() {
+                    processing = !processing;
+                  });
+                },
+                child: !processing
+                    ? const Expanded(
+                        child: Text(
+                          "Add",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    : const Expanded(
+                        child: SpinKitCircle(
+                        color: Colors.white,
+                        size: 25,
+                      ))),
+            MediaQuery.of(context).viewInsets.bottom < 10
+                ? const SizedBox(height: 50)
+                : const SizedBox.shrink(),
+          ],
+        ),
       ),
     );
   }

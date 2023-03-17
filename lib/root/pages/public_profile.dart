@@ -85,18 +85,6 @@ class _PublicProfileState extends State<PublicProfile> {
       appBar: AppBar(
         backgroundColor: appBarColor,
         iconTheme: IconThemeData(color: iconColor),
-        // actions: [
-        // Expanded(
-        //   child: Container(
-        //     decoration: BoxDecoration(
-        //       gradient: LinearGradient(
-        //         begin: Alignment.topCenter,
-        //         end: Alignment.bottomCenter,
-        //         colors: clr!.colors.toList().reversed.toList(),
-        //       ),
-        //     ),
-        //   ),
-        // )]
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -331,6 +319,52 @@ class _PublicProfileState extends State<PublicProfile> {
                                     icon: const Icon(Icons.show_chart),
                                     onPressed: model!.achievements != null &&
                                             model!.achievements!.length > 1
+                                        ? () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AllAchievements(
+                                                            model: model!)));
+                                          }
+                                        : null,
+                                    label: const Text("view more"),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  model!.skills != null && model!.skills!.isNotEmpty
+                      ? Container(
+                          margin: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              boxShadow: [
+                                BoxShadow(
+                                    offset: const Offset(5, 5),
+                                    blurRadius: 3,
+                                    color: Colors.grey.shade700),
+                                const BoxShadow(
+                                  blurRadius: 1,
+                                  color: Colors.white,
+                                )
+                              ]),
+                          child: Column(
+                            children: [
+                              const Text("Archiements or Jobs"),
+                              AchievementCard(
+                                model: model!,
+                                index: 0,
+                              ),
+                              ButtonBar(
+                                alignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  OutlinedButton.icon(
+                                    icon: const Icon(Icons.show_chart),
+                                    onPressed: model!.skills != null &&
+                                            model!.skills!.length > 1
                                         ? () {
                                             Navigator.push(
                                                 context,
