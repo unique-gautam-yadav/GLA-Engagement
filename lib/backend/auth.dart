@@ -293,7 +293,7 @@ class Auth {
   }
 
   static Future<List<ProfileModel>> suggestion(String keyword) async {
-    QuerySnapshot<Object?> res = await studentsRef
+    QuerySnapshot<Object?> res = await usersRef
         .where("branch", isEqualTo: keyword)
         // .where('name', isGreaterThanOrEqualTo: keyword)
         .get();
@@ -328,6 +328,7 @@ class Auth {
   static follow() async {
     usersRef
         .doc(FirebaseAuth.instance.currentUser!.email!)
-        .collection("followers").get();
+        .collection("followers")
+        .get();
   }
 }
