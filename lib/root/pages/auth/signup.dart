@@ -113,10 +113,23 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController id = TextEditingController();
   TextEditingController course = TextEditingController();
   TextEditingController branch = TextEditingController();
-  TextEditingController sem = TextEditingController();
+  // TextEditingController sem = TextEditingController();
   TextEditingController admisionYear = TextEditingController();
   TextEditingController bio = TextEditingController();
   TextEditingController passoutYear = TextEditingController();
+  String dropdownvalue = "please select your semester";
+
+  // List of items in our dropdown menu
+  var items = [
+    'sem 1',
+    'sem 2',
+    'sem 3',
+    'sem 4',
+    'sem 5',
+    'sem 6',
+    'sem 7',
+    'sem 8',
+  ];
 
   switchToNextStep() async {
     setState(() {
@@ -157,7 +170,7 @@ class _SignUpPageState extends State<SignUpPage> {
             mail: mail.text,
             name: fullName.text,
             phone: phone.text,
-            sem: sem.text,
+            sem: dropdownvalue,
             unvRoll: id.text,
             type: userType,
           );
@@ -583,17 +596,40 @@ class _SignUpPageState extends State<SignUpPage> {
                                       ),
                                     ),
                                     const SizedBox(height: 15),
-                                    TextFormField(
-                                      controller: sem,
-                                      decoration: InputDecoration(
-                                        hintText: "Enter your current sem",
-                                        labelText: "Semester",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                      ),
+                                    DropdownButton(
+                                      // Initial Value
+                                      value: dropdownvalue,
+
+                                      // Down Arrow Icon
+                                      icon:
+                                          const Icon(Icons.keyboard_arrow_down),
+
+                                      // Array list of items
+                                      items: items.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Text(items),
+                                        );
+                                      }).toList(),
+                                      // After selecting the desired option,it will
+                                      // change button value to selected value
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownvalue = newValue!;
+                                        });
+                                      },
                                     ),
+                                    // TextFormField(
+                                    //   controller: sem,
+                                    //   decoration: InputDecoration(
+                                    //     hintText: "Enter your current sem",
+                                    //     labelText: "Semester",
+                                    //     border: OutlineInputBorder(
+                                    //       borderRadius:
+                                    //           BorderRadius.circular(12),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     const SizedBox(height: 15),
                                     TextFormField(
                                       controller: admisionYear,
@@ -965,7 +1001,7 @@ class _SignUpPageState extends State<SignUpPage> {
     passoutYear.dispose();
     bio.dispose();
     id.dispose();
-    sem.dispose();
+    // sem.dispose();
     password.dispose();
     super.dispose();
   }
