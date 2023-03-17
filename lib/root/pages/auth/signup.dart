@@ -597,33 +597,29 @@ class _SignUpPageState extends State<SignUpPage> {
                                       ),
                                     ),
                                     const SizedBox(height: 15),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(width: 1)),
-                                      child: DropdownButton(
-                                        hint: Text('select your semester'),
-                                        // Initial Value
-                                        value: dropdownvalue,
+                                    DropdownButton(
+                                      hint: Text('select your semester'),
+                                      // Initial Value
+                                      value: dropdownvalue,
 
-                                        // Down Arrow Icon
-                                        icon: const Icon(
-                                            Icons.keyboard_arrow_down),
+                                      // Down Arrow Icon
+                                      icon: const Icon(
+                                          Icons.keyboard_arrow_down),
 
-                                        // Array list of items
-                                        items: items.map((String items) {
-                                          return DropdownMenuItem(
-                                            value: items,
-                                            child: Text(items),
-                                          );
-                                        }).toList(),
-                                        // After selecting the desired option,it will
-                                        // change button value to selected value
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            dropdownvalue = newValue!;
-                                          });
-                                        },
-                                      ),
+                                      // Array list of items
+                                      items: items.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Text(items),
+                                        );
+                                      }).toList(),
+                                      // After selecting the desired option,it will
+                                      // change button value to selected value
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownvalue = newValue!;
+                                        });
+                                      },
                                     ),
                                     // TextFormField(
                                     //   controller: sem,
