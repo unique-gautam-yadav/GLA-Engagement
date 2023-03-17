@@ -360,6 +360,23 @@ class Auth {
     return data;
   }
 
+  static Future<List<ProfileModel>> suggestion(String keyword) async {
+    QuerySnapshot<Object?> res = await usersRef
+        .where("branch", isEqualTo: keyword)
+        // .where('name', isGreaterThanOrEqualTo: keyword)
+        .get();
+    List<ProfileModel> data = [];
+    for (var e in res.docs) {
+      ProfileModel form =
+          ProfileModel.fromMap(e.data() as Map<String, dynamic>);
+      // if (form.mail!.startsWith(keyword, 0) &&
+      //     form.mail != FirebaseAuth.instance.currentUser!.email) {
+      data.add(form);
+      // }
+    }
+    return data;
+  }
+
   static Future<List<HomePagePosts>> getPosts() async {
     QuerySnapshot<Object?> data =
         await postsRef.orderBy("timeStamp", descending: true).get();

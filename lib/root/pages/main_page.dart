@@ -135,7 +135,7 @@ class _NavBarViewState extends State<NavBarView> {
               decoration: BoxDecoration(
                   border: Border.all(
                       color: Theme.of(context).primaryColor.withOpacity(.1)),
-                  color: Colors.indigo.shade400,
+                  color: Colors.indigo.shade300,
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(25))),
               child: ClipRRect(

@@ -519,7 +519,7 @@ class _SelfProfileState extends State<SelfProfile> {
                                     )),
                               )
                             ],
-                          ),
+                          )
                         ],
                       ),
                     ),
