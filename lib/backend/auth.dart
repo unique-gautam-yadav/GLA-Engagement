@@ -208,6 +208,74 @@ class Auth {
     }
   }
 
+  static addSkill(
+      {required Map<String, dynamic> data,
+      required BuildContext context,
+      required ProfileModel user}) async {
+    await usersRef.doc(user.mail).update({
+      "skills": FieldValue.arrayUnion([data])
+    });
+    if (user.type == KeyWords.studentUser && context.mounted) {
+      StudentModel model = StudentModel.fromMap(user.toMap());
+      model.skills ??= [];
+      model.skills!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setStudent(model);
+      }
+    } else if (user.type == KeyWords.alumniUser && context.mounted) {
+      AlumniModel model = AlumniModel.fromMap(user.toMap());
+      model.skills ??= [];
+      model.skills!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setAlumni(model);
+      }
+    } else if (user.type == KeyWords.teacherUser && context.mounted) {
+      TeacherModel model = TeacherModel.fromMap(user.toMap());
+      model.skills ??= [];
+      model.skills!.add(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setTeacher(model);
+      }
+    }
+  }
+
+  static removeSkill(
+      {required Map<String, dynamic> data,
+      required BuildContext context,
+      required ProfileModel user}) async {
+    await usersRef.doc(user.mail).update({
+      "skills": FieldValue.arrayRemove([data])
+    });
+    if (user.type == KeyWords.studentUser && context.mounted) {
+      StudentModel model = StudentModel.fromMap(user.toMap());
+      model.skills ??= [];
+      model.skills!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setStudent(model);
+      }
+    } else if (user.type == KeyWords.alumniUser && context.mounted) {
+      AlumniModel model = AlumniModel.fromMap(user.toMap());
+      model.skills ??= [];
+      model.skills!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setAlumni(model);
+      }
+    } else if (user.type == KeyWords.teacherUser && context.mounted) {
+      TeacherModel model = TeacherModel.fromMap(user.toMap());
+      model.skills ??= [];
+      model.skills!.remove(data);
+
+      if (context.mounted) {
+        context.read<UserProvider>().setTeacher(model);
+      }
+    }
+  }
+
   static Future<String> uploadPost(String caption) async {
     String pId = postsRef.doc().id;
     await postsRef.doc(pId).set(PostModel(
@@ -311,6 +379,7 @@ class Auth {
   static follow() async {
     usersRef
         .doc(FirebaseAuth.instance.currentUser!.email!)
-        .collection("followers").get();
+        .collection("followers")
+        .get();
   }
 }

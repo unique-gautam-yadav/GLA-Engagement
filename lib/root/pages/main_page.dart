@@ -50,7 +50,7 @@ class _NavBarViewState extends State<NavBarView> {
         children: [
           Container(
             padding: const EdgeInsets.only(bottom: 20, top: 10),
-            margin: const EdgeInsets.only(bottom: 10),
+            margin: const EdgeInsets.only(bottom: 10, left: 5, right: 5),
             decoration: BoxDecoration(
               borderRadius:
                   const BorderRadius.vertical(bottom: Radius.circular(20)),

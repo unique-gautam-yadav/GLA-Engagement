@@ -67,8 +67,8 @@ class BackEnd {
     );
   }
 
-  static follow(String userMail) {
-    userDetailsRef.doc(userMail).update({
+  static follow(String userMail) async {
+    await userDetailsRef.doc(userMail).update({
       "followers":
           FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.email])
     });

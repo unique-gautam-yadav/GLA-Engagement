@@ -51,8 +51,7 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            backgroundColor:
-                MaterialStateProperty.all(Theme.of(context).primaryColor),
+            backgroundColor: MaterialStateProperty.all(Colors.indigo),
           ),
         ),
       ),

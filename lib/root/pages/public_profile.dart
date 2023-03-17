@@ -30,6 +30,7 @@ class _PublicProfileState extends State<PublicProfile> {
   Color? appBarColor;
   Color? iconColor;
   UserDetails? userDetails;
+  bool followProcess = false;
 
   void getProfileData() async {
     ProfileModel? temp = await Auth.getProfileByMail(widget.email);
@@ -202,8 +203,11 @@ class _PublicProfileState extends State<PublicProfile> {
                                               FirebaseAuth
                                                   .instance.currentUser!.email)
                                       ? OutlinedButton.icon(
-                                          onPressed: () {
-                                            BackEnd.follow(model!.mail!);
+                                          onPressed: () async {
+                                            setState(() {
+                                              ///
+                                            });
+                                            await BackEnd.follow(model!.mail!);
                                           },
                                           icon: const Icon(Icons.person_add),
                                           label: const Text("Follow"))

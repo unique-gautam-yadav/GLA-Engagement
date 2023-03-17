@@ -15,7 +15,7 @@ class SocialMeda {
     "youtube",
     "linkedin",
     "twitter",
-    "pinterest",
+    // "pinterest",
     "facebook",
   ];
   static Widget? getIcon(String url) {

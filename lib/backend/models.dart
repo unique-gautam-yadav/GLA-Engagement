@@ -16,6 +16,7 @@ class StudentModel {
   String? coverImage;
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
+  List<Map<String, dynamic>>? skills;
   StudentModel({
     this.type,
     this.name,
@@ -31,6 +32,7 @@ class StudentModel {
     this.coverImage,
     this.achievements,
     this.socialLinks,
+    this.skills,
   });
 
   Map<String, dynamic> toMap() {
@@ -49,6 +51,7 @@ class StudentModel {
       'coverImage': coverImage,
       'achievements': achievements,
       'socialLinks': socialLinks,
+      'skills': skills,
     };
   }
 
@@ -82,6 +85,13 @@ class StudentModel {
               ),
             )
           : null,
+      skills: map['skills'] != null
+          ? List<Map<String, dynamic>>.from(
+              (map['skills'] as List<dynamic>).map<Map<String, dynamic>?>(
+                (x) => x,
+              ),
+            )
+          : null,
     );
   }
 
@@ -105,6 +115,7 @@ class StudentModel {
     String? coverImage,
     List<Map<String, dynamic>>? achievements,
     List<Map<String, dynamic>>? socialLinks,
+    List<Map<String, dynamic>>? skills,
   }) {
     return StudentModel(
       type: type ?? this.type,
@@ -121,6 +132,7 @@ class StudentModel {
       coverImage: coverImage ?? this.coverImage,
       achievements: achievements ?? this.achievements,
       socialLinks: socialLinks ?? this.socialLinks,
+      skills: skills ?? this.skills,
     );
   }
 }
@@ -140,6 +152,7 @@ class AlumniModel {
   String? coverImage;
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
+  List<Map<String, dynamic>>? skills;
   AlumniModel({
     this.type,
     this.name,
@@ -155,6 +168,7 @@ class AlumniModel {
     this.coverImage,
     this.achievements,
     this.socialLinks,
+    this.skills,
   });
 
   Map<String, dynamic> toMap() {
@@ -173,6 +187,7 @@ class AlumniModel {
       'coverImage': coverImage,
       'achievements': achievements,
       'socialLinks': socialLinks,
+      'skills': skills,
     };
   }
 
@@ -193,6 +208,13 @@ class AlumniModel {
       imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
       coverImage:
           map['coverImage'] != null ? map['coverImage'] as String : null,
+      socialLinks: map['socialLinks'] != null
+          ? List<Map<String, dynamic>>.from(
+              (map['socialLinks'] as List<dynamic>).map<Map<String, dynamic>?>(
+                (x) => x,
+              ),
+            )
+          : null,
       achievements: map['achievements'] != null
           ? List<Map<String, dynamic>>.from(
               (map['achievements'] as List<dynamic>).map<Map<String, dynamic>?>(
@@ -200,9 +222,9 @@ class AlumniModel {
               ),
             )
           : null,
-      socialLinks: map['socialLinks'] != null
+      skills: map['skills'] != null
           ? List<Map<String, dynamic>>.from(
-              (map['socialLinks'] as List<dynamic>).map<Map<String, dynamic>?>(
+              (map['skills'] as List<dynamic>).map<Map<String, dynamic>?>(
                 (x) => x,
               ),
             )
@@ -214,40 +236,6 @@ class AlumniModel {
 
   factory AlumniModel.fromJson(String source) =>
       AlumniModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  AlumniModel copyWith({
-    String? type,
-    String? name,
-    String? course,
-    String? branch,
-    String? mail,
-    String? phone,
-    String? unvRoll,
-    String? desc,
-    int? addmissionYear,
-    int? passoutYear,
-    String? imgUrl,
-    String? coverImage,
-    List<Map<String, dynamic>>? achievements,
-    List<Map<String, dynamic>>? socialLinks,
-  }) {
-    return AlumniModel(
-      type: type ?? this.type,
-      name: name ?? this.name,
-      course: course ?? this.course,
-      branch: branch ?? this.branch,
-      mail: mail ?? this.mail,
-      phone: phone ?? this.phone,
-      unvRoll: unvRoll ?? this.unvRoll,
-      desc: desc ?? this.desc,
-      addmissionYear: addmissionYear ?? this.addmissionYear,
-      passoutYear: passoutYear ?? this.passoutYear,
-      imgUrl: imgUrl ?? this.imgUrl,
-      coverImage: coverImage ?? this.coverImage,
-      achievements: achievements ?? this.achievements,
-      socialLinks: socialLinks ?? this.socialLinks,
-    );
-  }
 }
 
 class TeacherModel {
@@ -264,6 +252,7 @@ class TeacherModel {
   String? coverImage;
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
+  List<Map<String, dynamic>>? skills;
   TeacherModel({
     this.type,
     this.name,
@@ -278,6 +267,7 @@ class TeacherModel {
     this.coverImage,
     this.achievements,
     this.socialLinks,
+    this.skills,
   });
 
   Map<String, dynamic> toMap() {
@@ -295,6 +285,7 @@ class TeacherModel {
       'coverImage': coverImage,
       'achievements': achievements,
       'socialLinks': socialLinks,
+      'skills': skills,
     };
   }
 
@@ -318,6 +309,13 @@ class TeacherModel {
       imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
       coverImage:
           map['coverImage'] != null ? map['coverImage'] as String : null,
+      socialLinks: map['socialLinks'] != null
+          ? List<Map<String, dynamic>>.from(
+              (map['socialLinks'] as List<dynamic>).map<Map<String, dynamic>?>(
+                (x) => x,
+              ),
+            )
+          : null,
       achievements: map['achievements'] != null
           ? List<Map<String, dynamic>>.from(
               (map['achievements'] as List<dynamic>).map<Map<String, dynamic>?>(
@@ -325,9 +323,9 @@ class TeacherModel {
               ),
             )
           : null,
-      socialLinks: map['socialLinks'] != null
+      skills: map['skills'] != null
           ? List<Map<String, dynamic>>.from(
-              (map['socialLinks'] as List<dynamic>).map<Map<String, dynamic>?>(
+              (map['skills'] as List<dynamic>).map<Map<String, dynamic>?>(
                 (x) => x,
               ),
             )
@@ -339,38 +337,6 @@ class TeacherModel {
 
   factory TeacherModel.fromJson(String source) =>
       TeacherModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  TeacherModel copyWith({
-    String? type,
-    String? name,
-    String? course,
-    String? branch,
-    String? mail,
-    String? phone,
-    List<Map<String, dynamic>>? subjects,
-    String? empID,
-    String? desc,
-    String? imgUrl,
-    String? coverImage,
-    List<Map<String, dynamic>>? achievements,
-    List<Map<String, dynamic>>? socialLinks,
-  }) {
-    return TeacherModel(
-      type: type ?? this.type,
-      name: name ?? this.name,
-      course: course ?? this.course,
-      branch: branch ?? this.branch,
-      mail: mail ?? this.mail,
-      phone: phone ?? this.phone,
-      subjects: subjects ?? this.subjects,
-      empID: empID ?? this.empID,
-      desc: desc ?? this.desc,
-      imgUrl: imgUrl ?? this.imgUrl,
-      coverImage: coverImage ?? this.coverImage,
-      achievements: achievements ?? this.achievements,
-      socialLinks: socialLinks ?? this.socialLinks,
-    );
-  }
 }
 
 class ProfileModel {
@@ -391,6 +357,7 @@ class ProfileModel {
   List<Map<String, dynamic>>? subjects;
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
+  List<Map<String, dynamic>>? skills;
   ProfileModel({
     this.type,
     this.name,
@@ -409,6 +376,7 @@ class ProfileModel {
     this.subjects,
     this.achievements,
     this.socialLinks,
+    this.skills,
   });
 
   Map<String, dynamic> toMap() {
@@ -430,6 +398,7 @@ class ProfileModel {
       'subjects': subjects,
       'achievements': achievements,
       'socialLinks': socialLinks,
+      'skills': skills,
     };
   }
 
@@ -452,9 +421,9 @@ class ProfileModel {
           map['coverImage'] != null ? map['coverImage'] as String : null,
       imgUrl: map['imgUrl'] != null ? map['imgUrl'] as String : null,
       empID: map['empID'] != null ? map['empID'] as String : null,
-      subjects: map['subjects'] != null
+      socialLinks: map['socialLinks'] != null
           ? List<Map<String, dynamic>>.from(
-              (map['subjects'] as List<dynamic>).map<Map<String, dynamic>?>(
+              (map['socialLinks'] as List<dynamic>).map<Map<String, dynamic>?>(
                 (x) => x,
               ),
             )
@@ -466,9 +435,16 @@ class ProfileModel {
               ),
             )
           : null,
-      socialLinks: map['socialLinks'] != null
+      skills: map['skills'] != null
           ? List<Map<String, dynamic>>.from(
-              (map['socialLinks'] as List<dynamic>).map<Map<String, dynamic>?>(
+              (map['skills'] as List<dynamic>).map<Map<String, dynamic>?>(
+                (x) => x,
+              ),
+            )
+          : null,
+      subjects: map['subjects'] != null
+          ? List<Map<String, dynamic>>.from(
+              (map['subjects'] as List<dynamic>).map<Map<String, dynamic>?>(
                 (x) => x,
               ),
             )
@@ -499,6 +475,7 @@ class ProfileModel {
     List<Map<String, dynamic>>? subjects,
     List<Map<String, dynamic>>? achievements,
     List<Map<String, dynamic>>? socialLinks,
+    List<Map<String, dynamic>>? skills,
   }) {
     return ProfileModel(
       type: type ?? this.type,
@@ -518,6 +495,7 @@ class ProfileModel {
       subjects: subjects ?? this.subjects,
       achievements: achievements ?? this.achievements,
       socialLinks: socialLinks ?? this.socialLinks,
+      skills: skills ?? this.skills,
     );
   }
 }
@@ -826,6 +804,51 @@ class UserDetails {
     return UserDetails(
       followers: followers ?? this.followers,
       following: following ?? this.following,
+    );
+  }
+}
+
+class SkillModel {
+  String? title;
+  String? description;
+  String? level;
+  SkillModel({
+    this.title,
+    this.description,
+    this.level,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'title': title,
+      'description': description,
+      'level': level,
+    };
+  }
+
+  factory SkillModel.fromMap(Map<String, dynamic> map) {
+    return SkillModel(
+      title: map['title'] != null ? map['title'] as String : null,
+      description:
+          map['description'] != null ? map['description'] as String : null,
+      level: map['level'] != null ? map['level'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SkillModel.fromJson(String source) =>
+      SkillModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  SkillModel copyWith({
+    String? title,
+    String? description,
+    String? level,
+  }) {
+    return SkillModel(
+      title: title ?? this.title,
+      description: description ?? this.description,
+      level: level ?? this.level,
     );
   }
 }

@@ -596,8 +596,6 @@ class _SelfProfileState extends State<SelfProfile> {
                     ]),
                 child: Column(children: [
                   const Text("Archiements or Jobs"),
-
-                  ///
                   model!.achievements != null && model!.achievements!.isNotEmpty
                       ? AchievementCard(
                           getProfileData: getProfileData,
@@ -642,6 +640,12 @@ class _SelfProfileState extends State<SelfProfile> {
                   ),
                 ]),
               ),
+              Column(
+                  children: model!.skills != null && model!.skills!.isNotEmpty
+                      ? [
+                        ///
+                        ]
+                      : []),
               posts != null
                   ? GridView.builder(
                       padding: const EdgeInsets.all(10),
@@ -717,6 +721,101 @@ class _SelfProfileState extends State<SelfProfile> {
   void dispose() {
     bioController.dispose();
     super.dispose();
+  }
+}
+
+class SkillCard extends StatefulWidget {
+  const SkillCard(
+      {super.key,
+      required this.index,
+      required this.model,
+      required this.getProfileData});
+
+  @override
+  State<SkillCard> createState() => _SkillCardState();
+
+  final int index;
+  final ProfileModel model;
+  final VoidCallback getProfileData;
+}
+
+class _SkillCardState extends State<SkillCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: MaterialButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        splashColor: Theme.of(context).primaryColor.withOpacity(.5),
+        onLongPress: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => SizedBox(
+              height: 85,
+              child: Column(
+                children: [
+                  Container(
+                    height: 5,
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
+                    width: MediaQuery.of(context).size.width / 4,
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(.6),
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  OutlinedButton(
+                      onPressed: () async {
+                        await Auth.removeSkill(
+                            data: widget.model.skills!.elementAt(widget.index),
+                            context: context,
+                            user: widget.model);
+                        widget.getProfileData();
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Text("Remove"))
+                ],
+              ),
+            ),
+          );
+        },
+        onPressed: () {},
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 700,
+          height: 100,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.black.withOpacity(.6))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Flexible(
+                flex: 1,
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  "${widget.model.skills!.elementAt(widget.index)['title'](widget.model.skills!.elementAt(widget.index)['title'])}",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              Flexible(
+                flex: 2,
+                child: Text(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  "${widget.model.skills!.elementAt(widget.index)['description']}",
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
