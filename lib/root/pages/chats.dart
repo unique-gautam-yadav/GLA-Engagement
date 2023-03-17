@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gla_engage/backend/backend.dart';
-import 'package:gla_engage/root/pages/chat_screen.dart';
-import 'package:gla_engage/root/pages/public_profile.dart';
+import 'package:glaengage/backend/backend.dart';
+import 'package:glaengage/root/pages/chat_screen.dart';
+import 'package:glaengage/root/pages/public_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 

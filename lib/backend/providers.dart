@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:gla_engage/backend/keywords.dart';
-import 'package:gla_engage/backend/models.dart';
+import 'package:glaengage/backend/keywords.dart';
+import 'package:glaengage/backend/models.dart';
 
 class UserProvider extends ChangeNotifier {
   late String _userType;

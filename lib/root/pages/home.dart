@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gla_engage/backend/models.dart';
-import 'package:gla_engage/root/pages/posts_page.dart';
+import 'package:glaengage/backend/models.dart';
+import 'package:glaengage/root/pages/posts_page.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../backend/auth.dart';

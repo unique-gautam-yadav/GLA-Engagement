@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:gla_engage/backend/backend.dart';
+import 'package:glaengage/backend/backend.dart';
 
 import '../../backend/models.dart';
 

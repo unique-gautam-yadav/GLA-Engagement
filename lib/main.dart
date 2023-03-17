@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gla_engage/splash.dart';
+import 'package:glaengage/splash.dart';
 import 'package:provider/provider.dart';
 import 'backend/auth.dart';
 import 'backend/keywords.dart';
@@ -13,18 +13,18 @@ import 'root/pages/auth/login.dart';
 import 'root/pages/auth/signup.dart';
 import 'root/pages/main_page.dart';
 // import 'splash_screen.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding();
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  await messaging.requestPermission();
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // await messaging.requestPermission();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await messaging.getToken();
+  // await messaging.getToken();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
   ], child: const MyApp()));

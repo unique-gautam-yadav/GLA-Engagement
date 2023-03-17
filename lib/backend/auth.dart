@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gla_engage/backend/keywords.dart';
-import 'package:gla_engage/backend/models.dart';
-import 'package:gla_engage/backend/providers.dart';
+import 'package:glaengage/backend/keywords.dart';
+import 'package:glaengage/backend/models.dart';
+import 'package:glaengage/backend/providers.dart';
 import 'package:provider/provider.dart';
 
 final FirebaseFirestore store = FirebaseFirestore.instance;

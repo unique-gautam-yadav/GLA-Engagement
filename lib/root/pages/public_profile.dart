@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:gla_engage/backend/backend.dart';
-import 'package:gla_engage/root/pages/chat_screen.dart';
+import 'package:glaengage/backend/backend.dart';
+import 'package:glaengage/root/pages/chat_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:gla_engage/backend/auth.dart';
-import 'package:gla_engage/backend/models.dart';
+import 'package:glaengage/backend/auth.dart';
+import 'package:glaengage/backend/models.dart';
 
 import 'posts_page.dart';
 

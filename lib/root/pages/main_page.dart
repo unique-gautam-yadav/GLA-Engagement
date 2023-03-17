@@ -3,13 +3,13 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gla_engage/backend/providers.dart';
-import 'package:gla_engage/root/pages/add_post.dart';
-import 'package:gla_engage/root/pages/chats.dart';
-import 'package:gla_engage/root/pages/home.dart';
-import 'package:gla_engage/root/pages/public_profile.dart';
-import 'package:gla_engage/root/pages/search.dart';
-import 'package:gla_engage/root/pages/self_profile.dart';
+import 'package:glaengage/backend/providers.dart';
+import 'package:glaengage/root/pages/add_post.dart';
+import 'package:glaengage/root/pages/chats.dart';
+import 'package:glaengage/root/pages/home.dart';
+import 'package:glaengage/root/pages/public_profile.dart';
+import 'package:glaengage/root/pages/search.dart';
+import 'package:glaengage/root/pages/self_profile.dart';
 import 'package:provider/provider.dart';
 
 class NavBarView extends StatefulWidget {
