@@ -8,11 +8,12 @@ import 'package:gla_engage/backend/models.dart';
 
 final FirebaseFirestore store = FirebaseFirestore.instance;
 final CollectionReference chatRoomRef = store.collection("chatrooms");
+final CollectionReference userDetailsRef = store.collection("userDetails");
 
 class BackEnd {
-  static Future<ChatRoomModel> getChatRoom(ProfileModel targetUser) async {
+  static Future<ChatRoomModel> getChatRoom(String targetUserMail) async {
     QuerySnapshot<Object?> d = await chatRoomRef
-        .where('participants.${targetUser.mail!.hashCode}', isEqualTo: true)
+        .where('participants.${targetUserMail.hashCode}', isEqualTo: true)
         .where(
             "participants.${FirebaseAuth.instance.currentUser!.email!.hashCode}",
             isEqualTo: true)
@@ -24,10 +25,10 @@ class BackEnd {
       ChatRoomModel model =
           ChatRoomModel(chatroomid: const Uuid().v1(), participants: {
         FirebaseAuth.instance.currentUser!.email!.hashCode.toString(): true,
-        targetUser.mail!.hashCode.toString(): true
+        targetUserMail.hashCode.toString(): true
       }, users: [
         FirebaseAuth.instance.currentUser!.email!,
-        targetUser.mail!,
+        targetUserMail,
       ]);
       await chatRoomRef.doc(model.chatroomid).set(model.toMap());
       return model;
@@ -57,9 +58,28 @@ class BackEnd {
             isEqualTo: true)
         .get();
 
-    return List.generate(d.docs.length, (index) {
-      return ChatRoomModel.fromMap(
-          d.docs.elementAt(index).data() as Map<String, dynamic>);
+    return List.generate(
+      d.docs.length,
+      (index) {
+        return ChatRoomModel.fromMap(
+            d.docs.elementAt(index).data() as Map<String, dynamic>);
+      },
+    );
+  }
+
+  static follow(String userMail) {
+    userDetailsRef.doc(userMail).update({
+      "followers":
+          FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.email])
     });
+  }
+
+  static Future<UserDetails> getUserDetial(String userMail) async {
+    DocumentSnapshot<Object?> data = await userDetailsRef.doc(userMail).get();
+    if (data.data() == null) {
+      userDetailsRef.doc(userMail).set({"mail": userMail});
+      return UserDetails();
+    }
+    return UserDetails.fromMap(data.data() as Map<String, dynamic>);
   }
 }

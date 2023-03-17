@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gla_engage/backend/keywords.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:validators/validators.dart' as valdi;
 import 'package:gla_engage/backend/auth.dart';
@@ -937,16 +938,14 @@ class ProfileLink extends StatelessWidget {
           minWidth: 2,
           splashColor: Theme.of(context).primaryColor.withOpacity(.5),
           child: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Theme.of(context).primaryColor.withOpacity(.6)),
-                  borderRadius: BorderRadius.circular(50)),
-              child: Icon(
-                Icons.link,
-                color: Theme.of(context).primaryColor,
-              )),
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: Theme.of(context).primaryColor.withOpacity(.6)),
+                borderRadius: BorderRadius.circular(50)),
+            child: SocialMeda.getIcon(e['url']),
+          ),
         ),
         Text(e['title'])
       ],

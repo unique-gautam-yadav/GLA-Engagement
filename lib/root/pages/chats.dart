@@ -12,7 +12,6 @@ import '../../backend/providers.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
-
   @override
   State<Chat> createState() => _ChatState();
 }
@@ -26,6 +25,8 @@ class _ChatState extends State<Chat> {
       recent = temp;
     });
   }
+
+
 
   @override
   void initState() {
@@ -433,7 +434,7 @@ class _SearchAndChatState extends State<SearchAndChat> {
                               "${searchResult!.elementAt(index).type!.toUpperCase()} ${searchResult!.elementAt(index).course} (${searchResult!.elementAt(index).branch})"),
                           onTap: () async {
                             ChatRoomModel c = await BackEnd.getChatRoom(
-                                searchResult!.elementAt(index));
+                                searchResult!.elementAt(index).mail!);
                             if (context.mounted) {
                               Navigator.push(
                                 context,

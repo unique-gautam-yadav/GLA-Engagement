@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const Splash(),
+      home: const SplashScreen(),
     );
   }
 }
@@ -101,29 +101,31 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   getData() async {
     ProfileModel? data = await Auth.getProfileByMail(
         FirebaseAuth.instance.currentUser!.email ?? "");
-    if (context.mounted) {
-      if (data == null) {
-        FirebaseAuth.instance.signOut();
-      } else {
-        if (data.type == KeyWords.studentUser) {
-          context.read<UserProvider>().setUserType(KeyWords.studentUser);
-          context
-              .read<UserProvider>()
-              .setStudent(StudentModel.fromMap(data.toMap()));
-        } else if (data.type == KeyWords.alumniUser) {
-          context.read<UserProvider>().setUserType(KeyWords.alumniUser);
-          context
-              .read<UserProvider>()
-              .setAlumni(AlumniModel.fromMap(data.toMap()));
-        } else if (data.type == KeyWords.teacherUser) {
-          context.read<UserProvider>().setUserType(KeyWords.teacherUser);
-          context
-              .read<UserProvider>()
-              .setTeacher(TeacherModel.fromMap(data.toMap()));
+    if (mounted) {
+      if (context.mounted) {
+        if (data == null) {
+          FirebaseAuth.instance.signOut();
+        } else {
+          if (data.type == KeyWords.studentUser) {
+            context.read<UserProvider>().setUserType(KeyWords.studentUser);
+            context
+                .read<UserProvider>()
+                .setStudent(StudentModel.fromMap(data.toMap()));
+          } else if (data.type == KeyWords.alumniUser) {
+            context.read<UserProvider>().setUserType(KeyWords.alumniUser);
+            context
+                .read<UserProvider>()
+                .setAlumni(AlumniModel.fromMap(data.toMap()));
+          } else if (data.type == KeyWords.teacherUser) {
+            context.read<UserProvider>().setUserType(KeyWords.teacherUser);
+            context
+                .read<UserProvider>()
+                .setTeacher(TeacherModel.fromMap(data.toMap()));
+          }
+          setState(() {
+            userType = data.type;
+          });
         }
-        setState(() {
-          userType = data.type;
-        });
       }
     }
   }

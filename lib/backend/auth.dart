@@ -9,7 +9,7 @@ import 'package:gla_engage/backend/providers.dart';
 import 'package:provider/provider.dart';
 
 final FirebaseFirestore store = FirebaseFirestore.instance;
-final CollectionReference studentsRef = store.collection("Users");
+final CollectionReference usersRef = store.collection("Users");
 final CollectionReference postsRef = store.collection("Posts");
 
 class Auth {
@@ -22,7 +22,7 @@ class Auth {
       } on FirebaseAuthException catch (e) {
         return e.code;
       }
-      await studentsRef.doc(data['mail']).set(data);
+      await usersRef.doc(data['mail']).set(data);
       return "ok";
     } catch (e) {
       return e.toString();
@@ -46,24 +46,22 @@ class Auth {
   static Future<void> updateUserData(
       Map<String, dynamic> data, BuildContext? context) async {
     if (context != null) {
-      await studentsRef
-          .doc(data['mail'])
-          .set(StudentModel.fromMap(data).toMap());
+      await usersRef.doc(data['mail']).set(StudentModel.fromMap(data).toMap());
       if (data['type'] == KeyWords.studentUser) {
         StudentModel model = StudentModel.fromMap(data);
-        await studentsRef.doc(data['mail']).set(model.toMap());
+        await usersRef.doc(data['mail']).set(model.toMap());
         if (context.mounted) {
           context.read<UserProvider>().setStudent(model);
         }
       } else if (data['type'] == KeyWords.alumniUser) {
         AlumniModel model = AlumniModel.fromMap(data);
-        await studentsRef.doc(data['mail']).set(model.toMap());
+        await usersRef.doc(data['mail']).set(model.toMap());
         if (context.mounted) {
           context.read<UserProvider>().setAlumni(AlumniModel.fromMap(data));
         }
       } else if (data['type'] == KeyWords.teacherUser) {
         TeacherModel model = TeacherModel.fromMap(data);
-        await studentsRef.doc(data['mail']).set(model.toMap());
+        await usersRef.doc(data['mail']).set(model.toMap());
         if (context.mounted) {
           context.read<UserProvider>().setTeacher(model);
         }
@@ -77,7 +75,7 @@ class Auth {
     required BuildContext context,
     required ProfileModel user,
   }) async {
-    await studentsRef.doc(user.mail).update({
+    await usersRef.doc(user.mail).update({
       "socialLinks": FieldValue.arrayUnion([data])
     });
     if (user.type == KeyWords.studentUser && context.mounted) {
@@ -112,7 +110,7 @@ class Auth {
     required BuildContext context,
     required ProfileModel user,
   }) async {
-    await studentsRef.doc(user.mail).update({
+    await usersRef.doc(user.mail).update({
       "socialLinks": FieldValue.arrayRemove([data])
     });
     if (user.type == KeyWords.studentUser && context.mounted) {
@@ -146,7 +144,7 @@ class Auth {
       {required Map<String, dynamic> data,
       required BuildContext context,
       required ProfileModel user}) async {
-    await studentsRef.doc(user.mail).update({
+    await usersRef.doc(user.mail).update({
       "achievements": FieldValue.arrayUnion([data])
     });
     if (user.type == KeyWords.studentUser && context.mounted) {
@@ -180,7 +178,7 @@ class Auth {
       {required Map<String, dynamic> data,
       required BuildContext context,
       required ProfileModel user}) async {
-    await studentsRef.doc(user.mail).update({
+    await usersRef.doc(user.mail).update({
       "achievements": FieldValue.arrayRemove([data])
     });
     if (user.type == KeyWords.studentUser && context.mounted) {
@@ -242,7 +240,7 @@ class Auth {
   }
 
   static Future<ProfileModel?> getProfileByMail(String email) async {
-    DocumentSnapshot<Object?> data = await studentsRef.doc(email).get();
+    DocumentSnapshot<Object?> data = await usersRef.doc(email).get();
     if (data.data() != null) {
       return ProfileModel.fromMap(data.data() as Map<String, dynamic>);
     } else {
@@ -265,7 +263,7 @@ class Auth {
   }
 
   static Future<List<ProfileModel>> searchUser(String keyword) async {
-    QuerySnapshot<Object?> res = await studentsRef
+    QuerySnapshot<Object?> res = await usersRef
         .where("mail", isGreaterThanOrEqualTo: keyword)
         // .where('name', isGreaterThanOrEqualTo: keyword)
         .get();
@@ -279,7 +277,7 @@ class Auth {
       }
     }
     QuerySnapshot<Object?> res2 =
-        await studentsRef.where("name", isGreaterThanOrEqualTo: keyword).get();
+        await usersRef.where("name", isGreaterThanOrEqualTo: keyword).get();
     for (var e in res2.docs) {
       ProfileModel temp =
           ProfileModel.fromMap(e.data() as Map<String, dynamic>);
@@ -325,5 +323,11 @@ class Auth {
       // }
     }
     return res;
+  }
+
+  static follow() async {
+    usersRef
+        .doc(FirebaseAuth.instance.currentUser!.email!)
+        .collection("followers").get();
   }
 }

@@ -1,8 +1,11 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gla_engage/backend/backend.dart';
+import 'package:gla_engage/root/pages/chat_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,26 +29,33 @@ class _PublicProfileState extends State<PublicProfile> {
   String? userType;
   Color? appBarColor;
   Color? iconColor;
+  UserDetails? userDetails;
 
   void getProfileData() async {
     ProfileModel? temp = await Auth.getProfileByMail(widget.email);
+    UserDetails temp2 = await BackEnd.getUserDetial(widget.email);
+    if (mounted) {
+      setState(() {
+        userDetails = temp2;
+      });
+      setState(() {
+        model = temp;
+      });
 
-    setState(() {
-      model = temp;
-    });
-    if (model!.coverImage != null) {
-      PaletteGenerator d = await PaletteGenerator.fromImageProvider(
-          maximumColorCount: 5, NetworkImage(model!.coverImage!));
-      if (mounted) {
-        setState(() {
-          appBarColor = Color.alphaBlend(d.colors.first, d.colors.last);
-        });
-      }
-      if (ThemeData.estimateBrightnessForColor(appBarColor!) ==
-          Brightness.light) {
-        iconColor = Colors.black;
-      } else {
-        iconColor = Colors.white;
+      if (model!.coverImage != null) {
+        PaletteGenerator d = await PaletteGenerator.fromImageProvider(
+            maximumColorCount: 5, NetworkImage(model!.coverImage!));
+        if (mounted) {
+          setState(() {
+            appBarColor = Color.alphaBlend(d.colors.first, d.colors.last);
+          });
+        }
+        if (ThemeData.estimateBrightnessForColor(appBarColor!) ==
+            Brightness.light) {
+          iconColor = Colors.black;
+        } else {
+          iconColor = Colors.white;
+        }
       }
     }
   }
@@ -90,7 +100,7 @@ class _PublicProfileState extends State<PublicProfile> {
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: model != null
+          children: model != null && userDetails != null
               ? [
                   Container(
                     decoration: BoxDecoration(
@@ -184,6 +194,45 @@ class _PublicProfileState extends State<PublicProfile> {
                             ],
                           ),
                         ),
+                        widget.email != FirebaseAuth.instance.currentUser!.email
+                            ? ButtonBar(
+                                children: [
+                                  userDetails!.followers == null ||
+                                          userDetails!.followers!.contains(
+                                              FirebaseAuth
+                                                  .instance.currentUser!.email)
+                                      ? OutlinedButton.icon(
+                                          onPressed: () {
+                                            BackEnd.follow(model!.mail!);
+                                          },
+                                          icon: const Icon(Icons.person_add),
+                                          label: const Text("Follow"))
+                                      : OutlinedButton.icon(
+                                          onPressed: () {},
+                                          icon: const Icon(Icons.person_off),
+                                          label: const Text("Unfollow")),
+                                  OutlinedButton.icon(
+                                      onPressed: () async {
+                                        ChatRoomModel chatRoom =
+                                            await BackEnd.getChatRoom(
+                                                model!.mail!);
+                                        if (context.mounted) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ChatScreen(
+                                                  chatRoom: chatRoom,
+                                                  targetUserMail: model!.mail!,
+                                                  targetUser: model!),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      icon: const Icon(Icons.message_outlined),
+                                      label: const Text("Message")),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
                         const Divider(),
                         SizedBox(
                           width: double.infinity,
@@ -193,8 +242,16 @@ class _PublicProfileState extends State<PublicProfile> {
                               CusButton(
                                   keyword: "POST",
                                   value: posts != null ? posts!.length : 0),
-                              const CusButton(keyword: "FOLLOWER", value: 1200),
-                              const CusButton(keyword: "FOLLOWING", value: 200),
+                              CusButton(
+                                  keyword: "FOLLOWER",
+                                  value: userDetails!.followers != null
+                                      ? userDetails!.followers!.length
+                                      : 0),
+                              CusButton(
+                                  keyword: "FOLLOWING",
+                                  value: userDetails!.following != null
+                                      ? userDetails!.following!.length
+                                      : 0),
                             ],
                           ),
                         ),

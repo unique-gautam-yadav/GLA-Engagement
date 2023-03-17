@@ -77,7 +77,9 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
+          Container(
+            height: 500,
+            width: double.infinity,
             child: StreamBuilder(
                 stream: BackEnd.getChats(widget.chatRoom.chatroomid!),
                 builder: (context, snapshot) {
@@ -86,6 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       return ListView.builder(
                           reverse: true,
                           itemCount: snapshot.data!.docs.length,
+                          physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             ChatModel chat = ChatModel.fromMap(
                                 snapshot.data!.docs.elementAt(index).data());
@@ -123,7 +126,8 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 35,
                   child: TextFormField(
                     cursorColor: Theme.of(context).primaryColor,
                     autocorrect: true,
@@ -133,17 +137,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       labelStyle: const TextStyle(
                           color: Color.fromARGB(255, 81, 187, 104)),
                       labelText: "enter message",
-                      // suffixIcon: isTextFilled
-                      //     ? IconButton(
-                      //         onPressed: () async {
-                      //           msgcontrol.clear();
-                      //         },
-                      //         icon: const Icon(
-                      //           Icons.send,
-                      //           color: Color.fromARGB(255, 83, 212, 88),
-                      //         ),
-                      //       )
-                      //     : null,
                       border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(18))),
                       hintText: "Enter something to Chats ",
