@@ -68,7 +68,7 @@ class PostCard extends StatefulWidget {
   final Map<String, dynamic> e;
   final ProfileModel profileData;
   final bool? fromProfile;
-
+  
   @override
   State<PostCard> createState() => _PostCardState();
 }

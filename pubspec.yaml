@@ -55,7 +55,7 @@ dependencies:
   shimmer: ^2.0.0
   chat_bubbles: ^1.4.0
   uuid: ^3.0.7
-  # firebase_messaging: ^14.2.6
+  firebase_messaging: ^14.3.0
   # flutter_local_notifications: ^8.2.0
 
 
