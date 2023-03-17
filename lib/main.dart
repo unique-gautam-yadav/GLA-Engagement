@@ -12,13 +12,13 @@ import 'firebase_options.dart';
 import 'root/pages/auth/login.dart';
 import 'root/pages/auth/signup.dart';
 import 'root/pages/main_page.dart';
-import 'splash_screen.dart';
+// import 'splash_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-   await messaging.requestPermission();
+  await messaging.requestPermission();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
