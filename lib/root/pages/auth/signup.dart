@@ -59,7 +59,7 @@ class _SignUpWelcomeState extends State<SignUpWelcome> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("Hava an account?"),
+              const Text("Have an account?"),
               InkWell(
                 onTap: widget.togglePages,
                 child: Padding(
@@ -117,10 +117,11 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController admisionYear = TextEditingController();
   TextEditingController bio = TextEditingController();
   TextEditingController passoutYear = TextEditingController();
-  String dropdownvalue = "please select your semester";
+  String dropdownvalue = "please select sem";
 
   // List of items in our dropdown menu
   var items = [
+    // 'choose your semester',
     'sem 1',
     'sem 2',
     'sem 3',
@@ -597,12 +598,13 @@ class _SignUpPageState extends State<SignUpPage> {
                                     ),
                                     const SizedBox(height: 15),
                                     DropdownButton(
+                                      hint: Text('select your semester'),
                                       // Initial Value
                                       value: dropdownvalue,
 
                                       // Down Arrow Icon
-                                      icon:
-                                          const Icon(Icons.keyboard_arrow_down),
+                                      icon: const Icon(
+                                          Icons.keyboard_arrow_down),
 
                                       // Array list of items
                                       items: items.map((String items) {
