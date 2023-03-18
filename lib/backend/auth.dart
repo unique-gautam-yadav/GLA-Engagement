@@ -392,11 +392,4 @@ class Auth {
     }
     return res;
   }
-
-  static follow() async {
-    usersRef
-        .doc(FirebaseAuth.instance.currentUser!.email!)
-        .collection("followers")
-        .get();
-  }
 }

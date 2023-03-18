@@ -77,9 +77,9 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          Container(
-            height: 500,
-            width: double.infinity,
+          Expanded(
+            // height: 500,
+            // width: double.infinity,
             child: StreamBuilder(
                 stream: BackEnd.getChats(widget.chatRoom.chatroomid!),
                 builder: (context, snapshot) {
