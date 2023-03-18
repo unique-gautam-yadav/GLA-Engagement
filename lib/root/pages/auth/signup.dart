@@ -599,6 +599,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     const SizedBox(height: 15),
                                     TextFormField(
                                       controller: sem,
+                                      keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         hintText: "Enter your semester",
                                         labelText: "semester",
