@@ -1,5 +1,6 @@
 import 'dart:developer';
-
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,36 @@ class Auth {
         return e.code;
       }
       await usersRef.doc(data['mail']).set(data);
+
+      SendEmail() async {
+        String username = 'adityachauhan9456923436@gmail.com';
+        String password = 'ivxfgoragdskcghn';
+
+        final smtpServer = gmail(username, password);
+
+        final message = Message()
+          ..from = Address(username, 'Coding Beasts')
+          ..recipients.add(data['mail'])
+          ..subject = 'Account Created Successfully'
+          ..text =
+              ' Welcome To Gla Online Engagement Playtform  .\n\n\n We Hope You will Have a greate time here ,\n\n Thanks.';
+
+        try {
+          final sendReport = await send(message, smtpServer);
+          print('Message sent: ' + sendReport.toString());
+        } on MailerException catch (e) {
+          print('Message not sent. + $e');
+          for (var p in e.problems) {
+            print('Problem: ${p.code}: ${p.msg}');
+          }
+        }
+        var connection = PersistentConnection(smtpServer);
+        await connection.send(message);
+        await connection.close();
+      }
+
+      await SendEmail();
+
       return "ok";
     } catch (e) {
       return e.toString();

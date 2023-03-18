@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 class StudentModel {
   String? type;
   String? name;
@@ -860,5 +862,79 @@ class SkillModel {
       description: description ?? this.description,
       level: level ?? this.level,
     );
+  }
+}
+
+class Freelancing {
+  List<String>? skill;
+  String? duration;
+  String? package;
+  String? decp; 
+  Freelancing({
+    this.skill,
+    this.duration,
+    this.package,
+    this.decp,
+  });
+
+
+  Freelancing copyWith({
+    List<String>? skill,
+    String? duration,
+    String? package,
+    String? decp,
+  }) {
+    return Freelancing(
+      skill: skill ?? this.skill,
+      duration: duration ?? this.duration,
+      package: package ?? this.package,
+      decp: decp ?? this.decp,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'skill': skill,
+      'duration': duration,
+      'package': package,
+      'decp': decp,
+    };
+  }
+
+  factory Freelancing.fromMap(Map<String, dynamic> map) {
+    return Freelancing(
+      skill: map['skill'] != null ? List<String>.from((map['skill'] as List<String>)) : null,
+      duration: map['duration'] != null ? map['duration'] as String : null,
+      package: map['package'] != null ? map['package'] as String : null,
+      decp: map['decp'] != null ? map['decp'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Freelancing.fromJson(String source) => Freelancing.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'Freelancing(skill: $skill, duration: $duration, package: $package, decp: $decp)';
+  }
+
+  @override
+  bool operator ==(covariant Freelancing other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      listEquals(other.skill, skill) &&
+      other.duration == duration &&
+      other.package == package &&
+      other.decp == decp;
+  }
+
+  @override
+  int get hashCode {
+    return skill.hashCode ^
+      duration.hashCode ^
+      package.hashCode ^
+      decp.hashCode;
   }
 }
