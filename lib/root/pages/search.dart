@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glaengage/backend/auth.dart';
 import 'package:glaengage/root/pages/public_profile.dart';
 import 'package:provider/provider.dart';
+import '../../backend/keywords.dart';
 import '../../backend/models.dart';
 import '../../backend/providers.dart';
 import 'filters.dart';
@@ -25,6 +27,11 @@ class _SearchPageState extends State<SearchPage> {
   bool showClear = false;
   List<ProfileModel>? searchResult;
   List<ProfileModel>? suggestion;
+
+  bool errorAt0 = false;
+  bool errorAt1 = false;
+  bool errorAt2 = false;
+  String? userType;
   List<String> sortby = [
     'year',
     'company',
@@ -52,6 +59,197 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       suggestion = s;
     });
+  }
+
+  UserBanner() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Container(
+                height: 7,
+                width: 100,
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade500,
+                    borderRadius: BorderRadius.circular(50)),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 15),
+                  child: Text(
+                    "Student",
+                    style: TextStyle(fontSize: 30),
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 240,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: Radio(
+                      value: KeyWords.studentUser,
+                      groupValue: userType,
+                      onChanged: (value) {
+                        FocusManager.instance.primaryFocus!.unfocus();
+                        setState(() {
+                          userType = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 15),
+                  child: Text(
+                    "Teacher",
+                    style: TextStyle(fontSize: 30),
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 240,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: Radio(
+                      value: KeyWords.teacherUser,
+                      groupValue: userType,
+                      onChanged: (value) {
+                        FocusManager.instance.primaryFocus!.unfocus();
+                        setState(() {
+                          userType = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 15),
+                  child: Text(
+                    "Alumni",
+                    style: TextStyle(fontSize: 30),
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 240,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: Radio(
+                      value: KeyWords.alumniUser,
+                      groupValue: userType,
+                      onChanged: (value) {
+                        FocusManager.instance.primaryFocus!.unfocus();
+                        setState(() {
+                          userType = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  showbanner() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.9,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 8),
+                    child: IconButton(
+                      icon: Icon(CupertinoIcons.back),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 8),
+                    child: Text(
+                      "Filter",
+                      style:
+                          TextStyle(fontSize: 25, color: Colors.grey.shade700),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, right: 13),
+                    child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Reset",
+                          style: TextStyle(
+                              fontSize: 22, color: Colors.grey.shade700),
+                        )),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      "User Type",
+                      style: TextStyle(fontSize: 23),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: SizedBox(
+                      width: 125,
+                      child: MaterialButton(
+                        onPressed: () {
+                          UserBanner();
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              "View All",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.black),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 2),
+                              child: Icon(CupertinoIcons.arrow_right),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -89,7 +287,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width - 120,
+                      width: MediaQuery.of(context).size.width - 170,
                       height: 45,
                       child: TextFormField(
                         controller: search,
@@ -105,6 +303,19 @@ class _SearchPageState extends State<SearchPage> {
                           }
                         },
                         decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(
+                              color: Colors.indigo.shade200,
+                              width: 2.0,
+                            ),
+                          ),
                           contentPadding: const EdgeInsets.all(15.0),
                           border: const UnderlineInputBorder(),
                           filled: true,
@@ -142,8 +353,14 @@ class _SearchPageState extends State<SearchPage> {
                           }
                         },
                         icon: Icon(Icons.search_rounded)),
+                    IconButton(
+                        onPressed: () async {
+                          showbanner();
+                        },
+                        icon: Icon(CupertinoIcons.color_filter)),
                   ],
                 ),
+
                 // IconButton(
                 //     onPressed: () {
                 //       //sortby function
@@ -298,5 +515,19 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
     );
+  }
+}
+
+class sort extends StatefulWidget {
+  const sort({super.key});
+
+  @override
+  State<sort> createState() => _sortState();
+}
+
+class _sortState extends State<sort> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
