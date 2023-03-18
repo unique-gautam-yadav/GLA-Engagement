@@ -1292,7 +1292,7 @@ class AllSkills extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Achievements"),
+        title: const Text("Skills"),
       ),
       body: ListView.builder(
         itemCount: model.skills!.length,
