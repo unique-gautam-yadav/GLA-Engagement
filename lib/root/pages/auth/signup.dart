@@ -13,11 +13,9 @@ class SignUpWelcome extends StatefulWidget {
   const SignUpWelcome({super.key, required this.togglePages});
 
   final VoidCallback togglePages;
-
   @override
   State<SignUpWelcome> createState() => _SignUpWelcomeState();
 }
-
 class _SignUpWelcomeState extends State<SignUpWelcome> {
   @override
   Widget build(BuildContext context) {
