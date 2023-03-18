@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:glaengage/backend/keywords.dart';
 import 'package:glaengage/backend/models.dart';
@@ -22,6 +23,7 @@ class Auth {
       } on FirebaseAuthException catch (e) {
         return e.code;
       }
+      data['token'] = await FirebaseMessaging.instance.getToken();
       await usersRef.doc(data['mail']).set(data);
       return "ok";
     } catch (e) {
@@ -31,6 +33,8 @@ class Auth {
 
   static Future<String> login(String mail, String password) async {
     try {
+      String? token = await FirebaseMessaging.instance.getToken();
+      await usersRef.doc(mail).update({'token': token});
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: mail, password: password);
       return "ok";
@@ -40,6 +44,9 @@ class Auth {
   }
 
   static logOut() async {
+    await usersRef
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .update({'token': "null"});
     await FirebaseAuth.instance.signOut();
   }
 
@@ -215,6 +222,10 @@ class Auth {
     await usersRef.doc(user.mail).update({
       "skills": FieldValue.arrayUnion([data])
     });
+    await usersRef.doc(FirebaseAuth.instance.currentUser!.email!).update({
+      'keywords':
+          FieldValue.arrayUnion([data['title'].toString().toUpperCase()])
+    });
     if (user.type == KeyWords.studentUser && context.mounted) {
       StudentModel model = StudentModel.fromMap(user.toMap());
       model.skills ??= [];
@@ -246,6 +257,10 @@ class Auth {
       {required Map<String, dynamic> data,
       required BuildContext context,
       required ProfileModel user}) async {
+    await usersRef.doc(FirebaseAuth.instance.currentUser!.email).update({
+      "keywords":
+          FieldValue.arrayRemove([data['title'].toString().toUpperCase()])
+    });
     await usersRef.doc(user.mail).update({
       "skills": FieldValue.arrayRemove([data])
     });

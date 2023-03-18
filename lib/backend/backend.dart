@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:glaengage/backend/models.dart';
 
+import 'auth.dart';
+
 final FirebaseFirestore store = FirebaseFirestore.instance;
 final CollectionReference chatRoomRef = store.collection("chatrooms");
 final CollectionReference userDetailsRef = store.collection("userDetails");
@@ -88,5 +90,22 @@ class BackEnd {
   static getSuggestedPosts() {
     //
     postsRef.where("keywords", arrayContains: "");
+  }
+
+
+  static Future<List<HomePagePosts>> getPosts() async {
+    QuerySnapshot<Object?> data =
+        await postsRef.orderBy("timeStamp", descending: true).get();
+
+    List<HomePagePosts> res = [];
+
+    for (var e in data.docs) {
+      PostModel d = PostModel.fromMap(e.data() as Map<String, dynamic>);
+      // if (d.postedBy != FirebaseAuth.instance.currentUser!.email!) {
+      ProfileModel? p = await Auth.getProfileByMail(d.postedBy!);
+      res.add(HomePagePosts(post: d, profile: p));
+      // }
+    }
+    return res;
   }
 }

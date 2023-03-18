@@ -16,6 +16,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../backend/backend.dart';
 import 'posts_page.dart';
 
 class SelfProfile extends StatefulWidget {
@@ -28,6 +29,8 @@ class SelfProfile extends StatefulWidget {
 class _SelfProfileState extends State<SelfProfile> {
   // final double profileImageHeight = 120;
   ProfileModel? model;
+
+  UserDetails? details;
 
   bool loadingProfilePic = false;
   bool loadingCover = false;
@@ -207,14 +210,18 @@ class _SelfProfileState extends State<SelfProfile> {
     setState(() {
       model = ProfileModel.fromMap(data!);
     });
+    getPosts();
   }
 
   getPosts() async {
     List<Map<String, dynamic>> temp =
         await Auth.getAllPostsByMail(FirebaseAuth.instance.currentUser!.email!);
 
+    UserDetails temp2 =
+        await BackEnd.getUserDetial(FirebaseAuth.instance.currentUser!.email!);
     setState(() {
       posts = temp;
+      details = temp2;
     });
   }
 
@@ -223,7 +230,6 @@ class _SelfProfileState extends State<SelfProfile> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getProfileData();
-      getPosts();
     });
   }
 
@@ -231,7 +237,7 @@ class _SelfProfileState extends State<SelfProfile> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: model != null
+      children: model != null && details != null
           ? [
               Container(
                 decoration: BoxDecoration(
@@ -532,8 +538,16 @@ class _SelfProfileState extends State<SelfProfile> {
                           CusButton(
                               keyword: "POST",
                               value: posts != null ? posts!.length : 0),
-                          const CusButton(keyword: "FOLLOWER", value: 1200),
-                          const CusButton(keyword: "FOLLOWING", value: 200),
+                          CusButton(
+                              keyword: "FOLLOWER",
+                              value: details!.followers != null
+                                  ? details!.followers!.length
+                                  : 0),
+                          CusButton(
+                              keyword: "FOLLOWING",
+                              value: details!.following != null
+                                  ? details!.following!.length
+                                  : 0),
                         ],
                       ),
                     ),
@@ -574,6 +588,135 @@ class _SelfProfileState extends State<SelfProfile> {
                                 model: model!, getProfileData: getProfileData)
                           ],
                         ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //       offset: const Offset(5, 5),
+                        //       blurRadius: 3,
+                        //       color: Colors.grey.shade700),
+                        //   const BoxShadow(
+                        //     blurRadius: 1,
+                        //     color: Colors.white,
+                        //   )
+                        // ]
+                      ),
+                      child: Column(children: [
+                        const Text("Archiements or Jobs"),
+                        model!.achievements != null &&
+                                model!.achievements!.isNotEmpty
+                            ? AchievementCard(
+                                getProfileData: getProfileData,
+                                model: model!,
+                                index: 0,
+                              )
+                            : Text("No achievement added !!",
+                                style: TextStyle(
+                                  color: Colors.red.shade900,
+                                )),
+                        ButtonBar(
+                          alignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            OutlinedButton.icon(
+                              icon: const Icon(Icons.show_chart),
+                              onPressed: model!.achievements != null &&
+                                      model!.achievements!.length > 1
+                                  ? () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AllAchievements(
+                                                      getProfileData:
+                                                          getProfileData,
+                                                      model: model!)));
+                                    }
+                                  : null,
+                              label: const Text("view more"),
+                            ),
+                            OutlinedButton.icon(
+                              icon: const Icon(Icons.add),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => NewAchievement(
+                                            model: model!,
+                                            getProfileData: getProfileData)));
+                              },
+                              label: const Text("add new"),
+                            ),
+                          ],
+                        ),
+                      ]),
+                    ),
+                    const Divider(),
+                    const SizedBox(height: 15),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //       offset: const Offset(5, 5),
+                        //       blurRadius: 3,
+                        //       color: Colors.grey.shade700),
+                        //   const BoxShadow(
+                        //     blurRadius: 1,
+                        //     color: Colors.white,
+                        //   )
+                        // ]
+                      ),
+                      child: Column(
+                        children: [
+                          const Text("Skills"),
+                          model!.skills != null && model!.skills!.isNotEmpty
+                              ? SkillCard(
+                                  index: 0,
+                                  model: model!,
+                                  getProfileData: getProfileData)
+                              : Text("No skill added !!",
+                                  style: TextStyle(
+                                    color: Colors.red.shade900,
+                                  )),
+                          ButtonBar(
+                            alignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              OutlinedButton.icon(
+                                icon: const Icon(Icons.show_chart),
+                                onPressed: model!.skills != null &&
+                                        model!.skills!.length > 1
+                                    ? () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => AllSkills(
+                                                    getProfileData:
+                                                        getProfileData,
+                                                    model: model!)));
+                                      }
+                                    : null,
+                                label: const Text("view more"),
+                              ),
+                              OutlinedButton.icon(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NewSkill(
+                                              model: model!,
+                                              getProfileData: getProfileData)));
+                                },
+                                label: const Text("add new"),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -1138,6 +1281,32 @@ class AllAchievements extends StatelessWidget {
   }
 }
 
+class AllSkills extends StatelessWidget {
+  const AllSkills(
+      {super.key, required this.model, required this.getProfileData});
+
+  final ProfileModel model;
+  final VoidCallback getProfileData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Achievements"),
+      ),
+      body: ListView.builder(
+        itemCount: model.skills!.length,
+        itemBuilder: (context, index) {
+          return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SkillCard(
+                  index: index, model: model, getProfileData: getProfileData));
+        },
+      ),
+    );
+  }
+}
+
 class NewSkill extends StatefulWidget {
   const NewSkill(
       {super.key, required this.model, required this.getProfileData});
@@ -1164,77 +1333,73 @@ class _NewSkillState extends State<NewSkill> {
       appBar: AppBar(
         title: const Text("New Skill"),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.only(
             left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
         child: Column(
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Form(
-                  key: fKey,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
-                          } else {
-                            return null;
-                          }
-                        },
-                        controller: title,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            labelText: "Skill"),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
-                          } else if (value.length < 3) {
-                            return "Description must have at least 3 char";
-                          } else {
-                            return null;
-                          }
-                        },
-                        maxLines: 2,
-                        controller: briefD,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            labelText: "Brief description of Skill"),
-                      ),
-                      const SizedBox(height: 20),
-                      DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          labelText: "Skill Level",
-                        ),
-                        items: const [
-                          DropdownMenuItem(
-                              value: "Beginner", child: Text("Beginner")),
-                          DropdownMenuItem(
-                              value: "Intermediate",
-                              child: Text("Intermediate")),
-                          DropdownMenuItem(
-                              value: "Advanced", child: Text("Advanced")),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            level = value;
-                          });
-                        },
-                      )
-                    ],
+            Form(
+              key: fKey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "This field is required";
+                      } else {
+                        return null;
+                      }
+                    },
+                    controller: title,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        labelText: "Skill"),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "This field is required";
+                      } else if (value.length < 3) {
+                        return "Description must have at least 3 char";
+                      } else {
+                        return null;
+                      }
+                    },
+                    maxLines: 2,
+                    controller: briefD,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        labelText: "Brief description of Skill"),
+                  ),
+                  const SizedBox(height: 20),
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      labelText: "Skill Level",
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                          value: "Beginner", child: Text("Beginner")),
+                      DropdownMenuItem(
+                          value: "Intermediate", child: Text("Intermediate")),
+                      DropdownMenuItem(
+                          value: "Advanced", child: Text("Advanced")),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        level = value;
+                      });
+                    },
+                  )
+                ],
               ),
             ),
+            const SizedBox(height: 180),
             // const Expanded(child: SizedBox.shrink()),
             ElevatedButton(
                 onPressed: () async {
@@ -1261,17 +1426,14 @@ class _NewSkillState extends State<NewSkill> {
                   });
                 },
                 child: !processing
-                    ? const Expanded(
-                        child: Text(
-                          "Add",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                    ? const Text(
+                        "Add",
+                        style: TextStyle(color: Colors.white),
                       )
-                    : const Expanded(
-                        child: SpinKitCircle(
+                    : const SpinKitCircle(
                         color: Colors.white,
                         size: 25,
-                      ))),
+                      )),
             MediaQuery.of(context).viewInsets.bottom < 10
                 ? const SizedBox(height: 50)
                 : const SizedBox.shrink(),
