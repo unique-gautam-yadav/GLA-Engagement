@@ -37,7 +37,7 @@ class _NavBarViewState extends State<NavBarView> {
       appBar: curPageIndex == 0
           ? AppBar(
               title: const Text(
-                "GLA Connect",
+                "GLAXY",
                 style: TextStyle(
                     fontSize: 25,
                     color: Colors.black,
