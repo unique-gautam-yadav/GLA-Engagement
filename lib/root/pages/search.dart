@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../backend/keywords.dart';
 import '../../backend/models.dart';
 import '../../backend/providers.dart';
+import 'filter.dart';
 import 'filters.dart';
 
 class SearchPage extends StatefulWidget {
@@ -358,7 +359,9 @@ class _SearchPageState extends State<SearchPage> {
                         icon: Icon(Icons.search_rounded)),
                     IconButton(
                         onPressed: () async {
-                          showbanner();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return filter();
+                          },));
                         },
                         icon: Icon(CupertinoIcons.color_filter)),
                   ],
