@@ -3,6 +3,7 @@ import 'dart:math' show Random;
 
 import 'package:flutter/Material.dart';
 import 'package:glaengage/backend/providers.dart';
+import 'package:glaengage/root/pages/home.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -107,9 +108,11 @@ class BackEnd {
     return res;
   }
 
-  static getSuggestedPosts(BuildContext context) async {
-    List<PostModel> posts = [];
-    List<String>? keywords = context.watch<UserProvider>().getProfile!.keywords;
+  static Future<List<HomePagePosts>> getSuggestedPosts(
+      BuildContext context) async {
+    List<HomePagePosts> ps = [];
+    List<String>? keywords =
+        Provider.of<UserProvider>(context, listen: false).getProfile!.keywords;
     List<ProfileModel>? accounts = await getSuggestedAccounts(context);
     keywords ??= [];
     accounts ??= [];
@@ -121,15 +124,35 @@ class BackEnd {
           .where('postedBy', isEqualTo: e.mail)
           .orderBy('timeStamp', descending: true)
           .get();
-      for (var e in d.docs) {
-        posts.add(PostModel.fromMap(e.data() as Map<String, dynamic>));
+      for (var e2 in d.docs) {
+        ps.add(HomePagePosts(
+            post: PostModel.fromMap(e2.data() as Map<String, dynamic>),
+            profile: e));
       }
     }
+    return ps;
+  }
+
+  static Future<List<HomePagePosts>> getRandomPosts() async {
+    List<HomePagePosts> posts = [];
+
+    QuerySnapshot<Object?> d = await postsRef.get();
+
+    for (var e in d.docs) {
+      PostModel post = PostModel.fromMap(e.data() as Map<String, dynamic>);
+      DocumentSnapshot<Object?> t = await usersRef.doc(post.postedBy).get();
+      posts.add(HomePagePosts(
+          post: post,
+          profile: ProfileModel.fromMap(t.data() as Map<String, dynamic>)));
+    }
+    posts.shuffle();
+    return posts;
   }
 
   static Future<List<ProfileModel>?> getSuggestedAccounts(
       BuildContext context) async {
-    List<String>? skills = context.watch<UserProvider>().getProfile!.keywords;
+    List<String>? skills =
+        Provider.of<UserProvider>(context, listen: false).getProfile!.keywords;
     List<ProfileModel>? data;
     data = [];
     skills ??= [];
