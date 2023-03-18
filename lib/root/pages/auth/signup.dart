@@ -577,7 +577,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                       controller: course,
                                       decoration: InputDecoration(
                                         hintText: "Enter your course name",
-                                        labelText: "Course",
+                                        // labelText: "Course",
+                                        label: RequiredLabel("course"),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -589,7 +590,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                       controller: branch,
                                       decoration: InputDecoration(
                                         hintText: "Enter your branch",
-                                        labelText: "Branch",
+                                        // labelText: "Branch",
+                                        label: const RequiredLabel("Branch"),
+
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -602,7 +605,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         hintText: "Enter your semester",
-                                        labelText: "semester",
+                                        // labelText: "semester",
+                                        label: RequiredLabel("Semester"),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -637,14 +641,15 @@ class _SignUpPageState extends State<SignUpPage> {
                                       maxLength: 4,
                                       decoration: InputDecoration(
                                         hintText: "Enter your admission year",
-                                        labelText: "Admission Year",
+                                        // labelText: "Session",
+                                        label: RequiredLabel("Session"),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
+                                    const SizedBox(height: 10),
                                     TextField(
                                       controller: bio,
                                       maxLength: 200,
