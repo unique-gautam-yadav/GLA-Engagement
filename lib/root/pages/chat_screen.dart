@@ -75,12 +75,10 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 500,
-            width: double.infinity,
-            child: StreamBuilder(
+      body: Expanded(
+        child: Column(
+          children: [
+            StreamBuilder(
                 stream: BackEnd.getChats(widget.chatRoom.chatroomid!),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -88,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       return ListView.builder(
                           reverse: true,
                           itemCount: snapshot.data!.docs.length,
-                          physics: const ClampingScrollPhysics(),
+                          physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             ChatModel chat = ChatModel.fromMap(
                                 snapshot.data!.docs.elementAt(index).data());
