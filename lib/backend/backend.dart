@@ -74,12 +74,29 @@ class BackEnd {
     });
   }
 
+  static unFollow(String userMail) async {
+    await userDetailsRef.doc(userMail).update({
+      "followers":
+          FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.email])
+    });
+  }
+
   static Future<UserDetails> getUserDetial(String userMail) async {
+    log("sdfsd");
+    UserDetails model = UserDetails();
     DocumentSnapshot<Object?> data = await userDetailsRef.doc(userMail).get();
     if (data.data() == null) {
       userDetailsRef.doc(userMail).set({"mail": userMail});
       return UserDetails();
     }
-    return UserDetails.fromMap(data.data() as Map<String, dynamic>);
+    model = UserDetails.fromMap(data.data() as Map<String, dynamic>);
+    model.following ??= [];
+    QuerySnapshot<Object?> data2 =
+        await userDetailsRef.where("followers", arrayContains: userMail).get();
+    log("${data2.docs.length}  $userMail");
+    for (var e in data2.docs) {
+      model.following!.add(e.get("mail"));
+    }
+    return model;
   }
 }
