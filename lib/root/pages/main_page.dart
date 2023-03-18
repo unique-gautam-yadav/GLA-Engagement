@@ -7,10 +7,13 @@ import 'package:glaengage/backend/providers.dart';
 import 'package:glaengage/root/pages/add_post.dart';
 import 'package:glaengage/root/pages/chats.dart';
 import 'package:glaengage/root/pages/home.dart';
+import 'package:glaengage/root/pages/work.dart';
 import 'package:glaengage/root/pages/public_profile.dart';
 import 'package:glaengage/root/pages/search.dart';
 import 'package:glaengage/root/pages/self_profile.dart';
 import 'package:provider/provider.dart';
+
+import 'hire.dart';
 
 class NavBarView extends StatefulWidget {
   const NavBarView({super.key});
@@ -103,6 +106,28 @@ class _NavBarViewState extends State<NavBarView> {
                 )
               ],
             ),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return work();
+                },
+              ));
+            },
+            leading: const Icon(Icons.attach_money_outlined),
+            title: const Text("Work"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return hire();
+                },
+              ));
+            },
+            leading: const Icon(Icons.handshake),
+            title: const Text("Hire"),
           ),
           ListTile(
             onTap: () {
