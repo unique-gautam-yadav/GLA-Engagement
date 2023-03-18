@@ -98,6 +98,7 @@ class _SearchPageState extends State<SearchPage> {
                         FocusManager.instance.primaryFocus!.unfocus();
                         setState(() {
                           userType = value.toString();
+                          Navigator.pop(context);
                         });
                       },
                     ),
@@ -126,6 +127,7 @@ class _SearchPageState extends State<SearchPage> {
                         FocusManager.instance.primaryFocus!.unfocus();
                         setState(() {
                           userType = value.toString();
+                          Navigator.pop(context);
                         });
                       },
                     ),
@@ -154,6 +156,7 @@ class _SearchPageState extends State<SearchPage> {
                         FocusManager.instance.primaryFocus!.unfocus();
                         setState(() {
                           userType = value.toString();
+                          Navigator.pop(context);
                         });
                       },
                     ),
