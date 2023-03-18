@@ -934,7 +934,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         padding: MaterialStateProperty.all(
                             const EdgeInsets.only(left: 15, right: 15))),
                     onPressed: stepIndex == 0
-                        ? () {}
+                        ? () { Navigator.pop(context);}
                         : () {
                             if (stepIndex > 0) {
                               setState(() {
