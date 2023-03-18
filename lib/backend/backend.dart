@@ -74,6 +74,13 @@ class BackEnd {
     });
   }
 
+  static unFollow(String userMail) async {
+    await userDetailsRef.doc(userMail).update({
+      "followers":
+          FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.email])
+    });
+  }
+
   static Future<UserDetails> getUserDetial(String userMail) async {
     DocumentSnapshot<Object?> data = await userDetailsRef.doc(userMail).get();
     if (data.data() == null) {

@@ -88,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       return ListView.builder(
                           reverse: true,
                           itemCount: snapshot.data!.docs.length,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const ClampingScrollPhysics(),
                           itemBuilder: (context, index) {
                             ChatModel chat = ChatModel.fromMap(
                                 snapshot.data!.docs.elementAt(index).data());

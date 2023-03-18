@@ -187,20 +187,31 @@ class _PublicProfileState extends State<PublicProfile> {
                             ? ButtonBar(
                                 children: [
                                   userDetails!.followers == null ||
-                                          userDetails!.followers!.contains(
+                                          !userDetails!.followers!.contains(
                                               FirebaseAuth
                                                   .instance.currentUser!.email)
                                       ? OutlinedButton.icon(
                                           onPressed: () async {
-                                            setState(() {
-                                              ///
-                                            });
                                             await BackEnd.follow(model!.mail!);
+                                            userDetails!.followers ??= [];
+                                            setState(() {
+                                              userDetails!.followers!.add(
+                                                  FirebaseAuth.instance
+                                                      .currentUser!.email!);
+                                            });
                                           },
                                           icon: const Icon(Icons.person_add),
                                           label: const Text("Follow"))
                                       : OutlinedButton.icon(
-                                          onPressed: () {},
+                                          onPressed: () async {
+                                            await BackEnd.unFollow(
+                                                model!.mail!);
+                                            setState(() {
+                                              userDetails!.followers!.remove(
+                                                  FirebaseAuth.instance
+                                                      .currentUser!.email!);
+                                            });
+                                          },
                                           icon: const Icon(Icons.person_off),
                                           label: const Text("Unfollow")),
                                   OutlinedButton.icon(
@@ -353,8 +364,8 @@ class _PublicProfileState extends State<PublicProfile> {
                               ]),
                           child: Column(
                             children: [
-                              const Text("Archiements or Jobs"),
-                              AchievementCard(
+                              const Text("Skills"),
+                              SkillCard(
                                 model: model!,
                                 index: 0,
                               ),
@@ -370,7 +381,7 @@ class _PublicProfileState extends State<PublicProfile> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        AllAchievements(
+                                                        AllSkills(
                                                             model: model!)));
                                           }
                                         : null,
@@ -570,6 +581,73 @@ class _AchievementCardState extends State<AchievementCard> {
   }
 }
 
+class SkillCard extends StatefulWidget {
+  const SkillCard({
+    super.key,
+    required this.model,
+    required this.index,
+  });
+
+  final int index;
+  final ProfileModel model;
+
+  @override
+  State<SkillCard> createState() => _SkillCardState();
+}
+
+class _SkillCardState extends State<SkillCard> {
+  bool isExpanded = false;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: MaterialButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        splashColor: Theme.of(context).primaryColor.withOpacity(.5),
+        onPressed: () {
+          // setState(() {
+          //   isExpanded = !isExpanded;
+          // });
+        },
+        child: Container(
+          width: 700,
+          height: 100,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.black.withOpacity(.6))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Flexible(
+                flex: 1,
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  "${widget.model.skills!.elementAt(widget.index)['title']} "
+                  "(${widget.model.skills!.elementAt(widget.index)['level']})",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              Flexible(
+                flex: 2,
+                child: Text(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  "${widget.model.skills!.elementAt(widget.index)['description']}",
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class CusButton extends StatelessWidget {
   const CusButton({
     super.key,
@@ -648,6 +726,29 @@ class ProfileLink extends StatelessWidget {
 
 class AllAchievements extends StatelessWidget {
   const AllAchievements({super.key, required this.model});
+
+  final ProfileModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Achievements"),
+      ),
+      body: ListView.builder(
+        itemCount: model.achievements!.length,
+        itemBuilder: (context, index) {
+          return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AchievementCard(index: index, model: model));
+        },
+      ),
+    );
+  }
+}
+
+class AllSkills extends StatelessWidget {
+  const AllSkills({super.key, required this.model});
 
   final ProfileModel model;
 
