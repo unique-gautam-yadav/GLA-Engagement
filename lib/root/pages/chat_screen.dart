@@ -38,7 +38,9 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 40,
-        title: Expanded(
+        title: SizedBox(
+          width: MediaQuery.of(context).size.width - 55,
+          height: 48,
           child: Row(
             children: [
               CircleAvatar(
@@ -50,7 +52,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     : null,
               ),
               const SizedBox(width: 10),
-              Expanded(
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 122,
+                height: 48,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -75,10 +79,14 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-      body: Expanded(
-        child: Column(
-          children: [
-            StreamBuilder(
+      body: Column(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height -
+                175 -
+                (MediaQuery.of(context).viewInsets.bottom),
+            child: StreamBuilder(
                 stream: BackEnd.getChats(widget.chatRoom.chatroomid!),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -86,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       return ListView.builder(
                           reverse: true,
                           itemCount: snapshot.data!.docs.length,
-                          physics: NeverScrollableScrollPhysics(),
+                          // physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             ChatModel chat = ChatModel.fromMap(
                                 snapshot.data!.docs.elementAt(index).data());
@@ -116,68 +124,68 @@ class _ChatScreenState extends State<ChatScreen> {
                             color: Theme.of(context).primaryColor, size: 55));
                   }
                 }),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * .1,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 65,
-                      child: TextFormField(
-                        cursorColor: Theme.of(context).primaryColor,
-                        autocorrect: true,
-                        controller: msgcontrol,
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          labelStyle: const TextStyle(
-                              color: Color.fromARGB(255, 81, 187, 104)),
-                          labelText: "enter message",
-                          border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18))),
-                          hintText: "Enter something to Chats ",
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * .1,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 65,
+                    child: TextFormField(
+                      cursorColor: Theme.of(context).primaryColor,
+                      autocorrect: true,
+                      controller: msgcontrol,
+                      textAlign: TextAlign.start,
+                      decoration: InputDecoration(
+                        labelStyle: const TextStyle(
+                            color: Color.fromARGB(255, 81, 187, 104)),
+                        labelText: "enter message",
+                        border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18))),
+                        hintText: "Enter something to Chats ",
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
                         ),
                       ),
                     ),
+                  ),
 
-                    IconButton(
-                      onPressed: () async {
-                        if (msgcontrol.text.trim().isNotEmpty) {
-                          ChatModel chat = ChatModel(
-                              message: msgcontrol.text.trim(),
-                              sender: FirebaseAuth.instance.currentUser!.email,
-                              timeStamp: DateTime.now());
-                          await BackEnd.sendChat(
-                              widget.chatRoom.chatroomid!, chat);
-                        }
-                        msgcontrol.clear();
-                      },
-                      icon: const Icon(
-                        Icons.send,
-                        color: Color.fromARGB(255, 83, 212, 88),
-                      ),
-                    )
-                    // IconButton(
-                    //   color: const Color.fromARGB(255, 48, 220, 53),
-                    //   onPressed: () {},
-                    //   icon: const Icon(Icons.attach_file),
-                    // ),
+                  IconButton(
+                    onPressed: () async {
+                      if (msgcontrol.text.trim().isNotEmpty) {
+                        ChatModel chat = ChatModel(
+                            message: msgcontrol.text.trim(),
+                            sender: FirebaseAuth.instance.currentUser!.email,
+                            timeStamp: DateTime.now());
+                        await BackEnd.sendChat(
+                            widget.chatRoom.chatroomid!, chat);
+                      }
+                      msgcontrol.clear();
+                    },
+                    icon: const Icon(
+                      Icons.send,
+                      color: Color.fromARGB(255, 83, 212, 88),
+                    ),
+                  )
+                  // IconButton(
+                  //   color: const Color.fromARGB(255, 48, 220, 53),
+                  //   onPressed: () {},
+                  //   icon: const Icon(Icons.attach_file),
+                  // ),
 
-                    // const SizedBox(width: 4),
-                    // if(tcontroller.text!=null)
-                  ],
-                ),
+                  // const SizedBox(width: 4),
+                  // if(tcontroller.text!=null)
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

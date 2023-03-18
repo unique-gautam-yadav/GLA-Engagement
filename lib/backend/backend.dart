@@ -9,6 +9,7 @@ import 'package:glaengage/backend/models.dart';
 final FirebaseFirestore store = FirebaseFirestore.instance;
 final CollectionReference chatRoomRef = store.collection("chatrooms");
 final CollectionReference userDetailsRef = store.collection("userDetails");
+final CollectionReference postsRef = store.collection("Posts");
 
 class BackEnd {
   static Future<ChatRoomModel> getChatRoom(String targetUserMail) async {
@@ -51,22 +52,6 @@ class BackEnd {
         .set(chat.toMap());
   }
 
-  static Future<List<ChatRoomModel>> getRecentChats() async {
-    QuerySnapshot<Object?> d = await chatRoomRef
-        .where(
-            "participants.${FirebaseAuth.instance.currentUser!.email!.hashCode}",
-            isEqualTo: true)
-        .get();
-
-    return List.generate(
-      d.docs.length,
-      (index) {
-        return ChatRoomModel.fromMap(
-            d.docs.elementAt(index).data() as Map<String, dynamic>);
-      },
-    );
-  }
-
   static follow(String userMail) async {
     await userDetailsRef.doc(userMail).update({
       "followers":
@@ -98,5 +83,10 @@ class BackEnd {
       model.following!.add(e.get("mail"));
     }
     return model;
+  }
+
+  static getSuggestedPosts() {
+    //
+    postsRef.where("keywords", arrayContains: "");
   }
 }

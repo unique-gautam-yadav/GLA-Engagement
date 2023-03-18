@@ -17,6 +17,7 @@ class StudentModel {
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
   List<Map<String, dynamic>>? skills;
+  List<String>? keywords;
   StudentModel({
     this.type,
     this.name,
@@ -33,6 +34,7 @@ class StudentModel {
     this.achievements,
     this.socialLinks,
     this.skills,
+    this.keywords,
   });
 
   Map<String, dynamic> toMap() {
@@ -52,6 +54,7 @@ class StudentModel {
       'achievements': achievements,
       'socialLinks': socialLinks,
       'skills': skills,
+      'keywords': keywords,
     };
   }
 
@@ -88,6 +91,13 @@ class StudentModel {
       skills: map['skills'] != null
           ? List<Map<String, dynamic>>.from(
               (map['skills'] as List<dynamic>).map<Map<String, dynamic>?>(
+                (x) => x,
+              ),
+            )
+          : null,
+      keywords: map['keywords'] != null
+          ? List<String>.from(
+              (map['keywords'] as List<dynamic>).map<String?>(
                 (x) => x,
               ),
             )
