@@ -75,12 +75,10 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 500,
-            width: double.infinity,
-            child: StreamBuilder(
+      body: Expanded(
+        child: Column(
+          children: [
+            StreamBuilder(
                 stream: BackEnd.getChats(widget.chatRoom.chatroomid!),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -118,68 +116,68 @@ class _ChatScreenState extends State<ChatScreen> {
                             color: Theme.of(context).primaryColor, size: 55));
                   }
                 }),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * .1,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 65,
-                    child: TextFormField(
-                      cursorColor: Theme.of(context).primaryColor,
-                      autocorrect: true,
-                      controller: msgcontrol,
-                      textAlign: TextAlign.start,
-                      decoration: InputDecoration(
-                        labelStyle: const TextStyle(
-                            color: Color.fromARGB(255, 81, 187, 104)),
-                        labelText: "enter message",
-                        border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(18))),
-                        hintText: "Enter something to Chats ",
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * .1,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 65,
+                      child: TextFormField(
+                        cursorColor: Theme.of(context).primaryColor,
+                        autocorrect: true,
+                        controller: msgcontrol,
+                        textAlign: TextAlign.start,
+                        decoration: InputDecoration(
+                          labelStyle: const TextStyle(
+                              color: Color.fromARGB(255, 81, 187, 104)),
+                          labelText: "enter message",
+                          border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18))),
+                          hintText: "Enter something to Chats ",
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  IconButton(
-                    onPressed: () async {
-                      if (msgcontrol.text.trim().isNotEmpty) {
-                        ChatModel chat = ChatModel(
-                            message: msgcontrol.text.trim(),
-                            sender: FirebaseAuth.instance.currentUser!.email,
-                            timeStamp: DateTime.now());
-                        await BackEnd.sendChat(
-                            widget.chatRoom.chatroomid!, chat);
-                      }
-                      msgcontrol.clear();
-                    },
-                    icon: const Icon(
-                      Icons.send,
-                      color: Color.fromARGB(255, 83, 212, 88),
-                    ),
-                  )
-                  // IconButton(
-                  //   color: const Color.fromARGB(255, 48, 220, 53),
-                  //   onPressed: () {},
-                  //   icon: const Icon(Icons.attach_file),
-                  // ),
+                    IconButton(
+                      onPressed: () async {
+                        if (msgcontrol.text.trim().isNotEmpty) {
+                          ChatModel chat = ChatModel(
+                              message: msgcontrol.text.trim(),
+                              sender: FirebaseAuth.instance.currentUser!.email,
+                              timeStamp: DateTime.now());
+                          await BackEnd.sendChat(
+                              widget.chatRoom.chatroomid!, chat);
+                        }
+                        msgcontrol.clear();
+                      },
+                      icon: const Icon(
+                        Icons.send,
+                        color: Color.fromARGB(255, 83, 212, 88),
+                      ),
+                    )
+                    // IconButton(
+                    //   color: const Color.fromARGB(255, 48, 220, 53),
+                    //   onPressed: () {},
+                    //   icon: const Icon(Icons.attach_file),
+                    // ),
 
-                  // const SizedBox(width: 4),
-                  // if(tcontroller.text!=null)
-                ],
+                    // const SizedBox(width: 4),
+                    // if(tcontroller.text!=null)
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
