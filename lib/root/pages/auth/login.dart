@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:glaengage/backend/auth.dart';
 import 'package:validators/validators.dart' as validator;
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key, required this.togglePages});
@@ -19,10 +21,39 @@ class _SignInPageState extends State<SignInPage> {
 
   bool processing = false;
 
+  SendEmail() async {
+    String username = 'adityachauhan9456923436@gmail.com';
+    String password = 'ivxfgoragdskcghn';
+
+    final smtpServer = gmail(username, password);
+
+    final message = Message()
+      ..from = Address(username, 'Coding Beasts')
+      ..recipients.add(mail.text)
+      ..subject = 'Login Activity Recogniced '
+      ..text =
+          'We Have Noticed An Unusual Activity in Your Account There Is an Log in .\n So If You Have Not Log In Your Account then Please Contact Us .';
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent. + $e');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
+
+    var connection = PersistentConnection(smtpServer);
+    await connection.send(message);
+    await connection.close();
+  }
+
   login() async {
     bool toBeChanged = true;
     setState(() {
       processing = true;
+      SendEmail();
     });
     if (formKey.currentState!.validate()) {
       String msg = await Auth.login(mail.text, password.text);
