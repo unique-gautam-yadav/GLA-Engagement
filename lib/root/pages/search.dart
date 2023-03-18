@@ -62,114 +62,6 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  UserBanner() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: Container(
-                height: 7,
-                width: 100,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade500,
-                    borderRadius: BorderRadius.circular(50)),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 15),
-                  child: Text(
-                    "Student",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 240,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: Radio(
-                      value: KeyWords.studentUser,
-                      groupValue: userType,
-                      onChanged: (value) {
-                        FocusManager.instance.primaryFocus!.unfocus();
-                        setState(() {
-                          userType = value.toString();
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 15),
-                  child: Text(
-                    "Teacher",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 240,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: Radio(
-                      value: KeyWords.teacherUser,
-                      groupValue: userType,
-                      onChanged: (value) {
-                        FocusManager.instance.primaryFocus!.unfocus();
-                        setState(() {
-                          userType = value.toString();
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 15),
-                  child: Text(
-                    "Alumni",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 240,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: Radio(
-                      value: KeyWords.alumniUser,
-                      groupValue: userType,
-                      onChanged: (value) {
-                        FocusManager.instance.primaryFocus!.unfocus();
-                        setState(() {
-                          userType = value.toString();
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   showbanner() {
     showModalBottomSheet(
@@ -229,7 +121,9 @@ class _SearchPageState extends State<SearchPage> {
                       width: 125,
                       child: MaterialButton(
                         onPressed: () {
-                          UserBanner();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return filter();
+                          },));
                         },
                         child: Row(
                           children: [
