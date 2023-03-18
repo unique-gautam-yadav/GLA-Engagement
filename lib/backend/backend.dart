@@ -1,5 +1,9 @@
 import 'dart:developer';
+import 'dart:math' show Random;
 
+import 'package:flutter/Material.dart';
+import 'package:glaengage/backend/providers.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -87,12 +91,6 @@ class BackEnd {
     return model;
   }
 
-  static getSuggestedPosts() {
-    //
-    postsRef.where("keywords", arrayContains: "");
-  }
-
-
   static Future<List<HomePagePosts>> getPosts() async {
     QuerySnapshot<Object?> data =
         await postsRef.orderBy("timeStamp", descending: true).get();
@@ -107,5 +105,46 @@ class BackEnd {
       // }
     }
     return res;
+  }
+
+  static getSuggestedPosts(BuildContext context) async {
+    List<PostModel> posts = [];
+    List<String>? keywords = context.watch<UserProvider>().getProfile!.keywords;
+    List<ProfileModel>? accounts = await getSuggestedAccounts(context);
+    keywords ??= [];
+    accounts ??= [];
+    for (var e in accounts) {
+      QuerySnapshot<Object?> d = await postsRef
+          .where('field',
+              arrayContains:
+                  keywords.elementAt(Random().nextInt(keywords.length)))
+          .where('postedBy', isEqualTo: e.mail)
+          .orderBy('timeStamp', descending: true)
+          .get();
+      for (var e in d.docs) {
+        posts.add(PostModel.fromMap(e.data() as Map<String, dynamic>));
+      }
+    }
+  }
+
+  static Future<List<ProfileModel>?> getSuggestedAccounts(
+      BuildContext context) async {
+    List<String>? skills = context.watch<UserProvider>().getProfile!.keywords;
+    List<ProfileModel>? data;
+    data = [];
+    skills ??= [];
+    if (skills.isNotEmpty) {
+      for (var e in skills) {
+        QuerySnapshot<Object?> d = await usersRef
+            .where('keywords', arrayContains: e.toString().toUpperCase())
+            .limit(5)
+            .get();
+        for (var e in d.docs) {
+          data.add(ProfileModel.fromMap(e.data() as Map<String, dynamic>));
+        }
+      }
+    }
+    data.shuffle();
+    return data;
   }
 }

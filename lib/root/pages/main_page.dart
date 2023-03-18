@@ -112,7 +112,7 @@ class _NavBarViewState extends State<NavBarView> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return work();
+                  return const work();
                 },
               ));
             },
@@ -123,7 +123,7 @@ class _NavBarViewState extends State<NavBarView> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return hire();
+                  return const hire();
                 },
               ));
             },
