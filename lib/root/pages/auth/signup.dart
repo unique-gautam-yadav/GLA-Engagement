@@ -117,6 +117,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController admisionYear = TextEditingController();
   TextEditingController bio = TextEditingController();
   TextEditingController passoutYear = TextEditingController();
+  TextEditingController company = TextEditingController();
   // String dropdownvalue = "please select sem";
 
   // // List of items in our dropdown menu
@@ -788,6 +789,20 @@ class _SignUpPageState extends State<SignUpPage> {
                                           ),
                                         ),
                                         const SizedBox(height: 20),
+                                        TextFormField(
+                                          controller: company,
+                                          keyboardType: TextInputType.number,
+                                          maxLength: 4,
+                                          decoration: InputDecoration(
+                                            hintText: "Enter yourCompany Name",
+                                            labelText: "Company",
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
                                         TextField(
                                           controller: bio,
                                           maxLength: 200,
@@ -934,7 +949,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         padding: MaterialStateProperty.all(
                             const EdgeInsets.only(left: 15, right: 15))),
                     onPressed: stepIndex == 0
-                        ? () {}
+                        ? () {
+                            Navigator.pop(context);
+                          }
                         : () {
                             if (stepIndex > 0) {
                               setState(() {
@@ -1008,6 +1025,7 @@ class _SignUpPageState extends State<SignUpPage> {
     id.dispose();
     sem.dispose();
     password.dispose();
+    company.dispose();
     super.dispose();
   }
 }
