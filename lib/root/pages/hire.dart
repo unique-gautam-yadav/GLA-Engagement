@@ -57,10 +57,12 @@ class _hireState extends State<hire> {
                   ),
                 ],
               ),
-              SvgPicture.asset(
-                "assets/images/hire.svg",
+              SizedBox(
                 height: 200,
-                width: 200,
+                width: MediaQuery.of(context).size.width - 20,
+                child: SvgPicture.asset(
+                  "assets/images/hire.svg",
+                ),
               ),
               TextFormField(
                 validator: (value) {

@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:validators/validators.dart' as validator;
-
 import '../../../backend/auth.dart';
 import '../../../backend/keywords.dart';
 import '../../../backend/models.dart';
@@ -13,11 +11,9 @@ class SignUpWelcome extends StatefulWidget {
   const SignUpWelcome({super.key, required this.togglePages});
 
   final VoidCallback togglePages;
-
   @override
   State<SignUpWelcome> createState() => _SignUpWelcomeState();
 }
-
 class _SignUpWelcomeState extends State<SignUpWelcome> {
   @override
   Widget build(BuildContext context) {
