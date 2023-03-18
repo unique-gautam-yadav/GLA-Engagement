@@ -24,7 +24,7 @@ class _workState extends State<work> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("My Earning"),
+          title: Text("Search Work"),
         ),
         body: SafeArea(
           child: Column(

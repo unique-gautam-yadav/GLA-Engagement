@@ -134,7 +134,7 @@ class _hireState extends State<hire> {
                 controller: decp,
                 decoration: InputDecoration(
                     hintText: "Enter Detailed description of Job ",
-                    labelText: "description",
+                    labelText: "Description of Job",
                     // prefixIcon: const Icon(Icons.mail),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12))),
