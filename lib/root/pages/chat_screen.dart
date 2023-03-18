@@ -22,6 +22,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  bool sametime = true;
   TextEditingController msgcontrol = TextEditingController();
   bool isTextFilled = false;
 
@@ -102,16 +103,34 @@ class _ChatScreenState extends State<ChatScreen> {
                             bool self = chat.sender ==
                                 FirebaseAuth.instance.currentUser!.email;
 
-                            return BubbleSpecialThree(
-                              text: "${chat.message}",
-                              color: self
-                                  ? const Color(0xFFE8E8EE)
-                                  : Theme.of(context)
-                                      .primaryColor
-                                      .withOpacity(.7),
-                              tail: false,
-                              isSender: self,
-                            );
+                            return Column(children: [
+                              BubbleSpecialThree(
+                                text: "${chat.message}",
+                                color: self
+                                    ? const Color(0xFFE8E8EE)
+                                    : Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(.7),
+                                tail: false,
+                                isSender: self,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: Align(
+                                  alignment: self
+                                      ? Alignment.centerRight
+                                      : Alignment.bottomLeft,
+                                  child: Text(
+                                    "${chat.timeStamp!.hour}:${chat.timeStamp!.minute}",
+                                    style: TextStyle(
+                                        // color: Colors.white,
+
+                                        fontSize: 10),
+                                  ),
+                                ),
+                              )
+                            ]);
                           });
                     } else {
                       return const Align(

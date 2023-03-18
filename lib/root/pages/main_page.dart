@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glaengage/backend/auth.dart';
 import 'package:glaengage/backend/providers.dart';
 import 'package:glaengage/root/pages/add_post.dart';
 import 'package:glaengage/root/pages/chats.dart';
@@ -111,7 +112,7 @@ class _NavBarViewState extends State<NavBarView> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return work();
+                  return const work();
                 },
               ));
             },
@@ -122,7 +123,7 @@ class _NavBarViewState extends State<NavBarView> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return hire();
+                  return const hire();
                 },
               ));
             },
@@ -131,7 +132,7 @@ class _NavBarViewState extends State<NavBarView> {
           ),
           ListTile(
             onTap: () {
-              FirebaseAuth.instance.signOut();
+              Auth.logOut();
             },
             leading: const Icon(Icons.logout),
             title: const Text("Log Out"),

@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:validators/validators.dart' as validator;
-
 import '../../../backend/auth.dart';
 import '../../../backend/keywords.dart';
 import '../../../backend/models.dart';
@@ -13,11 +11,9 @@ class SignUpWelcome extends StatefulWidget {
   const SignUpWelcome({super.key, required this.togglePages});
 
   final VoidCallback togglePages;
-
   @override
   State<SignUpWelcome> createState() => _SignUpWelcomeState();
 }
-
 class _SignUpWelcomeState extends State<SignUpWelcome> {
   @override
   Widget build(BuildContext context) {
@@ -117,6 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController admisionYear = TextEditingController();
   TextEditingController bio = TextEditingController();
   TextEditingController passoutYear = TextEditingController();
+  TextEditingController company = TextEditingController();
   // String dropdownvalue = "please select sem";
 
   // // List of items in our dropdown menu
@@ -788,6 +785,20 @@ class _SignUpPageState extends State<SignUpPage> {
                                           ),
                                         ),
                                         const SizedBox(height: 20),
+                                        TextFormField(
+                                          controller: company,
+                                          keyboardType: TextInputType.number,
+                                          maxLength: 4,
+                                          decoration: InputDecoration(
+                                            hintText: "Enter yourCompany Name",
+                                            labelText: "Company",
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
                                         TextField(
                                           controller: bio,
                                           maxLength: 200,
@@ -934,7 +945,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         padding: MaterialStateProperty.all(
                             const EdgeInsets.only(left: 15, right: 15))),
                     onPressed: stepIndex == 0
-                        ? () { Navigator.pop(context);}
+                        ? () {
+                            Navigator.pop(context);
+                          }
                         : () {
                             if (stepIndex > 0) {
                               setState(() {
@@ -1008,6 +1021,7 @@ class _SignUpPageState extends State<SignUpPage> {
     id.dispose();
     sem.dispose();
     password.dispose();
+    company.dispose();
     super.dispose();
   }
 }
