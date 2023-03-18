@@ -376,20 +376,4 @@ class Auth {
     }
     return data;
   }
-
-  static Future<List<HomePagePosts>> getPosts() async {
-    QuerySnapshot<Object?> data =
-        await postsRef.orderBy("timeStamp", descending: true).get();
-
-    List<HomePagePosts> res = [];
-
-    for (var e in data.docs) {
-      PostModel d = PostModel.fromMap(e.data() as Map<String, dynamic>);
-      // if (d.postedBy != FirebaseAuth.instance.currentUser!.email!) {
-      ProfileModel? p = await Auth.getProfileByMail(d.postedBy!);
-      res.add(HomePagePosts(post: d, profile: p));
-      // }
-    }
-    return res;
-  }
 }
