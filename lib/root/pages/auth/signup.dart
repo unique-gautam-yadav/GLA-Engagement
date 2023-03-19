@@ -242,7 +242,6 @@ class _SignUpPageState extends State<SignUpPage> {
       processing = false;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
