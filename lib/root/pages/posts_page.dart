@@ -68,7 +68,7 @@ class PostCard extends StatefulWidget {
   final Map<String, dynamic> e;
   final ProfileModel profileData;
   final bool? fromProfile;
-  
+
   @override
   State<PostCard> createState() => _PostCardState();
 }
@@ -83,7 +83,7 @@ class _PostCardState extends State<PostCard> {
       setState(() {
         likeCounter += 1;
       });
-      await Auth.likePost(widget.e['postID']);
+      await Auth().likePost(widget.e['postID']);
       setState(() {
         showAdded = true;
       });
@@ -93,7 +93,7 @@ class _PostCardState extends State<PostCard> {
         });
       });
     } else {
-      await Auth.unLikePost(widget.e['postID']);
+      await Auth().unLikePost(widget.e['postID']);
       setState(() {
         liked = false;
         showAdded = false;

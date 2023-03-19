@@ -362,14 +362,14 @@ class Auth {
     }
   }
 
-  static likePost(String postID) async {
+  likePost(String postID) async {
     await postsRef.doc(postID).update({
       'likes':
           FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.email!])
     });
   }
 
-  static unLikePost(String postID) async {
+   unLikePost(String postID) async {
     await postsRef.doc(postID).update({
       'likes':
           FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.email!])

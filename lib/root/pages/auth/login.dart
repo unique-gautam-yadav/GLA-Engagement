@@ -121,11 +121,7 @@ class _SignInPageState extends State<SignInPage> {
                             color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          child: const Center(
-                              child: Text(
-                            "Logo Here!!",
-                            style: TextStyle(color: Colors.white),
-                          )),
+                          child: Image.asset("assets/images/logo.png"),
                         ),
                         const SizedBox(height: 35),
                         Text("Sign In to App",
