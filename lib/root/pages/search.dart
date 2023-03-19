@@ -62,7 +62,6 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-
   showbanner() {
     showModalBottomSheet(
       context: context,
@@ -121,9 +120,11 @@ class _SearchPageState extends State<SearchPage> {
                       width: 125,
                       child: MaterialButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) {
-                            return filter();
-                          },));
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return filter();
+                            },
+                          ));
                         },
                         child: Row(
                           children: [
@@ -253,11 +254,13 @@ class _SearchPageState extends State<SearchPage> {
                         icon: Icon(Icons.search_rounded)),
                     IconButton(
                         onPressed: () async {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) {
-                            return filter();
-                          },));
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return filter();
+                            },
+                          ));
                         },
-                        icon: Icon(CupertinoIcons.color_filter)),
+                        icon: Icon(Icons.filter_list_outlined)),
                   ],
                 ),
 
