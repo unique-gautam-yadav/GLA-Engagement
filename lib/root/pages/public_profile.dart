@@ -62,7 +62,6 @@ class _PublicProfileState extends State<PublicProfile> {
       }
     }
   }
-
   getPosts() async {
     List<Map<String, dynamic>> temp =
         await Auth.getAllPostsByMail(widget.email);

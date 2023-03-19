@@ -1555,17 +1555,14 @@ class _NewAchievementState extends State<NewAchievement> {
                   });
                 },
                 child: !processing
-                    ? const Expanded(
-                        child: Text(
-                          "Add",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                    ? const Text(
+                        "Add",
+                        style: TextStyle(color: Colors.white),
                       )
-                    : const Expanded(
-                        child: SpinKitCircle(
+                    : const SpinKitCircle(
                         color: Colors.white,
                         size: 25,
-                      ))),
+                      )),
             MediaQuery.of(context).viewInsets.bottom < 10
                 ? const SizedBox(height: 50)
                 : const SizedBox.shrink(),
