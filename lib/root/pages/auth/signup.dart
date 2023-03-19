@@ -787,8 +787,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                         const SizedBox(height: 20),
                                         TextFormField(
                                           controller: company,
-                                          keyboardType: TextInputType.number,
-                                          maxLength: 4,
+                                          // keyboardType: TextInputType.number,
+                                          // maxLength: 4,
                                           decoration: InputDecoration(
                                             hintText: "Enter yourCompany Name",
                                             labelText: "Company",
