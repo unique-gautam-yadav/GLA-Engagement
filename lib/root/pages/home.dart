@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:glaengage/backend/backend.dart';
 import 'package:glaengage/backend/models.dart';
 import 'package:glaengage/root/pages/posts_page.dart';
+import 'package:glaengage/root/pages/public_profile.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../backend/auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -19,18 +18,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<HomePagePosts>? data;
+  List<ProfileModel>? recom;
 
   getData() async {
+    data ??= [];
     List<HomePagePosts> temp = await BackEnd.getSuggestedPosts(context);
+
     if (mounted) {
       if (temp.isNotEmpty) {
-        log('sdfjk');
         setState(() {
           data = temp;
         });
       } else {
-        log('sdfjk');
-
         temp = await BackEnd.getRandomPosts();
         setState(() {
           data = temp;
@@ -38,11 +37,13 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getData();
+      getOthers();
     });
   }
 
@@ -53,6 +54,82 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.only(),
         child: Column(
           children: [
+            recom != null && recom!.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 150,
+                      child: ListView.builder(
+                        itemCount: recom!.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: MaterialButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PublicProfile(
+                                          email: recom!.elementAt(index).mail!),
+                                    ));
+                              },
+                              padding: const EdgeInsets.all(0),
+                              minWidth: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Container(
+                                // margin: const EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 80,
+                                      width: 75,
+                                      child: CircleAvatar(
+                                        backgroundImage: recom!
+                                                    .elementAt(index)
+                                                    .imgUrl !=
+                                                null
+                                            ? NetworkImage(
+                                                recom!.elementAt(index).imgUrl!)
+                                            : null,
+                                        child: recom!.elementAt(index).imgUrl ==
+                                                null
+                                            ? const Icon(Icons.person_3)
+                                            : null,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${recom!.elementAt(index).name}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge,
+                                    ),
+                                    Text(
+                                      recom!
+                                          .elementAt(index)
+                                          .type!
+                                          .toUpperCase(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink(),
             data != null
                 ? Column(
                     children: data!.map((e) {

@@ -811,12 +811,13 @@ class ChatRoomModel {
   String? lastmessage;
   Map<String, dynamic>? participants;
   List<String>? users;
-  ChatRoomModel({
-    this.chatroomid,
-    this.lastmessage,
-    this.participants,
-    this.users,
-  });
+  String? lastActive;
+  ChatRoomModel(
+      {this.chatroomid,
+      this.lastmessage,
+      this.participants,
+      this.users,
+      this.lastActive});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -824,6 +825,7 @@ class ChatRoomModel {
       'lastmessage': lastmessage,
       'participants': participants,
       'users': users,
+      'lastActive': lastActive,
     };
   }
 
@@ -840,6 +842,8 @@ class ChatRoomModel {
       users: map['users'] != null
           ? List<String>.from((map['users'] as List<dynamic>))
           : null,
+      lastActive:
+          map['lastActive'] != null ? map['lastActive'] as String : null,
     );
   }
 
@@ -853,12 +857,14 @@ class ChatRoomModel {
     String? lastmessage,
     Map<String, dynamic>? participants,
     List<String>? users,
+    String? lastActive,
   }) {
     return ChatRoomModel(
       chatroomid: chatroomid ?? this.chatroomid,
       lastmessage: lastmessage ?? this.lastmessage,
       participants: participants ?? this.participants,
       users: users ?? this.users,
+      lastActive: lastActive ?? this.lastActive,
     );
   }
 }
@@ -1000,14 +1006,13 @@ class Freelancing {
   List<String>? skill;
   String? duration;
   String? package;
-  String? decp; 
+  String? decp;
   Freelancing({
     this.skill,
     this.duration,
     this.package,
     this.decp,
   });
-
 
   Freelancing copyWith({
     List<String>? skill,
@@ -1034,7 +1039,9 @@ class Freelancing {
 
   factory Freelancing.fromMap(Map<String, dynamic> map) {
     return Freelancing(
-      skill: map['skill'] != null ? List<String>.from((map['skill'] as List<String>)) : null,
+      skill: map['skill'] != null
+          ? List<String>.from((map['skill'] as List<String>))
+          : null,
       duration: map['duration'] != null ? map['duration'] as String : null,
       package: map['package'] != null ? map['package'] as String : null,
       decp: map['decp'] != null ? map['decp'] as String : null,
@@ -1043,7 +1050,8 @@ class Freelancing {
 
   String toJson() => json.encode(toMap());
 
-  factory Freelancing.fromJson(String source) => Freelancing.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Freelancing.fromJson(String source) =>
+      Freelancing.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -1053,19 +1061,18 @@ class Freelancing {
   @override
   bool operator ==(covariant Freelancing other) {
     if (identical(this, other)) return true;
-  
-    return 
-      listEquals(other.skill, skill) &&
-      other.duration == duration &&
-      other.package == package &&
-      other.decp == decp;
+
+    return listEquals(other.skill, skill) &&
+        other.duration == duration &&
+        other.package == package &&
+        other.decp == decp;
   }
 
   @override
   int get hashCode {
     return skill.hashCode ^
-      duration.hashCode ^
-      package.hashCode ^
-      decp.hashCode;
+        duration.hashCode ^
+        package.hashCode ^
+        decp.hashCode;
   }
 }

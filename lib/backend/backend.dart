@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:math' show Random;
 
@@ -52,6 +53,10 @@ class BackEnd {
   }
 
   static sendChat(String roomID, ChatModel chat) async {
+    await chatRoomRef.doc(roomID).update({
+      'lastActive': "${DateTime.now().millisecondsSinceEpoch}",
+      'lastmessage': chat.message
+    });
     await chatRoomRef
         .doc(roomID)
         .collection("chats")
@@ -141,9 +146,11 @@ class BackEnd {
     for (var e in d.docs) {
       PostModel post = PostModel.fromMap(e.data() as Map<String, dynamic>);
       DocumentSnapshot<Object?> t = await usersRef.doc(post.postedBy).get();
-      posts.add(HomePagePosts(
-          post: post,
-          profile: ProfileModel.fromMap(t.data() as Map<String, dynamic>)));
+      if (t.data() != null) {
+        posts.add(HomePagePosts(
+            post: post,
+            profile: ProfileModel.fromMap(t.data() as Map<String, dynamic>)));
+      }
     }
     posts.shuffle();
     return posts;
@@ -169,5 +176,96 @@ class BackEnd {
     }
     data.shuffle();
     return data;
+  }
+
+  static Future<List<ProfileModel>?> getSuggestedAccounts2(
+      BuildContext context) async {
+    List<String>? skills =
+        Provider.of<UserProvider>(context, listen: false).getProfile!.keywords;
+    List<ProfileModel>? data;
+    data = [];
+    skills ??= [];
+    if (skills.isNotEmpty) {
+      for (var e in skills) {
+        QuerySnapshot<Object?> d = await usersRef
+            .where('keywords', arrayContains: e.toString().toUpperCase())
+            .limit(5)
+            .get();
+        for (var e in d.docs) {
+          data.add(ProfileModel.fromMap(e.data() as Map<String, dynamic>));
+        }
+      }
+    }
+    if (data.length < 5) {
+      QuerySnapshot<Object?> te = await usersRef
+          // .where('branch',
+          //     isEqualTo:
+          //         '${Provider.of<UserProvider>(context, listen: false).getProfile!.branch}')
+          .limit(15)
+          .get();
+      for (var ee in te.docs) {
+        data.add(ProfileModel.fromMap(ee.data() as Map<String, dynamic>));
+      }
+    }
+    data.shuffle();
+    return data;
+  }
+
+  static Future<List<HomePagePosts>> getFollowersPost() async {
+    List<HomePagePosts> posts = [];
+
+    UserDetails details =
+        await getUserDetial(FirebaseAuth.instance.currentUser!.email!);
+    details.following ??= [];
+    for (var e in details.following!) {
+      DocumentSnapshot<Object?> f = await usersRef.doc(e).get();
+      ProfileModel profile =
+          ProfileModel.fromMap(f.data() as Map<String, dynamic>);
+      var today = DateTime.now().subtract(const Duration(days: 1));
+      QuerySnapshot<Object?> temp = await postsRef
+          .where('postedBy', isEqualTo: profile.mail)
+          .where('timeStamp',
+              isGreaterThanOrEqualTo: "${today.millisecondsSinceEpoch}")
+          .get();
+      for (var en in temp.docs) {
+        posts.add(HomePagePosts(
+            post: PostModel.fromMap(en.data() as Map<String, dynamic>),
+            profile: profile));
+      }
+    }
+
+    return posts;
+  }
+
+  static Future<List<String>> getMutualUser(UserDetails destUser) async {
+    List<String> users = [];
+    destUser.followers ??= [];
+    UserDetails temp =
+        await getUserDetial(FirebaseAuth.instance.currentUser!.email!);
+    temp.followers ?? [];
+    for (var e in temp.followers!) {
+      for (var e2 in destUser.followers!) {
+        if (e == e2) {
+          users.add(e);
+        }
+      }
+    }
+    return users;
+  }
+
+  static Future<List<ChatRoomModel>> getRecentChat() async {
+    List<ChatRoomModel> model = [];
+
+    QuerySnapshot<Object?> temp = await chatRoomRef
+        .where('users',
+            arrayContains: FirebaseAuth.instance.currentUser!.email!)
+        .orderBy('lastActive', descending: true)
+        .get();
+
+    for (var e1 in temp.docs) {
+      log("aslkdf");
+      model.add(ChatRoomModel.fromMap(e1.data() as Map<String, dynamic>));
+    }
+    return model;
   }
 }
