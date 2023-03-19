@@ -22,6 +22,19 @@ class _filterState extends State<filter> {
   String? courseType;
   bool processing = false;
 
+  initState() {
+    super.initState();
+    setState(() {});
+  }
+
+  clear() {
+    // userType = " ";
+    // branchType = null;
+    // courseType = null;
+    // skillType = null;
+    // String? userType;
+  }
+
   UserBanner() {
     showModalBottomSheet(
       context: context,
@@ -890,7 +903,9 @@ class _filterState extends State<filter> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8, right: 13),
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        clear();
+                      },
                       child: Text(
                         "Reset",
                         style: TextStyle(
@@ -922,7 +937,7 @@ class _filterState extends State<filter> {
                       },
                       child: Row(
                         children: [
-                          userType == null
+                          userType == null || userType == " "
                               ? Text(
                                   "View All",
                                   style: TextStyle(
