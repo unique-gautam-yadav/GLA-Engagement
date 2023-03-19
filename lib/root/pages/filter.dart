@@ -130,7 +130,6 @@ class _filterState extends State<filter> {
       },
     );
   }
-
   BranchBanner() {
     showModalBottomSheet(
       context: context,
