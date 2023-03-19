@@ -20,10 +20,10 @@ class _ChatState extends State<Chat> {
   List<ChatRoomModel>? recent;
 
   getRecentChats() async {
-    ///
-    ///
-    ///
-    ///
+    List<ChatRoomModel> temp = await BackEnd.getRecentChat();
+    setState(() {
+      recent = temp;
+    });
   }
 
   @override
@@ -195,8 +195,7 @@ class _RecentChatCardState extends State<RecentChatCard> {
                       : null),
             ),
             title: Text("${targetUser!.name}"),
-            // subtitle: Text(
-            //     "${targetUser!.type!.toUpperCase()} ${targetUser!.course} (${targetUser!.branch})"),
+            subtitle: Text("${widget.chatRoom.lastmessage}"),
             onTap: () {
               Navigator.push(
                   context,

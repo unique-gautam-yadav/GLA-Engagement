@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:glaengage/backend/backend.dart';
 import 'package:glaengage/root/pages/chat_screen.dart';
+import 'package:glaengage/root/pages/profileshimmer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,16 +32,17 @@ class _PublicProfileState extends State<PublicProfile> {
   Color? iconColor;
   UserDetails? userDetails;
   bool followProcess = false;
+  List<String>? mutuals;
 
   void getProfileData() async {
     ProfileModel? temp = await Auth.getProfileByMail(widget.email);
     UserDetails temp2 = await BackEnd.getUserDetial(widget.email);
+    List<String> m = await BackEnd.getMutualUser(temp2);
     if (mounted) {
       setState(() {
         userDetails = temp2;
-      });
-      setState(() {
         model = temp;
+        mutuals = m;
       });
 
       if (model!.coverImage != null) {
@@ -237,6 +239,30 @@ class _PublicProfileState extends State<PublicProfile> {
                               )
                             : const SizedBox.shrink(),
                         const Divider(),
+                        mutuals != null && mutuals!.isNotEmpty
+                            ? SizedBox(
+                                width: MediaQuery.of(context).size.width - 20,
+                                height: 40,
+                                child: ListView.builder(
+                                    itemCount: mutuals!.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PublicProfile(
+                                                        email: mutuals!
+                                                            .elementAt(index),
+                                                      )));
+                                        },
+                                        child: Text(
+                                            "${mutuals!.elementAt(index)}    "),
+                                      );
+                                    }))
+                            : const SizedBox.shrink(),
                         SizedBox(
                           width: double.infinity,
                           child: Row(
@@ -495,14 +521,7 @@ class _PublicProfileState extends State<PublicProfile> {
                           ),
                         ),
                 ]
-              : [
-                  Center(
-                    child: SpinKitCircle(
-                      color: Theme.of(context).primaryColor,
-                      size: 55,
-                    ),
-                  ),
-                ],
+              : const [ProfileShimmer()],
         ),
       ),
     );
