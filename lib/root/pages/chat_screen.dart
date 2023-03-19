@@ -22,6 +22,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  bool sametime = true;
   TextEditingController msgcontrol = TextEditingController();
   bool isTextFilled = false;
 
@@ -38,7 +39,9 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 40,
-        title: Expanded(
+        title: SizedBox(
+          width: MediaQuery.of(context).size.width - 55,
+          height: 48,
           child: Row(
             children: [
               CircleAvatar(
@@ -50,7 +53,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     : null,
               ),
               const SizedBox(width: 10),
-              Expanded(
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 122,
+                height: 48,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -77,9 +82,11 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            // height: 500,
-            // width: double.infinity,
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height -
+                175 -
+                (MediaQuery.of(context).viewInsets.bottom),
             child: StreamBuilder(
                 stream: BackEnd.getChats(widget.chatRoom.chatroomid!),
                 builder: (context, snapshot) {
@@ -88,7 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       return ListView.builder(
                           reverse: true,
                           itemCount: snapshot.data!.docs.length,
-                          physics: const ClampingScrollPhysics(),
+                          // physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             ChatModel chat = ChatModel.fromMap(
                                 snapshot.data!.docs.elementAt(index).data());
@@ -96,16 +103,34 @@ class _ChatScreenState extends State<ChatScreen> {
                             bool self = chat.sender ==
                                 FirebaseAuth.instance.currentUser!.email;
 
-                            return BubbleSpecialThree(
-                              text: "${chat.message}",
-                              color: self
-                                  ? const Color(0xFFE8E8EE)
-                                  : Theme.of(context)
-                                      .primaryColor
-                                      .withOpacity(.7),
-                              tail: false,
-                              isSender: self,
-                            );
+                            return Column(children: [
+                              BubbleSpecialThree(
+                                text: "${chat.message}",
+                                color: self
+                                    ? const Color(0xFFE8E8EE)
+                                    : Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(.7),
+                                tail: false,
+                                isSender: self,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: Align(
+                                  alignment: self
+                                      ? Alignment.centerRight
+                                      : Alignment.bottomLeft,
+                                  child: Text(
+                                    "${chat.timeStamp!.hour}:${chat.timeStamp!.minute}",
+                                    style: TextStyle(
+                                        // color: Colors.white,
+
+                                        fontSize: 10),
+                                  ),
+                                ),
+                              )
+                            ]);
                           });
                     } else {
                       return const Align(

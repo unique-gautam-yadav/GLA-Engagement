@@ -6,7 +6,7 @@ class KeyWords {
   static const String alumniUser = "alumni";
   static const String teacherUser = "teacher";
 }
-
+ 
 class SocialMeda {
   static List<String> socialLinks = [
     "instagram",

@@ -3,14 +3,18 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glaengage/backend/auth.dart';
 import 'package:glaengage/backend/providers.dart';
 import 'package:glaengage/root/pages/add_post.dart';
 import 'package:glaengage/root/pages/chats.dart';
 import 'package:glaengage/root/pages/home.dart';
+import 'package:glaengage/root/pages/work.dart';
 import 'package:glaengage/root/pages/public_profile.dart';
 import 'package:glaengage/root/pages/search.dart';
 import 'package:glaengage/root/pages/self_profile.dart';
 import 'package:provider/provider.dart';
+
+import 'hire.dart';
 
 class NavBarView extends StatefulWidget {
   const NavBarView({super.key});
@@ -37,7 +41,7 @@ class _NavBarViewState extends State<NavBarView> {
       appBar: curPageIndex == 0
           ? AppBar(
               title: const Text(
-                "GLA Engage",
+                "ᏀᏞᎪХᎽ",
                 style: TextStyle(
                     fontSize: 25,
                     color: Colors.black,
@@ -106,7 +110,29 @@ class _NavBarViewState extends State<NavBarView> {
           ),
           ListTile(
             onTap: () {
-              FirebaseAuth.instance.signOut();
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return const work();
+                },
+              ));
+            },
+            leading: const Icon(Icons.attach_money_outlined),
+            title: const Text("Work"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return const hire();
+                },
+              ));
+            },
+            leading: const Icon(Icons.handshake),
+            title: const Text("Hire"),
+          ),
+          ListTile(
+            onTap: () {
+              Auth.logOut();
             },
             leading: const Icon(Icons.logout),
             title: const Text("Log Out"),

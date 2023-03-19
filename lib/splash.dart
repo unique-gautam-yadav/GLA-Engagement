@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           children: [
             Image.asset(
-              'assets/icon/gla_light.png',
+              'assets/images/logo.png',
               height: 500.0,
               width: 300.0,
               alignment: Alignment.center,

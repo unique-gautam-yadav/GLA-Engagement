@@ -81,7 +81,6 @@ class _PostCardState extends State<PostCard> {
   likePost() async {
     if (!liked) {
       setState(() {
-        liked = true;
         likeCounter += 1;
       });
       await Auth.likePost(widget.e['postID']);

@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:glaengage/backend/backend.dart';
 import 'package:glaengage/backend/models.dart';
 import 'package:glaengage/root/pages/posts_page.dart';
 import 'package:shimmer/shimmer.dart';
@@ -18,11 +21,21 @@ class _HomePageState extends State<HomePage> {
   List<HomePagePosts>? data;
 
   getData() async {
-    List<HomePagePosts> temp = await Auth.getPosts();
+    List<HomePagePosts> temp = await BackEnd.getSuggestedPosts(context);
     if (mounted) {
-      setState(() {
-        data = temp;
-      });
+      if (temp.isNotEmpty) {
+        log('sdfjk');
+        setState(() {
+          data = temp;
+        });
+      } else {
+        log('sdfjk');
+
+        temp = await BackEnd.getRandomPosts();
+        setState(() {
+          data = temp;
+        });
+      }
     }
   }
 

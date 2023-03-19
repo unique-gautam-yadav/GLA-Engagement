@@ -20,13 +20,11 @@ class _ChatState extends State<Chat> {
   List<ChatRoomModel>? recent;
 
   getRecentChats() async {
-    List<ChatRoomModel> temp = await BackEnd.getRecentChats();
-    setState(() {
-      recent = temp;
-    });
+    ///
+    ///
+    ///
+    ///
   }
-
-
 
   @override
   void initState() {

@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:validators/validators.dart' as validator;
-
 import '../../../backend/auth.dart';
 import '../../../backend/keywords.dart';
 import '../../../backend/models.dart';
@@ -13,11 +11,9 @@ class SignUpWelcome extends StatefulWidget {
   const SignUpWelcome({super.key, required this.togglePages});
 
   final VoidCallback togglePages;
-
   @override
   State<SignUpWelcome> createState() => _SignUpWelcomeState();
 }
-
 class _SignUpWelcomeState extends State<SignUpWelcome> {
   @override
   Widget build(BuildContext context) {
@@ -113,24 +109,24 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController id = TextEditingController();
   TextEditingController course = TextEditingController();
   TextEditingController branch = TextEditingController();
-  // TextEditingController sem = TextEditingController();
+  TextEditingController sem = TextEditingController();
   TextEditingController admisionYear = TextEditingController();
   TextEditingController bio = TextEditingController();
   TextEditingController passoutYear = TextEditingController();
-  String dropdownvalue = "please select sem";
+  TextEditingController company = TextEditingController();
+  // String dropdownvalue = "please select sem";
 
-  // List of items in our dropdown menu
-  var items = [
-    // 'choose your semester',
-    'sem 1',
-    'sem 2',
-    'sem 3',
-    'sem 4',
-    'sem 5',
-    'sem 6',
-    'sem 7',
-    'sem 8',
-  ];
+  // // List of items in our dropdown menu
+  // var items = [
+  //   'sem 1',
+  //   'sem 2',
+  //   'sem 3',
+  //   'sem 4',
+  //   'sem 5',
+  //   'sem 6',
+  //   'sem 7',
+  //   'sem 8',
+  // ];
 
   switchToNextStep() async {
     setState(() {
@@ -171,7 +167,8 @@ class _SignUpPageState extends State<SignUpPage> {
             mail: mail.text,
             name: fullName.text,
             phone: phone.text,
-            sem: dropdownvalue,
+            sem: sem.text,
+            // sem: dropdownvalue,
             unvRoll: id.text,
             type: userType,
           );
@@ -296,15 +293,15 @@ class _SignUpPageState extends State<SignUpPage> {
                             controller: mail,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "This filed is required";
+                                return "This field is Required";
                               } else if (!validator.isEmail(value)) {
-                                return "Please enter valid mail";
+                                return "Please Enter Valid Mail";
                               } else {
                                 return null;
                               }
                             },
                             decoration: InputDecoration(
-                              hintText: "Enter mail address",
+                              hintText: "Enter Mail Address",
                               labelText: "Mail",
                               prefixIcon: const Icon(Icons.mail),
                               border: OutlineInputBorder(
@@ -317,9 +314,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             controller: password,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "This field is required";
+                                return "This field is Required";
                               } else if (value.length < 6) {
-                                return "Password must hava 6 chars";
+                                return "Password must have 6 chars atleast";
                               } else {
                                 return null;
                               }
@@ -336,17 +333,17 @@ class _SignUpPageState extends State<SignUpPage> {
                           TextFormField(
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "This flield is required";
+                                return "This field is Required";
                               } else if (password.text != value) {
-                                return "Password didn't match re-password";
+                                return "Password didn't match Re-password";
                               } else {
                                 return null;
                               }
                             },
                             obscureText: true,
                             decoration: InputDecoration(
-                                hintText: "Enter password again",
-                                labelText: "Re Password",
+                                hintText: "Enter Password Again",
+                                labelText: "Re-Password",
                                 prefixIcon: const Icon(Icons.lock),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12))),
@@ -481,7 +478,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               Positioned(
                                 bottom: 0,
                                 child: Text(
-                                  errorAt1 ? "This field is required" : "",
+                                  errorAt1 ? "This field is Required" : "",
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.error,
                                   ),
@@ -503,7 +500,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   Step(
                     isActive: stepIndex == 2,
-                    title: Text(stepIndex == 2 ? "Personal details" : ""),
+                    title: Text(stepIndex == 2 ? "Personal Details" : ""),
                     content: Form(
                       key: personalFormKey,
                       child: Column(
@@ -515,13 +512,13 @@ class _SignUpPageState extends State<SignUpPage> {
                                       controller: fullName,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return "This field is required";
+                                          return "This field is Required";
                                         } else {
                                           return null;
                                         }
                                       },
                                       decoration: InputDecoration(
-                                        hintText: "Enter your name",
+                                        hintText: "Enter your Name",
                                         label: const RequiredLabel("Full Name"),
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -534,14 +531,14 @@ class _SignUpPageState extends State<SignUpPage> {
                                       controller: phone,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return "This field is reuired";
+                                          return "This field is Required";
                                         } else {
                                           return null;
                                         }
                                       },
                                       keyboardType: TextInputType.phone,
                                       decoration: InputDecoration(
-                                        hintText: "Enter your phone number",
+                                        hintText: "Enter your Phone Number",
                                         label: const RequiredLabel("Phone"),
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -554,9 +551,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                       controller: id,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return "This field is reuired";
+                                          return "This field is Required";
                                         } else if (value.length < 5) {
-                                          return "Invalid roll no";
+                                          return "Invalid Roll No";
                                         } else {
                                           return null;
                                         }
@@ -564,8 +561,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         hintText:
-                                            "Enter your university roll no",
-                                        label: const RequiredLabel("Roll no."),
+                                            "Enter your University Roll No",
+                                        label: const RequiredLabel("Roll No."),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -577,7 +574,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                       controller: course,
                                       decoration: InputDecoration(
                                         hintText: "Enter your course name",
-                                        labelText: "Course",
+                                        // labelText: "Course",
+                                        label: RequiredLabel("course"),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -589,7 +587,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                       controller: branch,
                                       decoration: InputDecoration(
                                         hintText: "Enter your branch",
-                                        labelText: "Branch",
+                                        // labelText: "Branch",
+                                        label: const RequiredLabel("Branch"),
+
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -597,40 +597,39 @@ class _SignUpPageState extends State<SignUpPage> {
                                       ),
                                     ),
                                     const SizedBox(height: 15),
-                                    DropdownButton(
-                                      hint: Text('select your semester'),
-                                      // Initial Value
-                                      value: dropdownvalue,
-
-                                      // Down Arrow Icon
-                                      icon: const Icon(
-                                          Icons.keyboard_arrow_down),
-
-                                      // Array list of items
-                                      items: items.map((String items) {
-                                        return DropdownMenuItem(
-                                          value: items,
-                                          child: Text(items),
-                                        );
-                                      }).toList(),
-                                      // After selecting the desired option,it will
-                                      // change button value to selected value
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          dropdownvalue = newValue!;
-                                        });
-                                      },
+                                    TextFormField(
+                                      controller: sem,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        hintText: "Enter your semester",
+                                        // labelText: "semester",
+                                        label: RequiredLabel("Semester"),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                      ),
                                     ),
-                                    // TextFormField(
-                                    //   controller: sem,
-                                    //   decoration: InputDecoration(
-                                    //     hintText: "Enter your current sem",
-                                    //     labelText: "Semester",
-                                    //     border: OutlineInputBorder(
-                                    //       borderRadius:
-                                    //           BorderRadius.circular(12),
-                                    //     ),
-                                    //   ),
+                                    // DropdownButton(
+                                    //   hint: Text('select your semester'),
+                                    //   // Initial Value
+                                    //   value: dropdownvalue,
+                                    //   icon:
+                                    //       const Icon(Icons.keyboard_arrow_down),
+
+                                    //   // Array list of items
+                                    //   items: items.map((e) {
+                                    //     return DropdownMenuItem(
+                                    //       value: e,
+                                    //       child: Text(e),
+                                    //     );
+                                    //   }).toList(),
+
+                                    //   onChanged: (newValue) {
+                                    //     setState(() {
+                                    //       dropdownvalue = "$newValue";
+                                    //     });
+                                    //   },
                                     // ),
                                     const SizedBox(height: 15),
                                     TextFormField(
@@ -638,21 +637,22 @@ class _SignUpPageState extends State<SignUpPage> {
                                       keyboardType: TextInputType.number,
                                       maxLength: 4,
                                       decoration: InputDecoration(
-                                        hintText: "Enter your admission year",
-                                        labelText: "Admission Year",
+                                        hintText: "Enter your Admission year",
+                                        // labelText: "Session",
+                                        label: RequiredLabel("Session"),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
+                                    const SizedBox(height: 10),
                                     TextField(
                                       controller: bio,
                                       maxLength: 200,
                                       maxLines: 5,
                                       decoration: InputDecoration(
-                                        hintText: "Enter bio for your account",
+                                        hintText: "Enter Bio for your Account",
                                         label: const Align(
                                             alignment: Alignment.topLeft,
                                             child: Text("Bio")),
@@ -691,14 +691,14 @@ class _SignUpPageState extends State<SignUpPage> {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return "This field is reuired";
+                                              return "This field is required";
                                             } else {
                                               return null;
                                             }
                                           },
                                           keyboardType: TextInputType.phone,
                                           decoration: InputDecoration(
-                                            hintText: "Enter your phone number",
+                                            hintText: "Enter your Phone Number",
                                             label: const RequiredLabel("Phone"),
                                             border: OutlineInputBorder(
                                               borderRadius:
@@ -722,7 +722,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           keyboardType: TextInputType.number,
                                           decoration: InputDecoration(
                                             hintText:
-                                                "Enter your university roll no",
+                                                "Enter your University Roll no",
                                             label:
                                                 const RequiredLabel("Roll no."),
                                             border: OutlineInputBorder(
@@ -735,7 +735,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         TextFormField(
                                           controller: course,
                                           decoration: InputDecoration(
-                                            hintText: "Enter your course name",
+                                            hintText: "Enter your Course Name",
                                             labelText: "Course",
                                             border: OutlineInputBorder(
                                               borderRadius:
@@ -747,7 +747,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         TextFormField(
                                           controller: branch,
                                           decoration: InputDecoration(
-                                            hintText: "Enter your branch",
+                                            hintText: "Enter your Branch",
                                             labelText: "Branch",
                                             border: OutlineInputBorder(
                                               borderRadius:
@@ -762,7 +762,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           maxLength: 4,
                                           decoration: InputDecoration(
                                             hintText:
-                                                "Enter your admission year",
+                                                "Enter your Admission Year",
                                             labelText: "Admission Year",
                                             border: OutlineInputBorder(
                                               borderRadius:
@@ -776,8 +776,22 @@ class _SignUpPageState extends State<SignUpPage> {
                                           keyboardType: TextInputType.number,
                                           maxLength: 4,
                                           decoration: InputDecoration(
-                                            hintText: "Enter your passout year",
+                                            hintText: "Enter your Passout Year",
                                             labelText: "Passout Year",
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        TextFormField(
+                                          controller: company,
+                                          keyboardType: TextInputType.number,
+                                          maxLength: 4,
+                                          decoration: InputDecoration(
+                                            hintText: "Enter yourCompany Name",
+                                            labelText: "Company",
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),
@@ -814,7 +828,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                             }
                                           },
                                           decoration: InputDecoration(
-                                            hintText: "Enter your name",
+                                            hintText: "Enter your Name",
                                             label: const RequiredLabel(
                                                 "Full Name"),
                                             border: OutlineInputBorder(
@@ -829,7 +843,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return "This field is reuired";
+                                              return "This field is required";
                                             } else {
                                               return null;
                                             }
@@ -850,7 +864,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return "This field is reuired";
+                                              return "This field is required";
                                             } else if (value.length < 5) {
                                               return "Invalid EMP ID";
                                             } else {
@@ -871,7 +885,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         TextFormField(
                                           controller: course,
                                           decoration: InputDecoration(
-                                            hintText: "Enter your course name",
+                                            hintText: "Enter your Course Name",
                                             labelText: "Course",
                                             border: OutlineInputBorder(
                                               borderRadius:
@@ -883,7 +897,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         TextFormField(
                                           controller: branch,
                                           decoration: InputDecoration(
-                                            hintText: "Enter your branch",
+                                            hintText: "Enter your Branch",
                                             labelText: "Branch",
                                             border: OutlineInputBorder(
                                               borderRadius:
@@ -898,7 +912,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           maxLines: 5,
                                           decoration: InputDecoration(
                                             hintText:
-                                                "Enter bio for your account",
+                                                "Enter bio for your Account",
                                             label: const Align(
                                                 alignment: Alignment.topLeft,
                                                 child: Text("Bio")),
@@ -931,7 +945,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         padding: MaterialStateProperty.all(
                             const EdgeInsets.only(left: 15, right: 15))),
                     onPressed: stepIndex == 0
-                        ? () {}
+                        ? () {
+                            Navigator.pop(context);
+                          }
                         : () {
                             if (stepIndex > 0) {
                               setState(() {
@@ -1003,8 +1019,9 @@ class _SignUpPageState extends State<SignUpPage> {
     passoutYear.dispose();
     bio.dispose();
     id.dispose();
-    // sem.dispose();
+    sem.dispose();
     password.dispose();
+    company.dispose();
     super.dispose();
   }
 }

@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 class StudentModel {
   String? type;
   String? name;
@@ -17,6 +19,8 @@ class StudentModel {
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
   List<Map<String, dynamic>>? skills;
+  List<String>? keywords;
+  String? token;
   StudentModel({
     this.type,
     this.name,
@@ -33,6 +37,8 @@ class StudentModel {
     this.achievements,
     this.socialLinks,
     this.skills,
+    this.keywords,
+    this.token,
   });
 
   Map<String, dynamic> toMap() {
@@ -52,11 +58,14 @@ class StudentModel {
       'achievements': achievements,
       'socialLinks': socialLinks,
       'skills': skills,
+      'keywords': keywords,
+      'token': token,
     };
   }
 
   factory StudentModel.fromMap(Map<String, dynamic> map) {
     return StudentModel(
+      token: map['token'] != null ? map['token'] as String : null,
       type: map['type'] != null ? map['type'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       course: map['course'] != null ? map['course'] as String : null,
@@ -92,6 +101,13 @@ class StudentModel {
               ),
             )
           : null,
+      keywords: map['keywords'] != null
+          ? List<String>.from(
+              (map['keywords'] as List<dynamic>).map<String?>(
+                (x) => x,
+              ),
+            )
+          : null,
     );
   }
 
@@ -116,6 +132,8 @@ class StudentModel {
     List<Map<String, dynamic>>? achievements,
     List<Map<String, dynamic>>? socialLinks,
     List<Map<String, dynamic>>? skills,
+    List<String>? keywords,
+    String? token,
   }) {
     return StudentModel(
       type: type ?? this.type,
@@ -133,6 +151,8 @@ class StudentModel {
       achievements: achievements ?? this.achievements,
       socialLinks: socialLinks ?? this.socialLinks,
       skills: skills ?? this.skills,
+      keywords: keywords ?? this.keywords,
+      token: token ?? this.token,
     );
   }
 }
@@ -153,6 +173,8 @@ class AlumniModel {
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
   List<Map<String, dynamic>>? skills;
+  List<String>? keywords;
+  String? token;
   AlumniModel({
     this.type,
     this.name,
@@ -169,6 +191,8 @@ class AlumniModel {
     this.achievements,
     this.socialLinks,
     this.skills,
+    this.keywords,
+    this.token,
   });
 
   Map<String, dynamic> toMap() {
@@ -188,6 +212,7 @@ class AlumniModel {
       'achievements': achievements,
       'socialLinks': socialLinks,
       'skills': skills,
+      'token': token,
     };
   }
 
@@ -229,6 +254,14 @@ class AlumniModel {
               ),
             )
           : null,
+      keywords: map['keywords'] != null
+          ? List<String>.from(
+              (map['keywords'] as List<dynamic>).map<String?>(
+                (x) => x,
+              ),
+            )
+          : null,
+      token: map['token'] != null ? map['token'] as String : null,
     );
   }
 
@@ -236,6 +269,46 @@ class AlumniModel {
 
   factory AlumniModel.fromJson(String source) =>
       AlumniModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  AlumniModel copyWith({
+    String? type,
+    String? name,
+    String? course,
+    String? branch,
+    String? mail,
+    String? phone,
+    String? unvRoll,
+    String? desc,
+    int? addmissionYear,
+    int? passoutYear,
+    String? imgUrl,
+    String? coverImage,
+    List<Map<String, dynamic>>? achievements,
+    List<Map<String, dynamic>>? socialLinks,
+    List<Map<String, dynamic>>? skills,
+    List<String>? keywords,
+    String? token,
+  }) {
+    return AlumniModel(
+      type: type ?? this.type,
+      name: name ?? this.name,
+      course: course ?? this.course,
+      branch: branch ?? this.branch,
+      mail: mail ?? this.mail,
+      phone: phone ?? this.phone,
+      unvRoll: unvRoll ?? this.unvRoll,
+      desc: desc ?? this.desc,
+      addmissionYear: addmissionYear ?? this.addmissionYear,
+      passoutYear: passoutYear ?? this.passoutYear,
+      imgUrl: imgUrl ?? this.imgUrl,
+      coverImage: coverImage ?? this.coverImage,
+      achievements: achievements ?? this.achievements,
+      socialLinks: socialLinks ?? this.socialLinks,
+      skills: skills ?? this.skills,
+      keywords: keywords ?? this.keywords,
+      token: token ?? this.token,
+    );
+  }
 }
 
 class TeacherModel {
@@ -253,6 +326,8 @@ class TeacherModel {
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
   List<Map<String, dynamic>>? skills;
+  List<String>? keywords;
+  String? token;
   TeacherModel({
     this.type,
     this.name,
@@ -268,6 +343,8 @@ class TeacherModel {
     this.achievements,
     this.socialLinks,
     this.skills,
+    this.keywords,
+    this.token,
   });
 
   Map<String, dynamic> toMap() {
@@ -286,6 +363,8 @@ class TeacherModel {
       'achievements': achievements,
       'socialLinks': socialLinks,
       'skills': skills,
+      'keywords': keywords,
+      'token': token,
     };
   }
 
@@ -330,6 +409,14 @@ class TeacherModel {
               ),
             )
           : null,
+      keywords: map['keywords'] != null
+          ? List<String>.from(
+              (map['keywords'] as List<dynamic>).map<String?>(
+                (x) => x,
+              ),
+            )
+          : null,
+      token: map['token'] != null ? map['token'] as String : null,
     );
   }
 
@@ -337,6 +424,44 @@ class TeacherModel {
 
   factory TeacherModel.fromJson(String source) =>
       TeacherModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  TeacherModel copyWith({
+    String? type,
+    String? name,
+    String? course,
+    String? branch,
+    String? mail,
+    String? phone,
+    List<Map<String, dynamic>>? subjects,
+    String? empID,
+    String? desc,
+    String? imgUrl,
+    String? coverImage,
+    List<Map<String, dynamic>>? achievements,
+    List<Map<String, dynamic>>? socialLinks,
+    List<Map<String, dynamic>>? skills,
+    List<String>? keywords,
+    String? token,
+  }) {
+    return TeacherModel(
+      type: type ?? this.type,
+      name: name ?? this.name,
+      course: course ?? this.course,
+      branch: branch ?? this.branch,
+      mail: mail ?? this.mail,
+      phone: phone ?? this.phone,
+      subjects: subjects ?? this.subjects,
+      empID: empID ?? this.empID,
+      desc: desc ?? this.desc,
+      imgUrl: imgUrl ?? this.imgUrl,
+      coverImage: coverImage ?? this.coverImage,
+      achievements: achievements ?? this.achievements,
+      socialLinks: socialLinks ?? this.socialLinks,
+      skills: skills ?? this.skills,
+      keywords: keywords ?? this.keywords,
+      token: token ?? this.token,
+    );
+  }
 }
 
 class ProfileModel {
@@ -358,6 +483,8 @@ class ProfileModel {
   List<Map<String, dynamic>>? achievements;
   List<Map<String, dynamic>>? socialLinks;
   List<Map<String, dynamic>>? skills;
+  List<String>? keywords;
+  String? token;
   ProfileModel({
     this.type,
     this.name,
@@ -377,6 +504,8 @@ class ProfileModel {
     this.achievements,
     this.socialLinks,
     this.skills,
+    this.keywords,
+    this.token,
   });
 
   Map<String, dynamic> toMap() {
@@ -399,6 +528,8 @@ class ProfileModel {
       'achievements': achievements,
       'socialLinks': socialLinks,
       'skills': skills,
+      'keywords': keywords,
+      'token': token,
     };
   }
 
@@ -449,6 +580,14 @@ class ProfileModel {
               ),
             )
           : null,
+      keywords: map['keywords'] != null
+          ? List<String>.from(
+              (map['keywords'] as List<dynamic>).map<String?>(
+                (x) => x,
+              ),
+            )
+          : null,
+      token: map['token'] != null ? map['token'] as String : null,
     );
   }
 
@@ -476,6 +615,8 @@ class ProfileModel {
     List<Map<String, dynamic>>? achievements,
     List<Map<String, dynamic>>? socialLinks,
     List<Map<String, dynamic>>? skills,
+    List<String>? keywords,
+    String? token,
   }) {
     return ProfileModel(
       type: type ?? this.type,
@@ -496,6 +637,8 @@ class ProfileModel {
       achievements: achievements ?? this.achievements,
       socialLinks: socialLinks ?? this.socialLinks,
       skills: skills ?? this.skills,
+      keywords: keywords ?? this.keywords,
+      token: token ?? this.token,
     );
   }
 }
@@ -850,5 +993,79 @@ class SkillModel {
       description: description ?? this.description,
       level: level ?? this.level,
     );
+  }
+}
+
+class Freelancing {
+  List<String>? skill;
+  String? duration;
+  String? package;
+  String? decp; 
+  Freelancing({
+    this.skill,
+    this.duration,
+    this.package,
+    this.decp,
+  });
+
+
+  Freelancing copyWith({
+    List<String>? skill,
+    String? duration,
+    String? package,
+    String? decp,
+  }) {
+    return Freelancing(
+      skill: skill ?? this.skill,
+      duration: duration ?? this.duration,
+      package: package ?? this.package,
+      decp: decp ?? this.decp,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'skill': skill,
+      'duration': duration,
+      'package': package,
+      'decp': decp,
+    };
+  }
+
+  factory Freelancing.fromMap(Map<String, dynamic> map) {
+    return Freelancing(
+      skill: map['skill'] != null ? List<String>.from((map['skill'] as List<String>)) : null,
+      duration: map['duration'] != null ? map['duration'] as String : null,
+      package: map['package'] != null ? map['package'] as String : null,
+      decp: map['decp'] != null ? map['decp'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Freelancing.fromJson(String source) => Freelancing.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'Freelancing(skill: $skill, duration: $duration, package: $package, decp: $decp)';
+  }
+
+  @override
+  bool operator ==(covariant Freelancing other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      listEquals(other.skill, skill) &&
+      other.duration == duration &&
+      other.package == package &&
+      other.decp == decp;
+  }
+
+  @override
+  int get hashCode {
+    return skill.hashCode ^
+      duration.hashCode ^
+      package.hashCode ^
+      decp.hashCode;
   }
 }

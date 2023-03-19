@@ -23,8 +23,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  final Token = await FirebaseMessaging.instance.getToken();
-  log(Token!);
+  final token = await FirebaseMessaging.instance.getToken();
+  log(token!);
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
