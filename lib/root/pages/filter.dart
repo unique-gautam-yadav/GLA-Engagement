@@ -45,7 +45,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "Student",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -74,7 +74,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "Teacher",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -103,7 +103,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "Alumni",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -322,7 +322,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "B.Tech",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -351,7 +351,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "Diploma",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -380,7 +380,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "PHD",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -409,7 +409,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "B.Com",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -438,7 +438,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "BCA",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -467,7 +467,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "B.Sc",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -496,7 +496,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "M.Tech",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -525,7 +525,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "B.Pharma",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -554,7 +554,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "LLB",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -583,7 +583,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "D.Pharma",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -612,7 +612,7 @@ class _filterState extends State<filter> {
                     padding: const EdgeInsets.only(left: 20, top: 15),
                     child: Text(
                       "MCA",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                   SizedBox(
@@ -664,7 +664,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "Java",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -693,7 +693,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "Flutter",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -722,7 +722,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "Python",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -751,7 +751,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "C",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -780,7 +780,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "Ruby",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -809,7 +809,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "C++",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -838,7 +838,7 @@ class _filterState extends State<filter> {
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
                     "React",
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
                 SizedBox(
@@ -1110,7 +1110,7 @@ class _filterState extends State<filter> {
               ],
             ),
             SizedBox(
-              height: 380,
+              height: 400,
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
