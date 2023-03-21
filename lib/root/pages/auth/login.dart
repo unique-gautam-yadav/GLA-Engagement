@@ -118,7 +118,6 @@ class _SignInPageState extends State<SignInPage> {
                           height: 250,
                           width: 250,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: Image.asset("assets/images/logo.png"),
