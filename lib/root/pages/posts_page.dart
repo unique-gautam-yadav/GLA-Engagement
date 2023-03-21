@@ -82,23 +82,22 @@ class _PostCardState extends State<PostCard> {
     if (!liked) {
       setState(() {
         likeCounter += 1;
-      });
-      await Auth().likePost(widget.e['postID']);
-      setState(() {
         showAdded = true;
+        liked = true;
       });
       Future.delayed(const Duration(seconds: 2)).then((value) {
         setState(() {
           showAdded = false;
         });
       });
+      await Auth().likePost(widget.e['postID']);
     } else {
-      await Auth().unLikePost(widget.e['postID']);
       setState(() {
         liked = false;
         showAdded = false;
         likeCounter -= 1;
       });
+      await Auth().unLikePost(widget.e['postID']);
     }
   }
 

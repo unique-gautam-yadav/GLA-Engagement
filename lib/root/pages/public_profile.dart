@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:glaengage/backend/auth.dart';
 import 'package:glaengage/backend/models.dart';
 
+import '../../backend/keywords.dart';
 import 'posts_page.dart';
 
 class PublicProfile extends StatefulWidget {
@@ -743,10 +744,7 @@ class ProfileLink extends StatelessWidget {
                   border: Border.all(
                       color: Theme.of(context).primaryColor.withOpacity(.6)),
                   borderRadius: BorderRadius.circular(50)),
-              child: Icon(
-                Icons.link,
-                color: Theme.of(context).primaryColor,
-              )),
+              child: SocialMeda.getIcon(e['url'])),
         ),
         Text(e['title'])
       ],
